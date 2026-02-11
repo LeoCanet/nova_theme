@@ -1,0 +1,161 @@
+///============================================================================
+/// Theme Nova — Responsive Design
+///============================================================================
+
+// ─── Tablet (768px - 1024px) ───────────────────────────────────────────────
+@media (max-width: 1024px) {
+    // Sidebar auto-collapse on tablet
+    .nova-sidebar {
+        width: var(--nova-sidebar-collapsed-width);
+
+        .nova-sidebar__label {
+            opacity: 0;
+            width: 0;
+        }
+
+        .nova-sidebar__section-title {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nova-sidebar__item {
+            justify-content: center;
+            padding: var(--nova-space-2);
+        }
+
+        // Expand on hover (tablet)
+        &:hover {
+            width: var(--nova-sidebar-width);
+            box-shadow: var(--nova-shadow-lg);
+            z-index: 1035;
+
+            .nova-sidebar__label {
+                opacity: 1;
+                width: auto;
+            }
+
+            .nova-sidebar__section-title {
+                opacity: 1;
+                height: auto;
+                padding: var(--nova-space-3) var(--nova-space-3) var(--nova-space-1);
+            }
+
+            .nova-sidebar__item {
+                justify-content: flex-start;
+                padding: var(--nova-space-2) var(--nova-space-3);
+            }
+        }
+    }
+
+    body.nova-sidebar-open .o_action_manager {
+        margin-left: var(--nova-sidebar-collapsed-width);
+    }
+
+    // Navbar adjustments
+    .o_main_navbar {
+        .o_menu_sections {
+            > .o_nav_entry,
+            > .dropdown > .dropdown-toggle {
+                padding: 0 var(--nova-space-2);
+                font-size: 0.75rem;
+            }
+        }
+
+        .o_menu_systray {
+            .oe_topbar_name {
+                display: none;
+            }
+        }
+    }
+
+    // Form view
+    .o_form_view .o_form_sheet_bg {
+        padding: var(--nova-space-3) var(--nova-space-4);
+
+        .o_form_sheet {
+            padding: var(--nova-space-4) var(--nova-space-5);
+        }
+    }
+}
+
+// ─── Small Tablet / Large Phone (max-width: 768px) ─────────────────────────
+@media (max-width: 768px) {
+    // App Launcher: smaller tiles
+    .nova-app-tile__icon {
+        width: 56px;
+        height: 56px;
+
+        .fa, .oi {
+            font-size: 22px;
+        }
+    }
+
+    .nova-app-tile__label {
+        font-size: 0.6875rem;
+        max-width: 72px;
+    }
+
+    // Hide sidebar completely on small screens
+    .nova-sidebar {
+        transform: translateX(-100%);
+
+        &.nova-sidebar--mobile-open {
+            transform: translateX(0);
+            width: var(--nova-sidebar-width);
+            box-shadow: var(--nova-shadow-xl);
+            z-index: 1050;
+        }
+    }
+
+    body.nova-sidebar-open .o_action_manager {
+        margin-left: 0;
+    }
+
+    // Navbar compact
+    .o_main_navbar {
+        padding: 0 var(--nova-space-2) !important;
+
+        .o_menu_brand {
+            font-size: 0.8125rem;
+            max-width: 120px;
+        }
+
+        .o_menu_sections {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            &::-webkit-scrollbar { display: none; }
+        }
+    }
+
+    // Form view compact
+    .o_form_view .o_form_sheet_bg {
+        padding: var(--nova-space-2);
+
+        .o_form_sheet {
+            padding: var(--nova-space-3) var(--nova-space-4);
+            border-radius: var(--nova-radius);
+        }
+    }
+
+    // Control panel compact
+    .o_control_panel {
+        padding: var(--nova-space-2) var(--nova-space-3) !important;
+
+        .o_searchview {
+            max-width: 100%;
+        }
+    }
+
+    // Modals full-screen on mobile
+    .modal .modal-dialog {
+        margin: var(--nova-space-2);
+        max-width: calc(100% - var(--nova-space-4));
+
+        .modal-content {
+            border-radius: var(--nova-radius-lg);
+        }
+    }
+}

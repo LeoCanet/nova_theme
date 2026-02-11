@@ -1,0 +1,189 @@
+///============================================================================
+/// Theme Nova — Kanban View Redesign
+///============================================================================
+
+.o_kanban_view {
+    background: var(--nova-bg);
+    padding: var(--nova-space-4);
+    gap: var(--nova-space-4);
+
+    // ─── Kanban Group (Column) ─────────────────────────────────────────
+    .o_kanban_group {
+        background: var(--nova-bg-alt);
+        border-radius: var(--nova-radius-lg);
+        padding: var(--nova-space-3);
+        border: 1px solid var(--nova-border-light);
+
+        // Column header
+        .o_kanban_header {
+            padding-bottom: var(--nova-space-3);
+            margin-bottom: var(--nova-space-2);
+
+            .o_kanban_header_title {
+                .o_column_title {
+                    font-size: 0.8125rem;
+                    font-weight: 600;
+                    color: var(--nova-text);
+                }
+
+                .o_kanban_config > .dropdown-toggle,
+                .o_kanban_quick_add {
+                    color: var(--nova-text-tertiary);
+                    border-radius: var(--nova-radius);
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all var(--nova-transition-fast);
+
+                    &:hover {
+                        background: var(--nova-accent-light);
+                        color: var(--nova-accent);
+                    }
+                }
+            }
+
+            // Count badge
+            .o_kanban_counter {
+                .o_kanban_counter_side {
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: var(--nova-text-tertiary);
+                    background: var(--nova-surface);
+                    border-radius: var(--nova-radius-full);
+                    padding: 0.125rem 0.5rem;
+                }
+            }
+        }
+    }
+
+    // ─── Kanban Record (Card) ──────────────────────────────────────────
+    // NOTE: Odoo sets background-color on .o_kanban_record > div (not on .o_kanban_record)
+    // We must target both the wrapper and the inner div.
+    .o_kanban_record {
+        border-radius: var(--nova-radius-md);
+        box-shadow: var(--nova-shadow-xs);
+        margin-bottom: var(--nova-space-2);
+        cursor: pointer;
+        transition: box-shadow var(--nova-transition), transform var(--nova-transition-fast), border-color var(--nova-transition-fast);
+
+        > div {
+            background: var(--nova-surface);
+            border-color: var(--nova-border);
+            border-radius: var(--nova-radius-md);
+        }
+
+        &:hover {
+            box-shadow: var(--nova-shadow-sm);
+            transform: translateY(-1px);
+
+            > div {
+                border-color: var(--nova-accent);
+            }
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        // Title
+        strong, .o_kanban_record_title {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--nova-text);
+        }
+
+        // Subtitle / details
+        .o_kanban_record_subtitle,
+        .o_kanban_record_body {
+            font-size: 0.75rem;
+            color: var(--nova-text-secondary);
+            margin-top: var(--nova-space-1);
+        }
+
+        // Tags
+        .o_field_many2manytags .badge {
+            border-radius: var(--nova-radius-full);
+            font-size: 0.6875rem;
+            font-weight: 500;
+            padding: 0.15em 0.5em;
+        }
+
+        // Bottom area (avatars, priority, etc.)
+        .o_kanban_record_bottom {
+            margin-top: var(--nova-space-2);
+            padding-top: var(--nova-space-2);
+            border-top: 1px solid var(--nova-border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .oe_kanban_bottom_left,
+            .oe_kanban_bottom_right {
+                display: flex;
+                align-items: center;
+                gap: var(--nova-space-2);
+            }
+
+            img.oe_kanban_avatar {
+                width: 24px;
+                height: 24px;
+                border-radius: var(--nova-radius-full);
+                border: 1.5px solid var(--nova-border);
+                object-fit: cover;
+            }
+        }
+
+        // Color bar on left edge
+        &.oe_kanban_color_border,
+        &[class*="oe_kanban_color_"] {
+            border-left-width: 3px;
+        }
+    }
+
+    // ─── Quick Create ──────────────────────────────────────────────────
+    .o_kanban_quick_create {
+        background: var(--nova-surface);
+        border: 1px solid var(--nova-accent);
+        border-radius: var(--nova-radius-md);
+        box-shadow: 0 0 0 3px var(--nova-accent-light);
+        padding: var(--nova-space-3);
+
+        input {
+            border-radius: var(--nova-radius);
+            border: 1px solid var(--nova-border);
+            padding: var(--nova-space-2) var(--nova-space-3);
+            font-size: $font-size-sm;
+        }
+    }
+
+    // ─── Ghost card (drag placeholder / empty spacer) ──────────────────
+    .o_kanban_record.o_kanban_ghost {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        visibility: hidden;
+        height: 0;
+        min-height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    // ─── Ungrouped Kanban (grid mode) ──────────────────────────────────
+    &.o_kanban_ungrouped {
+        .o_kanban_record {
+            border-radius: var(--nova-radius-md);
+        }
+    }
+}
+
+// ─── Kanban drag state ─────────────────────────────────────────────────────
+.o_kanban_record.ui-sortable-helper,
+.o_kanban_record.o_dragged {
+    transform: rotate(2deg) scale(1.02);
+    box-shadow: var(--nova-shadow-lg) !important;
+    opacity: 0.9;
+    z-index: 100;
+}

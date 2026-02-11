@@ -1,0 +1,291 @@
+///============================================================================
+/// Theme Nova — App Launcher
+/// Clean, professional full-screen app grid
+///============================================================================
+
+// ─── Full-screen launcher ─────────────────────────────────────────────────
+.nova-app-launcher-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1050;
+    background: var(--nova-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding-top: calc(var(--nova-navbar-height, 46px) + var(--nova-space-8));
+    padding-bottom: var(--nova-space-16);
+
+    // Fade in
+    opacity: 0;
+    animation: novaLauncherIn 0.25s ease forwards;
+}
+
+@keyframes novaLauncherIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+// ─── Launcher content wrapper ─────────────────────────────────────────────
+.nova-app-launcher {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--nova-space-8);
+    position: relative;
+}
+
+// ─── Close button ─────────────────────────────────────────────────────────
+.nova-launcher-close {
+    position: fixed;
+    top: calc(var(--nova-navbar-height, 48px) + var(--nova-space-4));
+    left: var(--nova-space-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--nova-radius-full);
+    border: 1px solid var(--nova-border);
+    background: var(--nova-surface);
+    color: var(--nova-text-secondary);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast),
+                color var(--nova-transition-fast),
+                border-color var(--nova-transition-fast);
+    font-size: 18px;
+    box-shadow: var(--nova-shadow-sm);
+    z-index: 10;
+    line-height: 1;
+    padding: 0;
+
+    .fa {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    &:hover {
+        background: var(--nova-danger-light);
+        color: var(--nova-danger);
+        border-color: var(--nova-danger);
+    }
+}
+
+// ─── NavBar apps button ───────────────────────────────────────────────────
+.nova-apps-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0 var(--nova-space-3, 12px);
+    cursor: pointer;
+    font-size: 1.35rem;
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+    height: 100%;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &:focus {
+        outline: none;
+        opacity: 1;
+    }
+}
+
+// ─── Search bar ───────────────────────────────────────────────────────────
+.nova-launcher-search {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto var(--nova-space-12);
+    padding: 0 var(--nova-space-6);
+    position: relative;
+
+    .nova-launcher-search__icon {
+        position: absolute;
+        left: calc(var(--nova-space-6) + 14px);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--nova-text-tertiary);
+        font-size: 15px;
+        pointer-events: none;
+    }
+
+    .nova-launcher-search__input {
+        width: 100%;
+        height: 48px;
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-xl);
+        background: var(--nova-surface);
+        padding: 0 var(--nova-space-5) 0 44px;
+        font-size: 1rem;
+        color: var(--nova-text);
+        transition: border-color var(--nova-transition-fast),
+                    box-shadow var(--nova-transition-fast);
+        box-shadow: var(--nova-shadow-xs);
+
+        &::placeholder {
+            color: var(--nova-text-tertiary);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--nova-accent);
+            box-shadow: 0 0 0 3px var(--nova-accent-light), var(--nova-shadow-sm);
+        }
+    }
+}
+
+// ─── App Grid ─────────────────────────────────────────────────────────────
+.nova-launcher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 110px);
+    gap: var(--nova-space-8);
+    justify-content: center;
+    padding: 0 var(--nova-space-6);
+    width: 100%;
+}
+
+// ─── Individual App Tile ──────────────────────────────────────────────────
+.nova-app-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-3);
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-user-select: none;
+    user-select: none;
+    padding: var(--nova-space-2);
+    border-radius: var(--nova-radius-lg);
+    transition: background var(--nova-transition-fast);
+
+    // Stagger animation
+    opacity: 0;
+    animation: novaAppTileIn 0.35s ease forwards;
+
+    @for $i from 1 through 30 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 25}ms;
+        }
+    }
+
+    &:hover {
+        text-decoration: none;
+        background: var(--nova-accent-light);
+
+        .nova-app-tile__icon {
+            transform: scale(1.06);
+            box-shadow: var(--nova-shadow-md);
+        }
+
+        .nova-app-tile__label {
+            color: var(--nova-text);
+        }
+    }
+
+    &:active {
+        .nova-app-tile__icon {
+            transform: scale(0.96);
+        }
+    }
+}
+
+@keyframes novaAppTileIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// ─── App Icon Square ──────────────────────────────────────────────────────
+.nova-app-tile__icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 22%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--nova-transition), box-shadow var(--nova-transition);
+    box-shadow: var(--nova-shadow-sm);
+    position: relative;
+    overflow: hidden;
+    background: var(--nova-surface-raised);
+
+    // Fallback icon (when image fails)
+    .fa, .oi {
+        font-size: 30px;
+        color: var(--nova-text-tertiary);
+    }
+
+    // App icon images — fill the entire tile
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+    }
+}
+
+// ─── App Label ────────────────────────────────────────────────────────────
+.nova-app-tile__label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--nova-text-secondary);
+    text-align: center;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--nova-transition-fast);
+    line-height: 1.3;
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────
+.nova-launcher-empty {
+    text-align: center;
+    padding: var(--nova-space-16) var(--nova-space-6);
+    color: var(--nova-text-tertiary);
+
+    .nova-launcher-empty__icon {
+        font-size: 48px;
+        margin-bottom: var(--nova-space-4);
+        opacity: 0.4;
+    }
+
+    .nova-launcher-empty__text {
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+}
+
+// ─── Animations disabled state ────────────────────────────────────────────
+[data-nova-animations="False"] {
+    .nova-app-launcher-overlay {
+        animation: none;
+        opacity: 1;
+    }
+    .nova-app-launcher {
+        animation: none;
+        opacity: 1;
+    }
+    .nova-app-tile {
+        animation: none;
+        opacity: 1;
+    }
+}

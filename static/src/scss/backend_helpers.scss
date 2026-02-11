@@ -1,0 +1,8 @@
+///============================================================================
+/// Theme Nova — Backend Helpers
+/// Loaded in web._assets_backend_helpers — after variables, before components
+///============================================================================
+
+// Additional Odoo-specific variable overrides that depend on helpers context
+$o-webclient-color-scheme: 'light';
+$o-list-group-header-bg: #F1F5F9;

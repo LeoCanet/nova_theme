@@ -1,0 +1,153 @@
+///============================================================================
+/// Theme Nova — List View Redesign
+///============================================================================
+
+.o_list_view {
+    background: var(--nova-bg);
+
+    // ─── Table ─────────────────────────────────────────────────────────
+    .o_list_table {
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--nova-surface);
+        border-radius: var(--nova-radius-lg);
+        overflow: hidden;
+        box-shadow: var(--nova-shadow-xs);
+        border: 1px solid var(--nova-border);
+
+        // ─── Header ────────────────────────────────────────────────────
+        thead {
+            th {
+                background: var(--nova-bg-alt);
+                border-bottom: 1px solid var(--nova-border);
+                color: var(--nova-text-secondary);
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                padding: var(--nova-space-3) var(--nova-space-4);
+                white-space: nowrap;
+
+                &:hover {
+                    background: var(--nova-border);
+                }
+
+                &.o_column_sortable {
+                    cursor: pointer;
+
+                    &.o-sort-asc::after,
+                    &.o-sort-desc::after {
+                        color: var(--nova-accent);
+                    }
+                }
+
+                // Checkbox column
+                &.o_list_record_selector {
+                    width: 40px;
+                    padding-left: var(--nova-space-4);
+                }
+            }
+        }
+
+        // ─── Body Rows ─────────────────────────────────────────────────
+        tbody {
+            tr {
+                transition: background var(--nova-transition-fast);
+
+                td {
+                    padding: var(--nova-space-3) var(--nova-space-4);
+                    border-bottom: 1px solid var(--nova-border-light);
+                    font-size: $font-size-sm;
+                    color: var(--nova-text);
+                    vertical-align: middle;
+                    max-width: 300px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                // Zebra striping
+                &:nth-child(even) {
+                    td {
+                        background: var(--nova-bg-alt);
+                    }
+                }
+
+                &:hover {
+                    td {
+                        background: var(--nova-accent-light);
+                    }
+                }
+
+                // Selected row
+                &.o_data_row_selected,
+                &.o_selected_row {
+                    td {
+                        background: var(--nova-accent-light);
+                    }
+                }
+
+                // Last row
+                &:last-child td {
+                    border-bottom: none;
+                }
+            }
+        }
+
+        // ─── Footer ───────────────────────────────────────────────────
+        tfoot {
+            td {
+                background: var(--nova-bg-alt);
+                border-top: 1px solid var(--nova-border);
+                font-weight: 600;
+                font-size: $font-size-sm;
+                color: var(--nova-text);
+                padding: var(--nova-space-3) var(--nova-space-4);
+            }
+        }
+    }
+
+    // ─── Group Header ──────────────────────────────────────────────────
+    .o_group_header {
+        td {
+            background: var(--nova-bg-alt) !important;
+            font-weight: 600;
+            color: var(--nova-text);
+            border-bottom: 1px solid var(--nova-border);
+        }
+    }
+
+    // ─── Optional columns dropdown ─────────────────────────────────────
+    .o_optional_columns_dropdown {
+        .dropdown-toggle {
+            border-radius: var(--nova-radius);
+            color: var(--nova-text-tertiary);
+
+            &:hover {
+                color: var(--nova-accent);
+                background: var(--nova-accent-light);
+            }
+        }
+    }
+}
+
+// ─── Checkbox styling ──────────────────────────────────────────────────────
+.o_list_view .custom-checkbox,
+.o_list_view .form-check {
+    .form-check-input {
+        border-radius: var(--nova-radius-sm);
+        border: 1.5px solid var(--nova-text-tertiary);
+        width: 16px;
+        height: 16px;
+        transition: all var(--nova-transition-fast);
+
+        &:checked {
+            background-color: var(--nova-accent);
+            border-color: var(--nova-accent);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 3px var(--nova-accent-light);
+        }
+    }
+}

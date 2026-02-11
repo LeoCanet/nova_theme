@@ -1,0 +1,216 @@
+///============================================================================
+/// Theme Nova — Modals & Dialogs Redesign
+///============================================================================
+
+// ─── Modal Backdrop ────────────────────────────────────────────────────────
+.modal-backdrop {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+// ─── Modal Dialog ──────────────────────────────────────────────────────────
+.modal {
+    .modal-dialog {
+        // Entrance animation
+        animation: novaModalIn 0.25s ease;
+    }
+
+    .modal-content {
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-xl);
+        box-shadow: var(--nova-shadow-xl);
+        overflow: hidden;
+        background: var(--nova-surface);
+    }
+
+    // ─── Header ────────────────────────────────────────────────────────
+    .modal-header {
+        background: var(--nova-surface);
+        border-bottom: 1px solid var(--nova-border);
+        padding: var(--nova-space-5) var(--nova-space-6);
+
+        .modal-title {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: var(--nova-text);
+        }
+
+        .btn-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--nova-radius);
+            opacity: 0.5;
+            transition: all var(--nova-transition-fast);
+            background-size: 12px;
+
+            &:hover {
+                opacity: 1;
+                background-color: var(--nova-accent-light);
+            }
+        }
+    }
+
+    // ─── Body ──────────────────────────────────────────────────────────
+    .modal-body {
+        padding: var(--nova-space-6);
+        color: var(--nova-text);
+        font-size: $font-size-sm;
+        line-height: 1.6;
+    }
+
+    // ─── Footer ────────────────────────────────────────────────────────
+    .modal-footer {
+        background: var(--nova-bg-alt);
+        border-top: 1px solid var(--nova-border);
+        padding: var(--nova-space-4) var(--nova-space-6);
+        gap: var(--nova-space-2);
+
+        .btn {
+            min-width: 80px;
+        }
+    }
+
+    // ─── Odoo-specific modals ──────────────────────────────────────────
+    &.o_technical_modal {
+        .modal-content {
+            border-radius: var(--nova-radius-lg);
+        }
+    }
+
+    // Exception / error dialogs
+    &.o_error_dialog {
+        .modal-header {
+            background: var(--nova-danger-light);
+            border-bottom-color: rgba(239, 68, 68, 0.15);
+
+            .modal-title {
+                color: var(--nova-danger);
+            }
+        }
+    }
+}
+
+@keyframes novaModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// ─── Confirmation dialogs ──────────────────────────────────────────────────
+.o_dialog {
+    .modal-content {
+        border-radius: var(--nova-radius-xl);
+    }
+}
+
+// ─── Notification / toast ──────────────────────────────────────────────────
+.o_notification_manager {
+    .o_notification {
+        border-radius: var(--nova-radius-lg);
+        box-shadow: var(--nova-shadow-lg);
+        border: 1px solid var(--nova-border);
+        background: var(--nova-surface);
+        padding: var(--nova-space-4);
+        animation: novaNotificationIn 0.3s ease;
+        overflow: hidden;
+
+        .o_notification_title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--nova-text);
+        }
+
+        .o_notification_content {
+            font-size: 0.8125rem;
+            color: var(--nova-text-secondary);
+        }
+
+        .o_notification_close {
+            color: var(--nova-text-tertiary);
+            border-radius: var(--nova-radius);
+            width: 28px;
+            height: 28px;
+
+            &:hover {
+                background: var(--nova-accent-light);
+                color: var(--nova-text);
+            }
+        }
+
+        // Type-specific styling
+        &.border-success {
+            border-left: 3px solid var(--nova-success) !important;
+        }
+        &.border-warning {
+            border-left: 3px solid var(--nova-warning) !important;
+        }
+        &.border-danger {
+            border-left: 3px solid var(--nova-danger) !important;
+        }
+        &.border-info {
+            border-left: 3px solid var(--nova-info) !important;
+        }
+    }
+}
+
+@keyframes novaNotificationIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// ─── Popover ───────────────────────────────────────────────────────────────
+.popover {
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    box-shadow: var(--nova-shadow-lg);
+    background: var(--nova-surface);
+
+    .popover-header {
+        background: var(--nova-bg-alt);
+        border-bottom: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+        font-weight: 600;
+        font-size: 0.8125rem;
+    }
+
+    .popover-body {
+        font-size: 0.8125rem;
+        color: var(--nova-text);
+    }
+}
+
+// ─── Autocomplete dropdown ─────────────────────────────────────────────────
+.o-autocomplete--dropdown-menu,
+.ui-autocomplete {
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    box-shadow: var(--nova-shadow-lg);
+    background: var(--nova-surface);
+    padding: var(--nova-space-1);
+
+    .o-autocomplete--dropdown-item,
+    .ui-menu-item {
+        border-radius: var(--nova-radius-sm);
+        padding: var(--nova-space-2) var(--nova-space-3);
+        font-size: 0.8125rem;
+        color: var(--nova-text);
+        transition: background var(--nova-transition-fast);
+
+        &:hover, &.ui-state-active {
+            background: var(--nova-accent-light);
+            color: var(--nova-accent);
+        }
+    }
+}

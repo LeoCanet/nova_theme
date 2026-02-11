@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Nova Sidebar Component -->
+    <t t-name="nova_theme.Sidebar" owl="1">
+        <div t-attf-class="nova-sidebar #{state.collapsed ? 'nova-sidebar--collapsed' : ''}">
+            <div class="nova-sidebar__nav">
+                <t t-foreach="menuItems" t-as="section" t-key="section.id">
+                    <t t-if="section.childrenTree and section.childrenTree.length">
+                        <div class="nova-sidebar__section-title" t-esc="section.name"/>
+                        <t t-foreach="section.childrenTree" t-as="item" t-key="item.id">
+                            <a class="nova-sidebar__item"
+                               t-att-class="{'active': isActive(item)}"
+                               t-on-click.prevent="() => this.onMenuClick(item)"
+                               href="#">
+                                <span class="nova-sidebar__icon">
+                                    <i t-attf-class="fa #{getMenuIcon(item)}"/>
+                                </span>
+                                <span class="nova-sidebar__label" t-esc="item.name"/>
+                            </a>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <a class="nova-sidebar__item"
+                           t-att-class="{'active': isActive(section)}"
+                           t-on-click.prevent="() => this.onMenuClick(section)"
+                           href="#">
+                            <span class="nova-sidebar__icon">
+                                <i t-attf-class="fa #{getMenuIcon(section)}"/>
+                            </span>
+                            <span class="nova-sidebar__label" t-esc="section.name"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+            <div class="nova-sidebar__footer">
+                <button class="nova-sidebar__toggle" t-on-click="toggleCollapse" title="Toggle sidebar">
+                    <i class="nova-sidebar__toggle-icon fa fa-chevron-left"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

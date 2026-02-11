@@ -1,0 +1,331 @@
+///============================================================================
+/// Theme Nova — Form View Redesign
+///============================================================================
+
+.o_form_view {
+    background: var(--nova-bg);
+
+    // ─── Sheet (main form area) ────────────────────────────────────────
+    .o_form_sheet_bg {
+        background: var(--nova-bg);
+        padding: var(--nova-space-4) var(--nova-space-6);
+
+        .o_form_sheet {
+            background: var(--nova-surface);
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius-lg);
+            box-shadow: var(--nova-shadow-xs);
+            padding: var(--nova-space-6) var(--nova-space-8);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    }
+
+    // ─── Status Bar ────────────────────────────────────────────────────
+    .o_form_statusbar {
+        background: var(--nova-bg-alt);
+        border-bottom: 1px solid var(--nova-border);
+        padding: var(--nova-space-2) var(--nova-space-4);
+        min-height: 46px;
+        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+
+        .o_statusbar_status {
+            gap: var(--nova-space-1);
+
+            .o_arrow_button {
+                background: transparent;
+                border: 1px solid var(--nova-border);
+                border-radius: var(--nova-radius-full);
+                padding: var(--nova-space-1) var(--nova-space-4);
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: var(--nova-text-secondary);
+                transition: all var(--nova-transition-fast);
+                clip-path: none;
+
+                // Remove Odoo's arrow shape
+                &::before, &::after {
+                    display: none;
+                }
+
+                &:hover {
+                    background: var(--nova-accent-light);
+                    border-color: var(--nova-accent);
+                    color: var(--nova-accent);
+                }
+
+                &.o_arrow_button_current {
+                    background: var(--nova-accent);
+                    border-color: var(--nova-accent);
+                    color: white;
+                    font-weight: 600;
+                }
+
+                + .o_arrow_button {
+                    margin-left: var(--nova-space-1);
+                }
+            }
+        }
+
+        .o_statusbar_buttons {
+            gap: var(--nova-space-2);
+        }
+    }
+
+    // ─── Stat / Smart Buttons ────────────────────────────────────────────
+    // Only override visual styles — DO NOT touch layout (display, flex, width, height)
+    .o-form-buttonbox {
+        box-shadow: inset 0 -1px 0 var(--nova-border-light);
+
+        .oe_stat_button {
+            border-left-color: var(--nova-border-light);
+            transition: background var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light);
+            }
+
+            > .o_button_icon {
+                color: var(--nova-text-tertiary);
+
+                &::before {
+                    font-size: 20px;
+                }
+            }
+
+            > .o_stat_info,
+            > span,
+            > .o_field_statinfo {
+                .o_stat_value {
+                    font-weight: 700;
+                    color: var(--nova-text);
+                    font-variant-numeric: tabular-nums;
+                }
+
+                .o_stat_text {
+                    font-size: 0.6875rem;
+                    font-weight: 500;
+                    color: var(--nova-text-tertiary);
+                    text-transform: uppercase;
+                    letter-spacing: 0.02em;
+                }
+            }
+        }
+    }
+
+    // ─── Title / Header ────────────────────────────────────────────────
+    .oe_title {
+        .o_field_widget {
+            input, textarea {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--nova-text);
+                border: none;
+                padding: var(--nova-space-1) 0;
+                background: transparent;
+
+                &:focus {
+                    box-shadow: none;
+                    border-bottom: 2px solid var(--nova-accent);
+                }
+
+                &::placeholder {
+                    color: var(--nova-text-tertiary);
+                }
+            }
+        }
+    }
+
+    // ─── Form Groups / Labels ──────────────────────────────────────────
+    .o_group {
+        margin-bottom: var(--nova-space-4);
+
+        // Group title
+        .o_horizontal_separator {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--nova-text);
+            border-bottom: 1px solid var(--nova-border-light);
+            padding-bottom: var(--nova-space-2);
+            margin-bottom: var(--nova-space-4);
+            margin-top: var(--nova-space-6);
+        }
+
+        // Labels
+        label.o_form_label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--nova-text-secondary);
+        }
+    }
+
+    // ─── Input Fields ──────────────────────────────────────────────────
+    .o_field_widget {
+        input.o_input,
+        textarea.o_input,
+        .o_input {
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius);
+            padding: var(--nova-space-2) var(--nova-space-3);
+            font-size: $font-size-sm;
+            color: var(--nova-text);
+            background: var(--nova-surface);
+            transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+
+            &:focus {
+                border-color: var(--nova-accent);
+                box-shadow: 0 0 0 3px var(--nova-accent-light);
+                outline: none;
+            }
+
+            &:read-only, &[readonly] {
+                background: var(--nova-bg-alt);
+                border-color: transparent;
+                color: var(--nova-text);
+            }
+
+            &::placeholder {
+                color: var(--nova-text-tertiary);
+            }
+        }
+
+        // Select / dropdown
+        select.o_input {
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius);
+            padding: var(--nova-space-2) var(--nova-space-3);
+            background: var(--nova-surface);
+            appearance: none;
+        }
+
+        // Many2one
+        .o_field_many2one_selection {
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius);
+            transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+
+            &:focus-within {
+                border-color: var(--nova-accent);
+                box-shadow: 0 0 0 3px var(--nova-accent-light);
+            }
+
+            input {
+                border: none;
+                box-shadow: none;
+
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+        }
+
+        // Monetary
+        .o_field_monetary {
+            input {
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+            }
+        }
+    }
+
+    // ─── Notebooks (Tabs) ──────────────────────────────────────────────
+    .o_notebook {
+        margin-top: var(--nova-space-6);
+
+        .nav-tabs {
+            border-bottom: 1px solid var(--nova-border);
+            gap: 0;
+            padding: 0;
+
+            .nav-item {
+                margin-bottom: -1px;
+            }
+
+            .nav-link {
+                border: none;
+                border-bottom: 2px solid transparent;
+                border-radius: 0;
+                padding: var(--nova-space-3) var(--nova-space-4);
+                font-size: 0.8125rem;
+                font-weight: 500;
+                color: var(--nova-text-secondary);
+                transition: all var(--nova-transition-fast);
+
+                &:hover {
+                    color: var(--nova-text);
+                    border-bottom-color: var(--nova-text-tertiary);
+                }
+
+                &.active {
+                    color: var(--nova-accent);
+                    border-bottom-color: var(--nova-accent);
+                    font-weight: 600;
+                    background: transparent;
+                }
+            }
+        }
+
+        .tab-content {
+            padding: var(--nova-space-4) 0;
+        }
+    }
+
+    // ─── Inner Groups (inside notebooks) ───────────────────────────────
+    .o_inner_group {
+        .o_td_label {
+            label {
+                font-size: 0.8125rem;
+                color: var(--nova-text-secondary);
+            }
+        }
+    }
+
+    // ─── One2many / Many2many List inside forms ────────────────────────
+    .o_field_one2many, .o_field_many2many {
+        .o_list_view {
+            .o_list_table {
+                border-radius: var(--nova-radius);
+            }
+        }
+
+        .o_field_x2many_list_row_add a {
+            color: var(--nova-accent);
+            font-size: 0.8125rem;
+            font-weight: 500;
+
+            &:hover {
+                color: var(--nova-accent-hover);
+            }
+        }
+    }
+
+    // ─── Widget fields ─────────────────────────────────────────────────
+    .o_field_boolean input[type="checkbox"] {
+        border-radius: var(--nova-radius-sm);
+        border: 1.5px solid var(--nova-text-tertiary);
+        width: 16px;
+        height: 16px;
+
+        &:checked {
+            background-color: var(--nova-accent);
+            border-color: var(--nova-accent);
+        }
+    }
+
+    // Priority stars
+    .o_priority {
+        .o_priority_star {
+            color: var(--nova-text-tertiary);
+            font-size: 18px;
+            transition: color var(--nova-transition-fast);
+
+            &:hover {
+                color: var(--nova-warning);
+            }
+
+            &.fa-star {
+                color: var(--nova-warning);
+            }
+        }
+    }
+}

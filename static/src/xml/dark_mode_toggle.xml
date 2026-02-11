@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Dark Mode Toggle Button (in systray) -->
+    <t t-name="nova_theme.DarkModeToggle" owl="1">
+        <button class="nova-dark-toggle" t-on-click="onToggle" t-att-title="state.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+            <i t-attf-class="fa #{state.isDark ? 'fa-sun-o' : 'fa-moon-o'}"/>
+        </button>
+    </t>
+
+</templates>

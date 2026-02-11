@@ -1,0 +1,413 @@
+///============================================================================
+/// Theme Nova — Chatter (Discussion Thread) Redesign
+///============================================================================
+
+.o_ChatterContainer,
+.o_Chatter {
+    background: var(--nova-bg);
+    border-top: 1px solid var(--nova-border);
+    margin-top: var(--nova-space-4);
+
+    // ─── Chatter header (Log note / Send message buttons) ──────────
+    .o_Chatter_topbar {
+        padding: var(--nova-space-3) var(--nova-space-4);
+        gap: var(--nova-space-2);
+        border-bottom: 1px solid var(--nova-border-light);
+
+        .o_ChatterTopbar_button {
+            border-radius: var(--nova-radius);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            padding: var(--nova-space-1) var(--nova-space-3);
+            color: var(--nova-text-secondary);
+            border: 1px solid var(--nova-border);
+            background: var(--nova-surface);
+            transition: all var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light);
+                border-color: var(--nova-accent);
+                color: var(--nova-accent);
+            }
+
+            &.o-active {
+                background: var(--nova-accent);
+                border-color: var(--nova-accent);
+                color: white;
+            }
+
+            .fa {
+                margin-right: var(--nova-space-1);
+                font-size: 13px;
+            }
+        }
+    }
+
+    // ─── Activity section ──────────────────────────────────────────────
+    .o_Activity {
+        .o_Activity_sidebar {
+            padding: var(--nova-space-3);
+        }
+
+        .o_Activity_info {
+            font-size: 0.8125rem;
+        }
+
+        .o_Activity_note {
+            font-size: 0.8125rem;
+            color: var(--nova-text-secondary);
+        }
+
+        // Activity action buttons (Mark Done, Edit, Cancel)
+        // Odoo uses .btn.btn-link.btn-primary — we override everything
+        .o_Activity_tools {
+            gap: var(--nova-space-2);
+            margin-top: var(--nova-space-2);
+
+            .o_Activity_toolButton.btn {
+                font-size: 0.75rem;
+                font-weight: 500;
+                padding: var(--nova-space-1) var(--nova-space-2) !important;
+                border-radius: var(--nova-radius);
+                text-decoration: none !important;
+                transition: all var(--nova-transition-fast);
+                box-shadow: none !important;
+
+                .fa {
+                    font-size: 11px;
+                    margin-right: 3px;
+                }
+            }
+
+            .o_Activity_markDoneButton.btn {
+                color: var(--nova-success) !important;
+                background: var(--nova-success-light) !important;
+                border: 1px solid transparent !important;
+
+                &:hover, &:focus, &:active {
+                    background: var(--nova-success) !important;
+                    color: white !important;
+                }
+            }
+
+            .o_Activity_editButton.btn {
+                color: var(--nova-accent) !important;
+                background: var(--nova-accent-light) !important;
+                border: 1px solid transparent !important;
+
+                &:hover, &:focus, &:active {
+                    background: var(--nova-accent) !important;
+                    color: white !important;
+                }
+            }
+
+            .o_Activity_cancelButton.btn {
+                color: var(--nova-text-tertiary) !important;
+                background: transparent !important;
+                border: 1px solid var(--nova-border) !important;
+
+                &:hover, &:focus, &:active {
+                    background: var(--nova-danger-light) !important;
+                    color: var(--nova-danger) !important;
+                    border-color: transparent !important;
+                }
+            }
+
+            .o_Activity_uploadButton.btn {
+                color: var(--nova-info) !important;
+                background: var(--nova-info-light) !important;
+                border: 1px solid transparent !important;
+
+                &:hover, &:focus, &:active {
+                    background: var(--nova-info) !important;
+                    color: white !important;
+                }
+            }
+        }
+    }
+
+    // ─── Activity box (Planned activities header) ────────────────────
+    .o_ActivityBox {
+        .o_ActivityBox_title {
+            color: var(--nova-text-secondary);
+            font-size: 0.8125rem;
+        }
+
+        .o_ActivityBox_titleLine {
+            border-top-color: var(--nova-border-light) !important;
+            border-top-style: dashed;
+        }
+
+        .o_ActivityBox_titleBadge {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            padding: 0.15em 0.5em;
+            border-radius: var(--nova-radius-full);
+        }
+    }
+
+    // ─── Follow button ───────────────────────────────────────────────
+    .o_FollowButton {
+        .o_FollowButton_follow {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--nova-text-secondary) !important;
+            text-decoration: none !important;
+            padding: var(--nova-space-1) var(--nova-space-3) !important;
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius);
+            background: var(--nova-surface);
+            transition: all var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light);
+                border-color: var(--nova-accent);
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        .o_FollowButton_unfollow {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            text-decoration: none !important;
+            padding: var(--nova-space-1) var(--nova-space-3) !important;
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius);
+            background: var(--nova-surface);
+            transition: all var(--nova-transition-fast);
+
+            &.o-following {
+                color: var(--nova-success) !important;
+                border-color: var(--nova-success);
+                background: var(--nova-success-light);
+            }
+
+            &.o-unfollow {
+                color: var(--nova-danger) !important;
+                border-color: var(--nova-danger);
+                background: var(--nova-danger-light);
+            }
+        }
+    }
+
+    // ─── Follower list menu ──────────────────────────────────────────
+    .o_FollowerListMenu {
+        .o_FollowerListMenu_buttonFollowers {
+            border: 1px solid var(--nova-border) !important;
+            background: var(--nova-surface) !important;
+            color: var(--nova-text-secondary) !important;
+            font-size: 0.8125rem;
+            border-radius: var(--nova-radius);
+            transition: all var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                border-color: var(--nova-accent) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        .o_Follower {
+            padding: var(--nova-space-2) var(--nova-space-3);
+            border-radius: var(--nova-radius);
+
+            &:hover {
+                background: var(--nova-accent-light);
+            }
+
+            img {
+                border-radius: var(--nova-radius-full);
+                width: 28px;
+                height: 28px;
+            }
+        }
+    }
+
+    // ─── Attachment count button ─────────────────────────────────────
+    .o_ChatterTopbar_buttonToggleAttachments,
+    .o_ChatterTopbar_buttonAddAttachments {
+        border: 1px solid var(--nova-border) !important;
+        background: var(--nova-surface) !important;
+        color: var(--nova-text-secondary) !important;
+
+        &:hover {
+            background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
+}
+
+// ─── Messages ──────────────────────────────────────────────────────────────
+.o_Message {
+    padding: var(--nova-space-4) var(--nova-space-4);
+    border-bottom: 1px solid var(--nova-border-light);
+    transition: background var(--nova-transition-fast);
+
+    &:hover {
+        background: var(--nova-accent-light);
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    // ─── Avatar ────────────────────────────────────────────────────────
+    .o_Message_authorAvatar {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--nova-radius-full);
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid var(--nova-border);
+    }
+
+    // ─── Header (author + timestamp) ───────────────────────────────────
+    .o_Message_header {
+        .o_Message_authorName {
+            font-weight: 600;
+            font-size: 0.8125rem;
+            color: var(--nova-text);
+        }
+
+        .o_Message_date {
+            font-size: 0.6875rem;
+            color: var(--nova-text-tertiary);
+            font-weight: 400;
+        }
+    }
+
+    // ─── Content ───────────────────────────────────────────────────────
+    .o_Message_content {
+        font-size: 0.8125rem;
+        color: var(--nova-text);
+        line-height: 1.6;
+        margin-top: var(--nova-space-1);
+
+        // Quoted text
+        blockquote {
+            border-left: 3px solid var(--nova-accent);
+            padding-left: var(--nova-space-3);
+            margin: var(--nova-space-2) 0;
+            color: var(--nova-text-secondary);
+            font-style: italic;
+        }
+
+        // Links in messages
+        a {
+            color: var(--nova-accent);
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // ─── Actions (react, reply, star) ──────────────────────────────────
+    .o_Message_actionList {
+        opacity: 0;
+        transition: opacity var(--nova-transition-fast);
+
+        .o_Message_actionButton {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--nova-radius);
+            color: var(--nova-text-tertiary);
+            transition: all var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light);
+                color: var(--nova-accent);
+            }
+        }
+    }
+
+    &:hover .o_Message_actionList {
+        opacity: 1;
+    }
+
+    // ─── Tracking values (field changes) ───────────────────────────────
+    .o_Message_trackingValues {
+        .o_Message_trackingValue {
+            font-size: 0.75rem;
+            color: var(--nova-text-secondary);
+            padding: var(--nova-space-1) 0;
+
+            .o_Message_trackingValueOld {
+                text-decoration: line-through;
+                color: var(--nova-text-tertiary);
+            }
+
+            .o_Message_trackingValueNew {
+                font-weight: 500;
+                color: var(--nova-accent);
+            }
+        }
+    }
+
+    // ─── Note vs. regular messages ─────────────────────────────────────
+    &.o_Message_note {
+        background: var(--nova-warning-light);
+        border-left: 3px solid var(--nova-warning);
+        margin: var(--nova-space-2) var(--nova-space-4);
+        border-radius: var(--nova-radius);
+        border-bottom: none;
+    }
+}
+
+// ─── Composer (message input area) ─────────────────────────────────────────
+.o_Composer {
+    padding: var(--nova-space-4);
+    border-top: 1px solid var(--nova-border);
+    background: var(--nova-surface);
+
+    .o_Composer_input {
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-lg);
+        padding: var(--nova-space-3) var(--nova-space-4);
+        font-size: 0.8125rem;
+        min-height: 80px;
+        resize: vertical;
+        transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+
+        &:focus {
+            border-color: var(--nova-accent);
+            box-shadow: 0 0 0 3px var(--nova-accent-light);
+            outline: none;
+        }
+    }
+
+    .o_Composer_actionButtons {
+        padding-top: var(--nova-space-2);
+        gap: var(--nova-space-2);
+    }
+
+    // Attachment area
+    .o_Composer_attachments {
+        padding: var(--nova-space-2) 0;
+        gap: var(--nova-space-2);
+    }
+}
+
+// ─── Attachment cards ──────────────────────────────────────────────────────
+.o_Attachment {
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius);
+    padding: var(--nova-space-2) var(--nova-space-3);
+    background: var(--nova-bg-alt);
+    font-size: 0.75rem;
+    transition: all var(--nova-transition-fast);
+
+    &:hover {
+        background: var(--nova-accent-light);
+        border-color: var(--nova-accent);
+    }
+
+    .o_Attachment_name {
+        color: var(--nova-text);
+        font-weight: 500;
+    }
+
+    .o_Attachment_size {
+        color: var(--nova-text-tertiary);
+    }
+}

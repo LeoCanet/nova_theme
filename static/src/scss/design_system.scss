@@ -1,0 +1,354 @@
+///============================================================================
+/// Theme Nova — Design System & Global Overrides
+/// CSS custom properties + global element restyling
+///============================================================================
+
+// ─── CSS Custom Properties (Light Mode defaults) ───────────────────────────
+:root {
+    // Surfaces
+    --nova-bg: #F8FAFC;
+    --nova-bg-alt: #F1F5F9;
+    --nova-surface: #FFFFFF;
+    --nova-surface-raised: #FFFFFF;
+    --nova-surface-overlay: #FFFFFF;
+
+    // Text
+    --nova-text: #1E293B;
+    --nova-text-secondary: #64748B;
+    --nova-text-tertiary: #94A3B8;
+    --nova-text-inverse: #FFFFFF;
+
+    // Borders
+    --nova-border: #E2E8F0;
+    --nova-border-light: #F1F5F9;
+    --nova-border-focus: #4F46E5;
+
+    // Accent (Indigo default — overridden via data-nova-accent)
+    --nova-accent: #4F46E5;
+    --nova-accent-hover: #4338CA;
+    --nova-accent-light: rgba(79, 70, 229, 0.08);
+    --nova-accent-medium: rgba(79, 70, 229, 0.15);
+
+    // Semantic
+    --nova-success: #10B981;
+    --nova-success-light: rgba(16, 185, 129, 0.1);
+    --nova-warning: #F59E0B;
+    --nova-warning-light: rgba(245, 158, 11, 0.1);
+    --nova-danger: #EF4444;
+    --nova-danger-light: rgba(239, 68, 68, 0.1);
+    --nova-info: #06B6D4;
+    --nova-info-light: rgba(6, 182, 212, 0.1);
+
+    // Shadows
+    --nova-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --nova-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --nova-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --nova-shadow-md: 0 8px 16px -4px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --nova-shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
+    --nova-shadow-xl: 0 24px 48px -12px rgba(0, 0, 0, 0.18);
+
+    // Radius
+    --nova-radius-sm: 6px;
+    --nova-radius: 8px;
+    --nova-radius-md: 10px;
+    --nova-radius-lg: 12px;
+    --nova-radius-xl: 16px;
+    --nova-radius-2xl: 20px;
+    --nova-radius-full: 9999px;
+
+    // Spacing scale
+    --nova-space-1: 4px;
+    --nova-space-2: 8px;
+    --nova-space-3: 12px;
+    --nova-space-4: 16px;
+    --nova-space-5: 20px;
+    --nova-space-6: 24px;
+    --nova-space-8: 32px;
+    --nova-space-10: 40px;
+    --nova-space-12: 48px;
+    --nova-space-16: 64px;
+
+    // Transitions
+    --nova-transition-fast: 150ms ease;
+    --nova-transition: 200ms ease;
+    --nova-transition-slow: 300ms ease;
+
+    // Navbar
+    --nova-navbar-height: 48px;
+
+    // Sidebar
+    --nova-sidebar-width: 240px;
+    --nova-sidebar-collapsed-width: 56px;
+}
+
+// ─── Accent Color Variants ─────────────────────────────────────────────────
+[data-nova-accent="blue"] {
+    --nova-accent: #2563EB;
+    --nova-accent-hover: #1D4ED8;
+    --nova-accent-light: rgba(37, 99, 235, 0.08);
+    --nova-accent-medium: rgba(37, 99, 235, 0.15);
+}
+[data-nova-accent="emerald"] {
+    --nova-accent: #059669;
+    --nova-accent-hover: #047857;
+    --nova-accent-light: rgba(5, 150, 105, 0.08);
+    --nova-accent-medium: rgba(5, 150, 105, 0.15);
+}
+[data-nova-accent="rose"] {
+    --nova-accent: #E11D48;
+    --nova-accent-hover: #BE123C;
+    --nova-accent-light: rgba(225, 29, 72, 0.08);
+    --nova-accent-medium: rgba(225, 29, 72, 0.15);
+}
+[data-nova-accent="amber"] {
+    --nova-accent: #D97706;
+    --nova-accent-hover: #B45309;
+    --nova-accent-light: rgba(217, 119, 6, 0.08);
+    --nova-accent-medium: rgba(217, 119, 6, 0.15);
+}
+[data-nova-accent="violet"] {
+    --nova-accent: #7C3AED;
+    --nova-accent-hover: #6D28D9;
+    --nova-accent-light: rgba(124, 58, 237, 0.08);
+    --nova-accent-medium: rgba(124, 58, 237, 0.15);
+}
+
+// ─── Global Reset & Base Styles ────────────────────────────────────────────
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern';
+    color: var(--nova-text);
+    background-color: var(--nova-bg);
+}
+
+// ─── Scrollbar styling ─────────────────────────────────────────────────────
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--nova-text-tertiary);
+    border-radius: var(--nova-radius-full);
+    &:hover {
+        background: var(--nova-text-secondary);
+    }
+}
+
+// ─── Selection ─────────────────────────────────────────────────────────────
+::selection {
+    background: var(--nova-accent-medium);
+    color: var(--nova-text);
+}
+
+// ─── Focus states ──────────────────────────────────────────────────────────
+*:focus-visible {
+    outline: 2px solid var(--nova-accent);
+    outline-offset: 2px;
+}
+
+// ─── Links ─────────────────────────────────────────────────────────────────
+a {
+    color: var(--nova-accent);
+    text-decoration: none;
+    transition: color var(--nova-transition-fast);
+
+    &:hover {
+        color: var(--nova-accent-hover);
+    }
+}
+
+// ─── Odoo Webclient overrides ──────────────────────────────────────────────
+.o_web_client {
+    background-color: var(--nova-bg) !important;
+}
+
+.o_action_manager {
+    background-color: var(--nova-bg) !important;
+}
+
+.o_content {
+    background-color: var(--nova-bg) !important;
+}
+
+// ─── Control panel ─────────────────────────────────────────────────────────
+.o_control_panel {
+    background-color: var(--nova-surface) !important;
+    border-bottom: 1px solid var(--nova-border) !important;
+    padding: var(--nova-space-3) var(--nova-space-6);
+    box-shadow: var(--nova-shadow-xs);
+
+    .o_control_panel_main {
+        gap: var(--nova-space-3);
+    }
+
+    .breadcrumb {
+        margin-bottom: 0;
+        font-size: 0.9375rem;
+
+        .breadcrumb-item {
+            font-weight: 500;
+
+            &.active {
+                color: var(--nova-text);
+                font-weight: 600;
+            }
+
+            a {
+                color: var(--nova-text-secondary);
+                &:hover {
+                    color: var(--nova-accent);
+                }
+            }
+
+            + .breadcrumb-item::before {
+                content: "›";
+                color: var(--nova-text-tertiary);
+                font-size: 1.1em;
+            }
+        }
+    }
+}
+
+// ─── Search Panel ──────────────────────────────────────────────────────────
+.o_searchview {
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius);
+    background: var(--nova-surface);
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+    max-width: 400px;
+
+    &:focus-within {
+        border-color: var(--nova-accent);
+        box-shadow: 0 0 0 3px var(--nova-accent-light);
+    }
+
+    .o_searchview_input {
+        font-size: $font-size-sm;
+        color: var(--nova-text);
+
+        &::placeholder {
+            color: var(--nova-text-tertiary);
+        }
+    }
+
+    // Search icon (loupe) — realign within our border/radius
+    .o_searchview_icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 32px;
+        color: var(--nova-text-tertiary);
+        cursor: pointer;
+
+        &:hover {
+            color: var(--nova-accent);
+        }
+    }
+
+    // ─── Active Search Facets (filter pills) ────────────────────────
+    // Only override colors — DO NOT change layout/padding/positioning
+    .o_searchview_facet {
+        --SearchBar-facet-background: var(--nova-accent);
+        --SearchBar-facet-color: white;
+        border-radius: var(--nova-radius-sm);
+        font-size: 0.75rem;
+
+        .o_searchview_facet_label {
+            border-radius: var(--nova-radius-sm) 0 0 var(--nova-radius-sm);
+            font-weight: 500;
+        }
+
+        .o_facet_values {
+            border-radius: 0 var(--nova-radius-sm) var(--nova-radius-sm) 0;
+            background: var(--nova-accent-light);
+            color: var(--nova-accent);
+            font-weight: 500;
+        }
+
+        .o_facet_remove {
+            color: var(--nova-accent);
+
+            &:hover {
+                color: var(--nova-danger);
+            }
+        }
+    }
+}
+
+// ─── Pager ─────────────────────────────────────────────────────────────────
+.o_pager {
+    .o_pager_counter {
+        font-size: $font-size-sm;
+        color: var(--nova-text-secondary);
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+// ─── Badge overrides ───────────────────────────────────────────────────────
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.2em 0.6em;
+    border-radius: var(--nova-radius-sm);
+}
+
+// ─── Settings Page ────────────────────────────────────────────────────────
+.o_base_settings {
+    // Override the dark sidebar tabs from Odoo defaults
+    --settings__tab-bg: var(--nova-surface);
+    --settings__tab-bg--active: var(--nova-accent-light);
+    --settings__tab-color: var(--nova-text-secondary);
+    --settings__title-bg: var(--nova-bg-alt);
+
+    .o_setting_container .settings_tab {
+        background: var(--nova-surface) !important;
+        border-right: 1px solid var(--nova-border);
+
+        .tab {
+            color: var(--nova-text-secondary);
+            font-size: 0.8125rem;
+            font-weight: 500;
+
+            &:hover {
+                color: var(--nova-text);
+                background: var(--nova-accent-light);
+            }
+        }
+
+        .selected {
+            background-color: var(--nova-accent-light) !important;
+            box-shadow: inset 2px 0 0 var(--nova-accent);
+            color: var(--nova-accent) !important;
+        }
+    }
+
+    .app_settings_block h2 {
+        background-color: var(--nova-bg-alt);
+        color: var(--nova-text);
+        font-weight: 600;
+    }
+
+    .o_setting_right_pane {
+        border-left-color: var(--nova-border-light);
+    }
+}
+
+// ─── Tooltip ───────────────────────────────────────────────────────────────
+.tooltip {
+    .tooltip-inner {
+        background-color: var(--nova-text);
+        border-radius: var(--nova-radius-sm);
+        font-size: 0.8125rem;
+        padding: 0.375rem 0.625rem;
+        box-shadow: var(--nova-shadow-md);
+    }
+}

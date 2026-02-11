@@ -1,0 +1,246 @@
+///============================================================================
+/// Theme Nova — Buttons Redesign
+///============================================================================
+
+// ─── Base Button Reset ─────────────────────────────────────────────────────
+.btn {
+    border-radius: var(--nova-radius);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: var(--nova-space-2) var(--nova-space-4);
+    transition: all var(--nova-transition-fast);
+    border: 1px solid transparent;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    position: relative;
+
+    &:focus-visible {
+        outline: 2px solid var(--nova-accent);
+        outline-offset: 2px;
+    }
+
+    // Small buttons
+    &.btn-sm {
+        font-size: 0.75rem;
+        padding: var(--nova-space-1) var(--nova-space-3);
+        border-radius: var(--nova-radius-sm);
+    }
+
+    // Large buttons
+    &.btn-lg {
+        font-size: 0.9375rem;
+        padding: var(--nova-space-3) var(--nova-space-6);
+        border-radius: var(--nova-radius);
+    }
+}
+
+// ─── Primary Button ────────────────────────────────────────────────────────
+.btn-primary {
+    background: var(--nova-accent);
+    border-color: var(--nova-accent);
+    color: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    &:hover, &:focus {
+        background: var(--nova-accent-hover);
+        border-color: var(--nova-accent-hover);
+        color: white;
+        box-shadow: var(--nova-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &:disabled, &.disabled {
+        opacity: 0.5;
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+// ─── Secondary Button ──────────────────────────────────────────────────────
+.btn-secondary {
+    background: var(--nova-surface);
+    border-color: var(--nova-border);
+    color: var(--nova-text);
+    box-shadow: var(--nova-shadow-xs);
+
+    &:hover, &:focus {
+        background: var(--nova-bg-alt);
+        border-color: var(--nova-border);
+        color: var(--nova-text);
+        box-shadow: var(--nova-shadow-sm);
+    }
+
+    &:active {
+        background: var(--nova-border);
+    }
+}
+
+// ─── Outline / Ghost Buttons ───────────────────────────────────────────────
+.btn-outline-primary {
+    color: var(--nova-accent);
+    border-color: var(--nova-accent);
+    background: transparent;
+
+    &:hover, &:focus {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+        border-color: var(--nova-accent);
+    }
+}
+
+.btn-outline-secondary {
+    color: var(--nova-text-secondary);
+    border-color: var(--nova-border);
+    background: transparent;
+
+    &:hover, &:focus {
+        background: var(--nova-bg-alt);
+        color: var(--nova-text);
+    }
+}
+
+// ─── Link Button (ghost) ──────────────────────────────────────────────────
+.btn-link {
+    color: var(--nova-accent);
+    border: none;
+    padding: var(--nova-space-1) var(--nova-space-2);
+    background: transparent;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--nova-accent-hover);
+        background: var(--nova-accent-light);
+        border-radius: var(--nova-radius);
+    }
+}
+
+// ─── Danger Button ─────────────────────────────────────────────────────────
+.btn-danger {
+    background: var(--nova-danger);
+    border-color: var(--nova-danger);
+    color: white;
+
+    &:hover, &:focus {
+        background: #DC2626;
+        border-color: #DC2626;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: var(--nova-shadow-sm);
+    }
+}
+
+.btn-outline-danger {
+    color: var(--nova-danger);
+    border-color: var(--nova-danger);
+    background: transparent;
+
+    &:hover, &:focus {
+        background: var(--nova-danger-light);
+        color: var(--nova-danger);
+    }
+}
+
+// ─── Success Button ────────────────────────────────────────────────────────
+.btn-success {
+    background: var(--nova-success);
+    border-color: var(--nova-success);
+    color: white;
+
+    &:hover, &:focus {
+        background: #059669;
+        border-color: #059669;
+        color: white;
+    }
+}
+
+// ─── Warning Button ────────────────────────────────────────────────────────
+.btn-warning {
+    background: var(--nova-warning);
+    border-color: var(--nova-warning);
+    color: white;
+
+    &:hover, &:focus {
+        background: #D97706;
+        border-color: #D97706;
+        color: white;
+    }
+}
+
+// ─── Info Button ───────────────────────────────────────────────────────────
+.btn-info {
+    background: var(--nova-info);
+    border-color: var(--nova-info);
+    color: white;
+
+    &:hover, &:focus {
+        background: #0891B2;
+        border-color: #0891B2;
+        color: white;
+    }
+}
+
+// ─── Light/Dark utility buttons ────────────────────────────────────────────
+.btn-light {
+    background: var(--nova-bg-alt);
+    border-color: var(--nova-border);
+    color: var(--nova-text);
+
+    &:hover {
+        background: var(--nova-border);
+    }
+}
+
+// ─── Icon-only Buttons ─────────────────────────────────────────────────────
+.btn.o_icon_button,
+.btn.btn-icon {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--nova-radius);
+    color: var(--nova-text-secondary);
+    background: transparent;
+    border: none;
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+}
+
+// ─── Button Groups ─────────────────────────────────────────────────────────
+.btn-group {
+    .btn {
+        border-radius: 0;
+
+        &:first-child {
+            border-radius: var(--nova-radius) 0 0 var(--nova-radius);
+        }
+
+        &:last-child {
+            border-radius: 0 var(--nova-radius) var(--nova-radius) 0;
+        }
+
+        &:only-child {
+            border-radius: var(--nova-radius);
+        }
+    }
+}
+
+// ─── Odoo-specific button overrides ────────────────────────────────────────
+.o_form_view .o_form_statusbar .btn {
+    border-radius: var(--nova-radius);
+    font-size: 0.8125rem;
+    padding: var(--nova-space-1) var(--nova-space-4);
+}
+
+.o_cp_buttons .btn {
+    border-radius: var(--nova-radius);
+}

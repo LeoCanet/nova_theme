@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Replace Odoo's AppsMenu dropdown with a simple button that triggers the Nova launcher -->
+    <t t-name="nova_theme.NavBar" t-inherit="web.NavBar" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="replace">
+            <button class="nova-apps-button" t-on-click.stop="onNovaAppsClick" title="Applications">
+                <i class="oi oi-apps"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

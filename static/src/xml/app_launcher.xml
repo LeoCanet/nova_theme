@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Standalone Nova App Launcher (rendered via main_components registry) -->
+    <t t-name="nova_theme.AppLauncher" owl="1">
+        <div t-if="state.isOpen" class="nova-app-launcher-overlay" t-on-click="onOverlayClick">
+            <div class="nova-app-launcher" t-on-click.stop="">
+                <!-- Close button -->
+                <button class="nova-launcher-close" t-on-click="close" title="Fermer">
+                    <i class="fa fa-times"/>
+                </button>
+
+                <!-- Search bar -->
+                <div class="nova-launcher-search">
+                    <i class="nova-launcher-search__icon fa fa-search"/>
+                    <input
+                        class="nova-launcher-search__input"
+                        type="text"
+                        placeholder="Rechercher une application..."
+                        t-on-input="onSearch"
+                        t-on-keydown="onSearchKeydown"
+                        t-ref="novaSearchInput"
+                    />
+                </div>
+
+                <!-- App Grid -->
+                <div class="nova-launcher-grid">
+                    <t t-foreach="filteredApps" t-as="app" t-key="app.id">
+                        <a class="nova-app-tile"
+                           t-on-click.prevent="() => this.openApp(app)"
+                           href="#"
+                           t-att-title="app.name">
+                            <div class="nova-app-tile__icon">
+                                <img t-att-src="getAppIconSrc(app)"
+                                     alt=""
+                                     loading="lazy"/>
+                            </div>
+                            <span class="nova-app-tile__label" t-esc="app.name"/>
+                        </a>
+                    </t>
+                </div>
+
+                <!-- Empty State -->
+                <t t-if="filteredApps.length === 0">
+                    <div class="nova-launcher-empty">
+                        <div class="nova-launcher-empty__icon">
+                            <i class="fa fa-search"/>
+                        </div>
+                        <div class="nova-launcher-empty__text">
+                            Aucune application trouvée
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

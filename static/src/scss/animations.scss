@@ -1,0 +1,223 @@
+///============================================================================
+/// Theme Nova — Micro-interactions & Animations
+///============================================================================
+
+// ─── Keyframe Library ──────────────────────────────────────────────────────
+
+@keyframes novaFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes novaFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes novaFadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes novaSlideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes novaScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes novaPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes novaShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes novaSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+// ─── Content appearance ────────────────────────────────────────────────────
+
+// Action views fade in
+.o_action_manager > .o_action {
+    animation: novaFadeIn 0.2s ease;
+}
+
+// Form sheet slide up
+.o_form_view .o_form_sheet {
+    animation: novaFadeInUp 0.25s ease;
+}
+
+// Kanban cards stagger (handled via JS class toggling or pure CSS)
+.o_kanban_view .o_kanban_record {
+    animation: novaFadeInUp 0.3s ease both;
+
+    @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 25}ms;
+        }
+    }
+}
+
+// List rows fade in
+.o_list_view tbody tr {
+    animation: novaFadeIn 0.15s ease both;
+
+    @for $i from 1 through 30 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 15}ms;
+        }
+    }
+}
+
+// Sidebar items slide in
+.nova-sidebar__item {
+    animation: novaSlideInLeft 0.2s ease both;
+
+    @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 20}ms;
+        }
+    }
+}
+
+// ─── Skeleton Loader ───────────────────────────────────────────────────────
+.nova-skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--nova-bg-alt) 25%,
+        var(--nova-border-light) 37%,
+        var(--nova-bg-alt) 63%
+    );
+    background-size: 400% 100%;
+    animation: novaShimmer 1.4s ease infinite;
+    border-radius: var(--nova-radius);
+
+    &--text {
+        height: 14px;
+        margin-bottom: 8px;
+        width: 80%;
+    }
+
+    &--title {
+        height: 20px;
+        margin-bottom: 12px;
+        width: 60%;
+    }
+
+    &--avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--nova-radius-full);
+    }
+
+    &--card {
+        height: 120px;
+        width: 100%;
+    }
+}
+
+// ─── Loading spinner ───────────────────────────────────────────────────────
+.nova-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--nova-border);
+    border-top-color: var(--nova-accent);
+    border-radius: 50%;
+    animation: novaSpin 0.6s linear infinite;
+}
+
+// Odoo loading bar override
+.o_loading_indicator {
+    background: var(--nova-accent) !important;
+    height: 2px !important;
+    box-shadow: 0 0 8px var(--nova-accent);
+}
+
+// ─── Smooth transitions on interactive elements ────────────────────────────
+
+// Generic hover lift
+.o_kanban_record,
+.nova-app-tile__icon,
+.btn,
+.dropdown-item,
+.nav-link,
+.o_searchview,
+.nova-sidebar__item {
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+}
+
+// ─── Focus ring animation ──────────────────────────────────────────────────
+@keyframes novaFocusRing {
+    from {
+        box-shadow: 0 0 0 0px var(--nova-accent-light);
+    }
+    to {
+        box-shadow: 0 0 0 3px var(--nova-accent-light);
+    }
+}
+
+input:focus, textarea:focus, select:focus {
+    animation: novaFocusRing 0.15s ease forwards;
+}
+
+// ─── Page transition (between actions) ─────────────────────────────────────
+.o_action_manager {
+    .o_action {
+        &.o_action_fade_in {
+            animation: novaFadeIn 0.2s ease;
+        }
+    }
+}
+
+// ─── Disabled animations state ─────────────────────────────────────────────
+[data-nova-animations="False"] {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0s !important;
+    }
+}
