@@ -14,17 +14,21 @@ export class NovaAppLauncher extends Component {
         this.state = useState({
             isOpen: false,
             searchQuery: "",
+            _menuVersion: 0,
         });
 
         this._boundToggle = this._onToggle.bind(this);
+        this._boundRefreshApps = this._refreshApps.bind(this);
         this._removeHotkey = this.hotkeyService.add("h", () => this._onToggle());
 
         onMounted(() => {
             this.env.bus.addEventListener("NOVA:TOGGLE-LAUNCHER", this._boundToggle);
+            this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._boundRefreshApps);
         });
 
         onWillUnmount(() => {
             this.env.bus.removeEventListener("NOVA:TOGGLE-LAUNCHER", this._boundToggle);
+            this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._boundRefreshApps);
             if (this._removeHotkey) {
                 this._removeHotkey();
             }
@@ -69,7 +73,14 @@ export class NovaAppLauncher extends Component {
         return `/web/image?model=ir.ui.menu&id=${app.id}&field=web_icon_data`;
     }
 
+    _refreshApps() {
+        // Bump version to trigger Owl re-render so filteredApps re-evaluates
+        this.state._menuVersion++;
+    }
+
     get filteredApps() {
+        // Read _menuVersion so Owl tracks it as a reactive dependency
+        void this.state._menuVersion;
         const apps = this.menuService.getApps();
         if (!this.state.searchQuery) {
             return apps;

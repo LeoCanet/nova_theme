@@ -760,10 +760,33 @@ html.nova-dark {
         border-color: var(--nova-border) !important;
 
         .o_searchview_input {
+            background-color: transparent !important;
             color: var(--nova-text) !important;
 
             &::placeholder {
                 color: var(--nova-text-tertiary) !important;
+            }
+        }
+
+        .o_searchview_autocomplete {
+            background: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
+
+            .o_menu_item {
+                color: var(--nova-text) !important;
+
+                a {
+                    color: var(--nova-text) !important;
+                }
+
+                &:hover, &.focus {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+
+                    a {
+                        color: var(--nova-accent) !important;
+                    }
+                }
             }
         }
 
@@ -1786,10 +1809,17 @@ html.nova-dark {
         }
     }
 
+    // Override Odoo's compiled --ChatterTopbar-border variable
+    .o_FormRenderer_chatterContainer,
+    .o_form_view {
+        --ChatterTopbar-border: #{1px solid} var(--nova-border);
+    }
+
     // Chatter topbar / mail thread buttons
     .o_ChatterTopbar {
         background: var(--nova-surface) !important;
         border-bottom-color: var(--nova-border) !important;
+        border-color: var(--nova-border) !important;
 
         .btn {
             color: var(--nova-text-secondary) !important;
@@ -1800,6 +1830,14 @@ html.nova-dark {
                 color: var(--nova-accent) !important;
             }
         }
+    }
+
+    .o_ChatterTopbar_borderLeft {
+        border-left-color: var(--nova-border) !important;
+    }
+
+    .o_ChatterTopbar_tools {
+        border-bottom-color: var(--nova-border) !important;
     }
 
     // Follow button
@@ -2106,9 +2144,19 @@ html.nova-dark {
         color: var(--nova-text) !important;
     }
 
-    // O_form_uri links
+    // O_form_uri links (Odoo styles span:first-child with compiled $link-color)
     .o_form_uri, a.o_form_uri {
         color: var(--nova-accent) !important;
+
+        > span, > span:first-child {
+            color: var(--nova-accent) !important;
+        }
+
+        &:hover, &:focus {
+            > span, > span:first-child {
+                color: var(--nova-accent-hover) !important;
+            }
+        }
     }
 
     // Pager
@@ -2176,6 +2224,23 @@ html.nova-dark {
         // "Ajouter une ligne" link
         .o_field_x2many_list_row_add a {
             color: var(--nova-accent) !important;
+        }
+
+    }
+
+    // Section rows — Odoo hard-codes background-color: #DDDDDD on tr
+    // Selector matches Odoo's: table.o_section_and_note_list_view tr.o_data_row.o_is_line_section
+    table.o_section_and_note_list_view tr.o_data_row.o_is_line_section {
+        background-color: var(--nova-bg-alt) !important;
+
+        td {
+            background: var(--nova-bg-alt) !important;
+        }
+
+        &:hover,
+        &:hover td {
+            background: var(--nova-accent-light) !important;
+            background-color: var(--nova-accent-light) !important;
         }
     }
 
