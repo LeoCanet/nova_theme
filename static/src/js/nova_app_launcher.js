@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { NavBar } from "@web/webclient/navbar/navbar";
+import { getFavoriteAppIds, setFavoriteAppIds } from "./nova_storage";
 
 export class NovaAppLauncher extends Component {
     setup() {
@@ -15,20 +16,26 @@ export class NovaAppLauncher extends Component {
             isOpen: false,
             searchQuery: "",
             _menuVersion: 0,
+            favoriteAppIds: getFavoriteAppIds(),
         });
 
         this._boundToggle = this._onToggle.bind(this);
         this._boundRefreshApps = this._refreshApps.bind(this);
+        this._boundOnFavoritesChanged = () => {
+            this.state.favoriteAppIds = getFavoriteAppIds();
+        };
         this._removeHotkey = this.hotkeyService.add("h", () => this._onToggle());
 
         onMounted(() => {
             this.env.bus.addEventListener("NOVA:TOGGLE-LAUNCHER", this._boundToggle);
             this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._boundRefreshApps);
+            this.env.bus.addEventListener("NOVA:FAVORITES-CHANGED", this._boundOnFavoritesChanged);
         });
 
         onWillUnmount(() => {
             this.env.bus.removeEventListener("NOVA:TOGGLE-LAUNCHER", this._boundToggle);
             this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._boundRefreshApps);
+            this.env.bus.removeEventListener("NOVA:FAVORITES-CHANGED", this._boundOnFavoritesChanged);
             if (this._removeHotkey) {
                 this._removeHotkey();
             }
@@ -69,17 +76,14 @@ export class NovaAppLauncher extends Component {
     }
 
     getAppIconSrc(app) {
-        // Use Odoo's web/image endpoint — handles MIME type + missing icons automatically
         return `/web/image?model=ir.ui.menu&id=${app.id}&field=web_icon_data`;
     }
 
     _refreshApps() {
-        // Bump version to trigger Owl re-render so filteredApps re-evaluates
         this.state._menuVersion++;
     }
 
     get filteredApps() {
-        // Read _menuVersion so Owl tracks it as a reactive dependency
         void this.state._menuVersion;
         const apps = this.menuService.getApps();
         if (!this.state.searchQuery) {
@@ -93,6 +97,27 @@ export class NovaAppLauncher extends Component {
     openApp(app) {
         this.menuService.selectMenu(app);
         this.close();
+    }
+
+    // ── Favorites ───────────────────────────────────────────────────────
+
+    isFavorite(app) {
+        return this.state.favoriteAppIds.includes(app.id);
+    }
+
+    toggleFavorite(app, ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const ids = [...this.state.favoriteAppIds];
+        const idx = ids.indexOf(app.id);
+        if (idx >= 0) {
+            ids.splice(idx, 1);
+        } else {
+            ids.push(app.id);
+        }
+        setFavoriteAppIds(ids);
+        this.state.favoriteAppIds = ids;
+        this.env.bus.trigger("NOVA:FAVORITES-CHANGED");
     }
 }
 

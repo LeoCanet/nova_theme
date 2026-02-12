@@ -1,5 +1,5 @@
 ///============================================================================
-/// Theme Nova — Collapsible Sidebar Navigation
+/// Theme Nova — Collapsible Sidebar Navigation (Favorites + Pinned Pages)
 ///============================================================================
 
 // ─── Sidebar Container ─────────────────────────────────────────────────────
@@ -18,6 +18,10 @@
     overflow: hidden;
 
     // ─── Collapsed State ───────────────────────────────────────────────
+    // No justify-content: center — it's not animatable and causes a visual
+    // jump. Instead we transition padding-left to center the icon within
+    // the collapsed width (56px - 2×8px nav padding = 40px available,
+    // icon 20px → 10px padding-left centers it).
     &.nova-sidebar--collapsed {
         width: var(--nova-sidebar-collapsed-width);
 
@@ -32,11 +36,11 @@
             height: 0;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         .nova-sidebar__item {
-            justify-content: center;
-            padding: var(--nova-space-2);
+            padding: var(--nova-space-2) var(--nova-space-2) var(--nova-space-2) 10px;
         }
 
         .nova-sidebar__toggle-icon {
@@ -45,7 +49,30 @@
 
         .nova-sidebar__footer {
             padding: var(--nova-space-2);
-            justify-content: center;
+        }
+
+        .nova-sidebar__toggle {
+            margin: 0 auto;
+        }
+
+        .nova-sidebar__pin-remove {
+            display: none !important;
+        }
+
+        .nova-sidebar__pin-add {
+            display: none;
+        }
+
+        .nova-sidebar__section-header {
+            padding-left: 10px;
+        }
+
+        .nova-sidebar__section-divider {
+            margin: var(--nova-space-2) 10px;
+        }
+
+        .nova-sidebar__empty span {
+            display: none;
         }
     }
 
@@ -65,8 +92,95 @@
         color: var(--nova-text-tertiary);
         padding: var(--nova-space-3) var(--nova-space-3) var(--nova-space-1);
         margin: 0;
-        transition: opacity var(--nova-transition), height var(--nova-transition);
+        transition: opacity var(--nova-transition-slow),
+                    height var(--nova-transition-slow),
+                    padding var(--nova-transition-slow);
         white-space: nowrap;
+    }
+
+    // ─── Section header (title + add button) ─────────────────────────
+    .nova-sidebar__section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: var(--nova-space-2);
+        transition: padding var(--nova-transition-slow);
+    }
+
+    // ─── Section divider ─────────────────────────────────────────────
+    .nova-sidebar__section-divider {
+        height: 1px;
+        background: var(--nova-border-light);
+        margin: var(--nova-space-2) var(--nova-space-3);
+        transition: margin var(--nova-transition-slow);
+    }
+
+    // ─── Pin add button (+) ──────────────────────────────────────────
+    .nova-sidebar__pin-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border: none;
+        border-radius: var(--nova-radius);
+        background: transparent;
+        color: var(--nova-text-tertiary);
+        cursor: pointer;
+        font-size: 12px;
+        transition: all var(--nova-transition-fast);
+        flex-shrink: 0;
+
+        &:hover {
+            background: var(--nova-accent-light);
+            color: var(--nova-accent);
+        }
+    }
+
+    // ─── Pin remove button (x) ──────────────────────────────────────
+    .nova-sidebar__pin-remove {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border: none;
+        border-radius: var(--nova-radius-sm, 4px);
+        background: transparent;
+        color: var(--nova-text-tertiary);
+        cursor: pointer;
+        font-size: 10px;
+        margin-left: auto;
+        flex-shrink: 0;
+        transition: all var(--nova-transition-fast);
+
+        &:hover {
+            background: var(--nova-danger-light, rgba(239, 68, 68, 0.1));
+            color: var(--nova-danger);
+        }
+    }
+
+    .nova-sidebar__pin-item:hover .nova-sidebar__pin-remove {
+        display: flex;
+    }
+
+    // ─── App icon (native module icon) ───────────────────────────────
+    .nova-sidebar__app-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: inherit;
+        }
     }
 
     .nova-sidebar__item {
@@ -79,11 +193,12 @@
         font-size: 0.8125rem;
         font-weight: 450;
         cursor: pointer;
-        transition: all var(--nova-transition-fast);
+        transition: padding var(--nova-transition-slow),
+                    background var(--nova-transition-fast),
+                    color var(--nova-transition-fast);
         margin-bottom: 1px;
         text-decoration: none;
         white-space: nowrap;
-        gap: var(--nova-space-3);
 
         .nova-sidebar__icon {
             width: 20px;
@@ -96,7 +211,10 @@
         .nova-sidebar__label {
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: opacity var(--nova-transition), width var(--nova-transition);
+            margin-left: var(--nova-space-3);
+            transition: opacity var(--nova-transition-slow),
+                        margin-left var(--nova-transition-slow),
+                        width var(--nova-transition-slow);
         }
 
         &:hover {
@@ -133,12 +251,36 @@
         }
     }
 
-    // ─── Footer with collapse toggle ───────────────────────────────────
+    // ─── Empty state ─────────────────────────────────────────────────
+    .nova-sidebar__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--nova-space-8) var(--nova-space-3);
+        color: var(--nova-text-tertiary);
+        text-align: center;
+        gap: var(--nova-space-2);
+
+        .fa {
+            font-size: 24px;
+            opacity: 0.4;
+        }
+
+        span {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            max-width: 140px;
+        }
+    }
+
+    // ─── Footer with collapse toggle ─────────────────────────────────
     .nova-sidebar__footer {
         padding: var(--nova-space-2) var(--nova-space-3);
         border-top: 1px solid var(--nova-border-light);
         display: flex;
         align-items: center;
+        transition: padding var(--nova-transition-slow);
     }
 
     .nova-sidebar__toggle {
@@ -166,6 +308,19 @@
     }
 }
 
+// ─── Default: sidebar hidden off-screen ─────────────────────────────────────
+// Always in DOM, visibility controlled by body.nova-sidebar-open
+.nova-sidebar {
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+// ─── Sidebar visible when body has the class ────────────────────────────────
+body.nova-sidebar-open .nova-sidebar {
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
 // ─── Content offset when sidebar is visible ────────────────────────────────
 .o_action_manager {
     transition: margin-left var(--nova-transition-slow);
@@ -180,11 +335,6 @@ body.nova-sidebar-open.nova-sidebar-collapsed .o_action_manager {
 }
 
 // ─── No sidebar on home menu ───────────────────────────────────────────────
-body.nova-home-menu-visible .nova-sidebar {
-    transform: translateX(-100%);
-    pointer-events: none;
-}
-
 body.nova-home-menu-visible .o_action_manager {
     margin-left: 0 !important;
 }

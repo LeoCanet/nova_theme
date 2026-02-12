@@ -235,7 +235,7 @@
 }
 
 // ─── Odoo-specific button overrides ────────────────────────────────────────
-.o_form_view .o_form_statusbar .btn {
+.o_form_view .o_form_statusbar .btn:not(.o_arrow_button) {
     border-radius: var(--nova-radius);
     font-size: 0.8125rem;
     padding: var(--nova-space-1) var(--nova-space-4);

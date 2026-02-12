@@ -55,6 +55,7 @@
             "nova_theme/static/src/scss/dark_mode.scss",
             "nova_theme/static/src/scss/animations.scss",
             "nova_theme/static/src/scss/responsive.scss",
+            "nova_theme/static/src/js/nova_storage.js",
             "nova_theme/static/src/js/nova_app_launcher.js",
             "nova_theme/static/src/js/nova_sidebar.js",
             "nova_theme/static/src/js/nova_dark_mode.js",

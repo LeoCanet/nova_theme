@@ -1,38 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <!-- Nova Sidebar Component -->
+    <!-- Nova Sidebar Component — Favorites + Pinned Pages -->
     <t t-name="nova_theme.Sidebar" owl="1">
         <div t-attf-class="nova-sidebar #{state.collapsed ? 'nova-sidebar--collapsed' : ''}">
             <div class="nova-sidebar__nav">
-                <t t-foreach="menuItems" t-as="section" t-key="section.id">
-                    <t t-if="section.childrenTree and section.childrenTree.length">
-                        <div class="nova-sidebar__section-title" t-esc="section.name"/>
-                        <t t-foreach="section.childrenTree" t-as="item" t-key="item.id">
-                            <a class="nova-sidebar__item"
-                               t-att-class="{'active': isActive(item)}"
-                               t-on-click.prevent="() => this.onMenuClick(item)"
-                               href="#">
-                                <span class="nova-sidebar__icon">
-                                    <i t-attf-class="fa #{getMenuIcon(item)}"/>
-                                </span>
-                                <span class="nova-sidebar__label" t-esc="item.name"/>
-                            </a>
-                        </t>
-                    </t>
-                    <t t-else="">
+
+                <!-- ── Favorite Apps ─────────────────────────────── -->
+                <t t-if="state.favoriteApps.length">
+                    <div class="nova-sidebar__section-title">Favoris</div>
+                    <t t-foreach="state.favoriteApps" t-as="app" t-key="app.id">
                         <a class="nova-sidebar__item"
-                           t-att-class="{'active': isActive(section)}"
-                           t-on-click.prevent="() => this.onMenuClick(section)"
-                           href="#">
-                            <span class="nova-sidebar__icon">
-                                <i t-attf-class="fa #{getMenuIcon(section)}"/>
+                           t-att-class="{'active': isFavoriteActive(app)}"
+                           t-on-click.prevent="() => this.onFavoriteClick(app)"
+                           href="#"
+                           t-att-title="app.name">
+                            <span class="nova-sidebar__icon nova-sidebar__app-icon">
+                                <img t-att-src="getAppIconSrc(app)" alt="" loading="lazy"/>
                             </span>
-                            <span class="nova-sidebar__label" t-esc="section.name"/>
+                            <span class="nova-sidebar__label" t-esc="app.name"/>
                         </a>
                     </t>
                 </t>
+
+                <!-- ── Divider ───────────────────────────────────── -->
+                <t t-if="state.favoriteApps.length and state.pinnedPages.length">
+                    <div class="nova-sidebar__section-divider"/>
+                </t>
+
+                <!-- ── Pinned Pages ──────────────────────────────── -->
+                <div class="nova-sidebar__section-header">
+                    <span class="nova-sidebar__section-title">Pages</span>
+                    <button t-if="canPinCurrentPage and !isPageAlreadyPinned"
+                            class="nova-sidebar__pin-add"
+                            t-on-click="pinCurrentPage"
+                            title="Pin current page">
+                        <i class="fa fa-plus"/>
+                    </button>
+                </div>
+                <t t-if="state.pinnedPages.length">
+                    <t t-foreach="state.pinnedPages" t-as="pin" t-key="pin.menuId">
+                        <a class="nova-sidebar__item nova-sidebar__pin-item"
+                           t-att-class="{'active': isPinActive(pin)}"
+                           t-on-click.prevent="() => this.onPinClick(pin)"
+                           href="#"
+                           t-att-title="pin.name">
+                            <span class="nova-sidebar__icon">
+                                <i t-attf-class="fa #{getMenuIcon(pin)}"/>
+                            </span>
+                            <span class="nova-sidebar__label" t-esc="pin.name"/>
+                            <button class="nova-sidebar__pin-remove"
+                                    t-on-click.prevent.stop="() => this.removePin(pin)"
+                                    title="Unpin">
+                                <i class="fa fa-times"/>
+                            </button>
+                        </a>
+                    </t>
+                </t>
+
+                <!-- ── Empty state ───────────────────────────────── -->
+                <t t-if="!state.favoriteApps.length and !state.pinnedPages.length">
+                    <div class="nova-sidebar__empty">
+                        <i class="fa fa-star-o"/>
+                        <span>Ajoutez des favoris depuis le launcher</span>
+                    </div>
+                </t>
+
             </div>
+
+            <!-- ── Footer: collapse toggle ───────────────────── -->
             <div class="nova-sidebar__footer">
                 <button class="nova-sidebar__toggle" t-on-click="toggleCollapse" title="Toggle sidebar">
                     <i class="nova-sidebar__toggle-icon fa fa-chevron-left"/>

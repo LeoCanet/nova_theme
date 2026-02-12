@@ -29,7 +29,9 @@
                 .o_kanban_config > .dropdown-toggle,
                 .o_kanban_quick_add {
                     color: var(--nova-text-tertiary);
+                    border: none !important;
                     border-radius: var(--nova-radius);
+                    background: transparent;
                     width: 28px;
                     height: 28px;
                     display: flex;
@@ -56,6 +58,12 @@
                 }
             }
         }
+    }
+
+    // ─── Dropdown three-dots on cards ──────────────────────────────────
+    .o_dropdown_kanban .dropdown-toggle {
+        border: none !important;
+        background: transparent !important;
     }
 
     // ─── Kanban Record (Card) ──────────────────────────────────────────

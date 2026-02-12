@@ -133,29 +133,30 @@
 
         .o_notification_close {
             color: var(--nova-text-tertiary);
+            border: none !important;
             border-radius: var(--nova-radius);
             width: 28px;
             height: 28px;
 
             &:hover {
-                background: var(--nova-accent-light);
-                color: var(--nova-text);
+                background: rgba(0, 0, 0, 0.15) !important;
+                color: white;
             }
         }
 
-        // Type-specific styling
-        &.border-success {
-            border-left: 3px solid var(--nova-success) !important;
+        // Type-specific styling — solid tinted background
+        &.border-success, &.border-warning, &.border-danger, &.border-info {
+            border: none !important;
+
+            .o_notification_title { color: white !important; }
+            .o_notification_content { color: rgba(255, 255, 255, 0.85) !important; }
+            .o_notification_close { color: rgba(255, 255, 255, 0.7) !important; }
         }
-        &.border-warning {
-            border-left: 3px solid var(--nova-warning) !important;
-        }
-        &.border-danger {
-            border-left: 3px solid var(--nova-danger) !important;
-        }
-        &.border-info {
-            border-left: 3px solid var(--nova-info) !important;
-        }
+
+        &.border-success { background: #1a6944 !important; }
+        &.border-warning { background: #92600a !important; }
+        &.border-danger  { background: #9b2222 !important; }
+        &.border-info    { background: #0e7490 !important; }
     }
 }
 
@@ -204,13 +205,27 @@
     .ui-menu-item {
         border-radius: var(--nova-radius-sm);
         padding: var(--nova-space-2) var(--nova-space-3);
-        font-size: 0.8125rem;
+        font-size: 0.875rem;
         color: var(--nova-text);
-        transition: background var(--nova-transition-fast);
+        transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+        cursor: pointer;
 
-        &:hover, &.ui-state-active {
-            background: var(--nova-accent-light);
-            color: var(--nova-accent);
+        &:hover, &:focus, &.ui-state-active {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
+
+        // Strip hover from nested <a> — only the <li> hover matters
+        a, .dropdown-item {
+            background: none !important;
+            color: inherit !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+
+            &:hover, &:focus, &:active {
+                background: none !important;
+                color: inherit !important;
+            }
         }
     }
 }

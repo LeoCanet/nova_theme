@@ -125,6 +125,8 @@
         > div {
             display: flex;
             align-items: center;
+            height: 34px;
+            position: relative;
         }
 
         // All systray interactive elements
@@ -132,20 +134,32 @@
         > li > a,
         > li > button,
         .o_nav_entry {
-            display: flex;
+            // Kill Bootstrap .btn styles (MessagingMenu uses btn btn-light)
+            --bs-btn-bg: transparent;
+            --bs-btn-hover-bg: transparent;
+            --bs-btn-active-bg: transparent;
+            --bs-btn-border-color: transparent;
+            --bs-btn-hover-border-color: transparent;
+            --bs-btn-active-border-color: transparent;
+
+            display: flex !important;
             align-items: center;
             justify-content: center;
             min-width: 34px;
-            height: 34px;
+            height: 34px !important;
+            max-height: 34px !important;
             border-radius: var(--nova-radius);
             color: var(--nova-text-secondary) !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
             transition: all var(--nova-transition-fast);
             font-size: 15px;
-            padding: 0 var(--nova-space-1);
+            padding: 0 var(--nova-space-1) !important;
             position: relative;
 
             &:hover {
-                background: var(--nova-accent-light);
+                background: var(--nova-accent-light) !important;
                 color: var(--nova-accent) !important;
             }
 

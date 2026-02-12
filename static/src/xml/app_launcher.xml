@@ -30,6 +30,11 @@
                            t-on-click.prevent="() => this.openApp(app)"
                            href="#"
                            t-att-title="app.name">
+                            <button t-attf-class="nova-app-tile__star #{isFavorite(app) ? 'nova-app-tile__star--active' : ''}"
+                                    t-on-click.stop="(ev) => this.toggleFavorite(app, ev)"
+                                    title="Toggle favorite">
+                                <i t-attf-class="fa #{isFavorite(app) ? 'fa-star' : 'fa-star-o'}"/>
+                            </button>
                             <div class="nova-app-tile__icon">
                                 <img t-att-src="getAppIconSrc(app)"
                                      alt=""

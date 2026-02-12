@@ -139,11 +139,32 @@ html.nova-dark {
         .o_menu_systray {
             .dropdown-toggle,
             > li > a,
+            > li > button,
             .o_nav_entry {
                 color: var(--nova-text-secondary) !important;
+                background: transparent !important;
+                background-color: transparent !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
 
-                &:hover {
+                &:hover, &:focus {
+                    background: var(--nova-accent-light) !important;
+                    background-color: var(--nova-accent-light) !important;
                     color: var(--nova-accent) !important;
+                }
+            }
+
+            // Override .btn-light propagation on systray toggle buttons
+            .dropdown-toggle.btn-light,
+            .dropdown-toggle.btn {
+                background: transparent !important;
+                background-color: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+
+                &:hover, &:focus {
+                    background: var(--nova-accent-light) !important;
+                    background-color: var(--nova-accent-light) !important;
                 }
             }
 
@@ -408,6 +429,18 @@ html.nova-dark {
     .nova-sidebar {
         background: var(--nova-surface) !important;
         border-right-color: var(--nova-border) !important;
+
+        .nova-sidebar__section-divider {
+            background: var(--nova-border) !important;
+        }
+
+        .nova-sidebar__empty {
+            color: var(--nova-text-tertiary) !important;
+        }
+
+        .nova-sidebar__pin-remove:hover {
+            background: rgba(239, 68, 68, 0.15) !important;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -611,7 +644,8 @@ html.nova-dark {
     }
 
     // ─── Dropdowns ───────────────────────────────────────────────────
-    .dropdown-menu {
+    .dropdown-menu,
+    .o-dropdown-menu {
         background: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
         color: var(--nova-text) !important;
@@ -620,7 +654,7 @@ html.nova-dark {
             color: var(--nova-text) !important;
 
             &:hover, &:focus {
-                background: var(--nova-accent-light) !important;
+                background: none !important;
                 color: var(--nova-accent) !important;
             }
 
@@ -855,24 +889,49 @@ html.nova-dark {
             border-color: var(--nova-border) !important;
         }
 
+        // Status bar: override @extend .btn-light / .btn-secondary.
+        // @extend hover = (0,6,1). We reach (0,7,1) with .o_form_statusbar.
         .o_form_statusbar {
+            // Redefine opaque hover for dark palette (stronger mix)
+            --_arrow-hover: color-mix(in srgb, var(--nova-accent) 25%, var(--nova-bg));
+        }
+
+        .o_form_statusbar .o_statusbar_status .o_arrow_button {
             background: var(--nova-bg) !important;
-            border: none !important;
+            background-color: var(--nova-bg) !important;
+            color: var(--nova-text-secondary) !important;
+            border-top-color: var(--nova-border) !important;
+            border-bottom-color: var(--nova-border) !important;
 
-            .o_statusbar_status .o_arrow_button {
-                background: transparent !important;
-                border-color: var(--nova-border) !important;
-                color: var(--nova-text-secondary) !important;
+            &:not(:first-child)::after {
+                border-left-color: var(--nova-bg) !important;
+            }
+            &:not(:first-child)::before {
+                border-left-color: var(--nova-border) !important;
+            }
 
-                &:hover {
-                    background: var(--nova-accent-light) !important;
-                    color: var(--nova-accent) !important;
+            // Active / Current
+            &.o_arrow_button_current {
+                background: var(--nova-accent) !important;
+                background-color: var(--nova-accent) !important;
+                color: white !important;
+                border-color: var(--nova-accent) !important;
+                &::before, &::after {
+                    border-left-color: var(--nova-accent) !important;
                 }
+            }
 
-                &.o_arrow_button_current {
-                    background: var(--nova-accent) !important;
-                    border-color: var(--nova-accent) !important;
-                    color: white !important;
+            // Hover — uses the opaque --_arrow-hover variable
+            &:not(.disabled):hover {
+                background: var(--_arrow-hover) !important;
+                background-color: var(--_arrow-hover) !important;
+                color: var(--nova-accent) !important;
+                border-color: var(--_arrow-hover) !important;
+                &::before {
+                    border-left-color: var(--_arrow-hover) !important;
+                }
+                &::after {
+                    border-left-color: var(--_arrow-hover) !important;
                 }
             }
         }
@@ -921,25 +980,58 @@ html.nova-dark {
             }
         }
 
-        // Many2one fields
+        // Many2one fields — outermost container only
         .o_field_many2one_selection {
             background-color: var(--nova-bg-alt) !important;
             border-color: var(--nova-border) !important;
 
-            input {
+            // Strip all nested wrappers and inputs
+            .o_input_dropdown,
+            div.o_input, .o_input,
+            input, .o_dropdown_button {
+                border: none !important;
+                box-shadow: none !important;
                 background: transparent !important;
                 color: var(--nova-text) !important;
             }
         }
 
-        // Many2many tags
-        .o_field_many2many_tags .badge {
-            background-color: var(--nova-accent-light) !important;
-            color: var(--nova-accent) !important;
-            border-color: transparent !important;
+        // Selection fields — uniform dark bg
+        .o_field_selection select {
+            background-color: var(--nova-bg-alt) !important;
+            border-color: var(--nova-border) !important;
+            color: var(--nova-text) !important;
+        }
 
-            .o_delete {
-                color: var(--nova-accent) !important;
+        // Many2many tags — uniform dark container + tag colors
+        .o_field_many2many_tags {
+            > .o_input,
+            > div.o_input {
+                background-color: var(--nova-bg-alt) !important;
+                border-color: var(--nova-border) !important;
+
+                // Strip ALL nested borders in dark mode too
+                .o_field_many2many_selection,
+                .o_input_dropdown,
+                div.o_input, .o_input,
+                input, .o-autocomplete--input,
+                .o_dropdown_button {
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
+                    color: var(--nova-text) !important;
+                }
+            }
+
+            // Let native o_tag_color_X classes handle badge colors.
+            // Only style the delete button for readability.
+            .badge .o_delete {
+                color: inherit !important;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
 
@@ -1171,6 +1263,8 @@ html.nova-dark {
             // Dropdown menu button (three dots)
             .o_dropdown_kanban .dropdown-toggle {
                 color: var(--nova-text-secondary) !important;
+                border: none !important;
+                background: transparent !important;
             }
 
             .o_kanban_record_bottom {
@@ -1682,6 +1776,15 @@ html.nova-dark {
         color: var(--nova-text-secondary) !important;
     }
 
+    .nova-app-tile__star {
+        color: var(--nova-text-tertiary) !important;
+
+        &:hover,
+        &--active {
+            color: var(--nova-warning, #f59e0b) !important;
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════════════
     // NOTIFICATIONS & TOASTS
     // ═══════════════════════════════════════════════════════════════════
@@ -1769,7 +1872,7 @@ html.nova-dark {
             &:hover,
             &.ui-state-active,
             &.ui-state-focus {
-                background-color: var(--nova-accent-light) !important;
+                background: var(--nova-accent-light) !important;
                 color: var(--nova-accent) !important;
             }
         }
@@ -1780,11 +1883,25 @@ html.nova-dark {
         background-color: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
 
+        // Hover only on the <li> container
         .o-autocomplete--dropdown-item {
             color: var(--nova-text) !important;
 
             &:hover, &:focus {
-                background-color: var(--nova-accent-light) !important;
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+
+            // Strip the nested <a> — no double hover
+            a, .dropdown-item {
+                background: none !important;
+                color: inherit !important;
+                padding: 0 !important;
+
+                &:hover, &:focus, &:active {
+                    background: none !important;
+                    color: inherit !important;
+                }
             }
         }
     }
@@ -1950,7 +2067,7 @@ html.nova-dark {
 
     // Extra: any remaining white backgrounds from Odoo
     .o_field_widget .o_external_button {
-        color: var(--nova-text-secondary) !important;
+        color: var(--nova-accent) !important;
     }
 
     .o_field_widget .o_input_dropdown {
@@ -2085,7 +2202,7 @@ html.nova-dark {
     }
 
     // Status bar buttons text
-    .o_form_statusbar .btn {
+    .o_form_statusbar .btn:not(.o_arrow_button) {
         color: var(--nova-text) !important;
     }
 
@@ -2157,17 +2274,19 @@ html.nova-dark {
 
     // Many2one external link button
     .o_field_many2one .o_external_button {
-        color: var(--nova-text-tertiary) !important;
+        color: var(--nova-accent) !important;
 
         &:hover {
             color: var(--nova-accent) !important;
         }
     }
 
-    // Tags field inside form
-    .o_field_many2many_tags .badge {
-        background-color: var(--nova-accent-light) !important;
-        color: var(--nova-accent) !important;
+    // Tags field inside form — let native tag colors through
+    // Only provide a dark-friendly default for colorless tags (o_tag_color_0)
+    .o_field_many2many_tags .o_tag.o_tag_color_0 {
+        background-color: var(--nova-surface-raised) !important;
+        color: var(--nova-text) !important;
+        box-shadow: inset 0 0 0 1px var(--nova-border) !important;
     }
 
     // Notebook / tab pane bg
@@ -2614,11 +2733,7 @@ html.nova-dark {
             }
         }
 
-        // Status bar
-        .o_form_statusbar {
-            background: var(--nova-bg) !important;
-            border: none !important;
-        }
+        // Status bar: handled by form_view.scss via CSS variables (both modes)
 
         // Totals area at bottom of form
         .oe_subtotal_footer {

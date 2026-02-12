@@ -24,7 +24,24 @@
         }
     }
 
-    // ─── Status Bar ────────────────────────────────────────────────────
+    // ─── Status Bar (Chevron Arrows) ─────────────────────────────────────
+    // Uses the NATIVE Odoo arrow mechanism (CSS border triangles on ::before/::after).
+    // We only override colors + typography. No clip-path needed.
+    //
+    // How it works:
+    //   ::before = outer triangle (1px further right = border line)
+    //   ::after  = inner triangle (fill color)
+    //   The 1px gap between them creates the visible chevron border.
+    //
+    // Layout: flex row-reverse → DOM :first-child = visual RIGHT,
+    //         DOM :last-child = visual LEFT.
+    //         DOM next-sibling (+) = visual LEFT neighbor.
+    //         A button's ::before/::after extend to its visual RIGHT,
+    //         creating the LEFT notch of its DOM previous sibling.
+    //
+    // So: the button visually LEFT of active (= DOM next-sibling of active)
+    //     has arrows that extend INTO the active button's area.
+    //     Its ::after must match the active bg so the notch is invisible.
     .o_form_statusbar {
         background: var(--nova-bg) !important;
         border: none !important;
@@ -33,42 +50,96 @@
         border-radius: 0 !important;
         box-shadow: none !important;
 
+        // Opaque hover color — semi-transparent rgba on background vs border-left-color
+        // renders differently due to compositing. color-mix() gives a true opaque blend.
+        --_arrow-hover: color-mix(in srgb, var(--nova-accent) 18%, var(--nova-bg));
+
         .o_statusbar_status {
-            gap: var(--nova-space-1);
-
             .o_arrow_button {
-                background: transparent;
-                border: 1px solid var(--nova-border);
-                border-radius: var(--nova-radius-full);
-                padding: var(--nova-space-1) var(--nova-space-4);
-                font-size: 0.75rem;
-                font-weight: 500;
-                color: var(--nova-text-secondary);
-                transition: all var(--nova-transition-fast);
-                clip-path: none;
+                // Kill Bootstrap btn-light/btn-secondary CSS custom properties
+                --bs-btn-bg: transparent;
+                --bs-btn-hover-bg: transparent;
+                --bs-btn-active-bg: transparent;
+                --bs-btn-disabled-bg: transparent;
+                --bs-btn-border-color: transparent;
+                --bs-btn-hover-border-color: transparent;
+                --bs-btn-active-border-color: transparent;
+                --bs-btn-disabled-border-color: transparent;
 
-                // Remove Odoo's arrow shape
-                &::before, &::after {
-                    display: none;
+                // Unified transition — button + pseudo-elements use identical timing
+                transition: background-color .15s ease-in-out, color .15s ease-in-out, border-color .15s ease-in-out !important;
+
+                font-size: 0.75rem !important;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--nova-text-secondary) !important;
+                background: var(--nova-bg) !important;
+                border-radius: 0 !important;
+
+                // Top & bottom borders
+                border-top: 1px solid var(--nova-border) !important;
+                border-bottom: 1px solid var(--nova-border) !important;
+                border-left: none !important;
+                border-right: none !important;
+                min-height: 35px !important;
+
+                // Visual leftmost (DOM :last-child) — flat left edge
+                &:last-child {
+                    border-left: 1px solid var(--nova-border) !important;
                 }
 
-                &:hover {
-                    background: var(--nova-accent-light);
-                    border-color: var(--nova-accent);
-                    color: var(--nova-accent);
+                // Visual rightmost (DOM :first-child) — flat right edge
+                &:first-child {
+                    border-right: 1px solid var(--nova-border) !important;
                 }
 
+                // Arrow triangles — longhand only (shorthand + var() = libsass issue)
+                // Sync transition with Bootstrap .btn (150ms) so chevrons animate together
+                &:not(:first-child)::after {
+                    border-left-color: var(--nova-bg) !important;
+                    transition: border-left-color .15s ease-in-out !important;
+                }
+                &:not(:first-child)::before {
+                    border-left-color: var(--nova-border) !important;
+                    transition: border-left-color .15s ease-in-out !important;
+                }
+
+                // ── Hover ──
+                &:not(.disabled):hover {
+                    background: var(--_arrow-hover) !important;
+                    color: var(--nova-accent) !important;
+                    border-color: var(--_arrow-hover) !important;
+
+                    &::before {
+                        border-left-color: var(--_arrow-hover) !important;
+                    }
+                    &::after {
+                        border-left-color: var(--_arrow-hover) !important;
+                    }
+                }
+
+                // ── Active / Current ──
                 &.o_arrow_button_current {
-                    background: var(--nova-accent);
-                    border-color: var(--nova-accent);
-                    color: white;
-                    font-weight: 600;
+                    background: var(--nova-accent) !important;
+                    color: white !important;
+                    border-color: var(--nova-accent) !important;
+
+                    &::before,
+                    &::after {
+                        border-left-color: var(--nova-accent) !important;
+                    }
                 }
 
-                + .o_arrow_button {
-                    margin-left: var(--nova-space-1);
+                // ── Disabled (non-active) ──
+                &.disabled:not(.o_arrow_button_current) {
+                    color: var(--nova-text-secondary) !important;
                 }
             }
+
+            // No adjacent-sibling rules needed.
+            // Each button's ::before/::after only color its OWN right-side chevron.
+            // The left-side notch stays the neighbor's color (like the reference).
         }
 
         .o_statusbar_buttons {
@@ -111,6 +182,7 @@
             }
 
             &:last-child {
+                border-right: 1px solid var(--nova-border) !important;
                 border-top-right-radius: calc(var(--nova-radius-lg) - 1px) !important;
             }
 
@@ -289,10 +361,11 @@
     }
 
     // ─── Input Fields ──────────────────────────────────────────────────
+    // Only style actual form elements — not wrapper divs that also carry .o_input
     .o_field_widget {
         input.o_input,
         textarea.o_input,
-        .o_input {
+        select.o_input {
             border: 1px solid var(--nova-border);
             border-radius: var(--nova-radius);
             padding: var(--nova-space-2) var(--nova-space-3);
@@ -318,19 +391,22 @@
             }
         }
 
-        // Select / dropdown
         select.o_input {
-            border: 1px solid var(--nova-border);
-            border-radius: var(--nova-radius);
-            padding: var(--nova-space-2) var(--nova-space-3);
-            background: var(--nova-surface);
             appearance: none;
         }
 
-        // Many2one
+        // ── Wrapper containers (div.o_input, .o_input_dropdown, etc.) ──
+        // These get a single border — everything nested is stripped bare.
+        // IMPORTANT: the strip list must include ALL wrapper types so that
+        // nested wrappers (e.g. .o_field_many2one_selection > .o_input_dropdown)
+        // don't produce double borders.
+        div.o_input,
+        .o_input_dropdown,
         .o_field_many2one_selection {
             border: 1px solid var(--nova-border);
             border-radius: var(--nova-radius);
+            overflow: hidden;
+            background: var(--nova-surface);
             transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
 
             &:focus-within {
@@ -338,13 +414,67 @@
                 box-shadow: 0 0 0 3px var(--nova-accent-light);
             }
 
-            input {
-                border: none;
-                box-shadow: none;
+            // Strip all borders from anything nested — including other wrappers
+            input, select, textarea,
+            div.o_input, .o_input,
+            .o_input_dropdown,
+            .o_field_many2one_selection {
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                border-radius: 0 !important;
+                outline: none !important;
 
                 &:focus {
-                    box-shadow: none;
+                    border: none !important;
+                    box-shadow: none !important;
                 }
+            }
+
+        }
+
+        // ── Dropdown carets (CSS triangle via border-top + --o-caret-color) ──
+        .o_dropdown_button,
+        .o_datepicker_button {
+            --o-caret-color: var(--nova-accent);
+            color: var(--nova-accent) !important;
+        }
+
+        // ── External link button (arrow on many2one fields) ──
+        .o_external_button {
+            --bs-btn-bg: transparent;
+            --bs-btn-hover-bg: transparent;
+            --bs-btn-active-bg: transparent;
+            --bs-btn-border-color: transparent;
+            --bs-btn-hover-border-color: transparent;
+            --bs-btn-active-border-color: transparent;
+            --bs-btn-disabled-bg: transparent;
+            --bs-btn-disabled-border-color: transparent;
+
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px;
+            padding: 0 !important;
+            margin: 0;
+            flex-shrink: 0;
+            background: transparent !important;
+            border: none !important;
+            border-radius: var(--nova-radius) !important;
+            box-shadow: none !important;
+            color: var(--nova-accent) !important;
+            font-size: 14px !important;
+            transition: color var(--nova-transition-fast), background var(--nova-transition-fast);
+
+            &:hover {
+                color: var(--nova-accent) !important;
+                background: var(--nova-accent-light) !important;
+            }
+
+            &:focus {
+                box-shadow: none !important;
             }
         }
 
@@ -354,6 +484,102 @@
                 text-align: right;
                 font-variant-numeric: tabular-nums;
             }
+        }
+    }
+
+    // ─── Many2many tags — uniform container with text inputs ─────────
+    // DOM: .o_field_many2many_tags > div.o_field_tags.o_input > badges + div.o_field_many2many_selection > .o_input_dropdown > input
+    // Only the DIRECT child (div.o_input) gets a border. Everything deeper is stripped.
+    .o_field_many2many_tags {
+        width: 100%;
+
+        > .o_input,
+        > div.o_input {
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius) !important;
+            padding: 4px var(--nova-space-2) !important;
+            min-height: 36px;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center;
+            gap: 4px;
+            background: var(--nova-surface);
+            overflow: visible !important;
+            transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+
+            &:focus-within {
+                border-color: var(--nova-accent) !important;
+                box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            }
+
+            // Strip ALL nested borders — no double borders
+            .o_field_many2many_selection,
+            .o_input_dropdown,
+            div.o_input, .o_input,
+            input, .o-autocomplete--input,
+            .o_dropdown_button {
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                outline: none !important;
+                border-radius: 0 !important;
+            }
+
+            // "Dissolve" ALL intermediate wrappers so the input sits inline
+            // with the badges in the parent flex container.
+            // Chain: .o_field_many2many_selection > .o_input_dropdown > .o-autocomplete
+            .o_field_many2many_selection,
+            .o_input_dropdown,
+            .o-autocomplete {
+                display: contents !important;
+            }
+
+            input {
+                flex: 1 1 0 !important; // flex-basis: 0, NOT auto
+                width: 0 !important;    // override Odoo's .o_input { width: 100% }
+                min-width: 80px;
+                padding: 2px 4px;
+                font-size: $font-size-sm;
+                color: var(--nova-text);
+                cursor: text;
+            }
+
+            // Hide the dropdown arrow inside tags field
+            .o_dropdown_button {
+                display: none !important;
+            }
+
+            // Make entire container feel clickable
+            cursor: text;
+        }
+
+        .badge {
+            border-radius: var(--nova-radius-sm) !important;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            line-height: 1.3;
+            border: none !important;
+            flex-shrink: 0;
+        }
+    }
+
+    // ─── Avatar tags (Assignés, etc.) — accent style ─────────────────
+    .o_field_many2many_tags_avatar .badge,
+    .o_field_many2one_avatar .badge {
+        background-color: var(--nova-accent-light) !important;
+        color: var(--nova-accent) !important;
+        box-shadow: inset 0 0 0 1px var(--nova-accent) !important;
+
+        .o_delete {
+            color: var(--nova-accent) !important;
+        }
+
+        img {
+            border: 1.5px solid var(--nova-accent);
+            border-radius: 50%;
+            margin: 2px;
+            margin-left: 3px;
         }
     }
 

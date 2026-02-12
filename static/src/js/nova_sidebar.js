@@ -3,6 +3,7 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { getFavoriteAppIds, getPinnedPages, setPinnedPages } from "./nova_storage";
 
 export class NovaSidebar extends Component {
     setup() {
@@ -15,114 +16,215 @@ export class NovaSidebar extends Component {
 
         this.state = useState({
             collapsed: sidebarCollapsed,
-            currentAppId: null,
-            menuItems: [],
-            // Counter bumped on every navigation to force re-render (updates isActive)
+            favoriteApps: [],
+            pinnedPages: [],
             _tick: 0,
         });
 
-        this._boundOnUpdate = () => this._updateMenuItems();
-        // hashchange catches ALL navigation — including app switches via
-        // the launcher, navbar clicks, breadcrumb, and browser back/forward
-        this._boundOnHashChange = () => {
-            // Small delay: the menu service needs a tick to update getCurrentApp()
-            setTimeout(() => this._updateMenuItems(), 50);
+        // MENUS:APP-CHANGED fires AFTER setCurrentMenu() sets currentAppId,
+        // so getCurrentApp() is guaranteed correct. This is the right event
+        // for visibility — unlike ACTION_MANAGER:UI-UPDATED which fires
+        // before setCurrentMenu() during the boot sequence.
+        this._boundOnAppChanged = () => {
+            this._loadFavorites();
+            this._updateVisibility();
+            this.state._tick++;
         };
 
+        // ACTION_MANAGER:UI-UPDATED fires on every action change (sub-page
+        // navigation within an app). We only bump _tick to re-evaluate
+        // active states — no visibility update needed here.
+        this._boundOnUiUpdated = () => {
+            this.state._tick++;
+        };
+
+        this._boundOnFavoritesChanged = () => this._loadFavorites();
+        this._boundOnPinsChanged = () => this._loadPins();
+
         onMounted(() => {
-            this._updateBodyClasses();
-            this._updateMenuItems();
-            this.env.bus.addEventListener(
-                "ACTION_MANAGER:UI-UPDATED",
-                this._boundOnUpdate
-            );
-            window.addEventListener("hashchange", this._boundOnHashChange);
+            this._loadFavorites();
+            this._loadPins();
+            this._updateVisibility();
+            this.env.bus.addEventListener("MENUS:APP-CHANGED", this._boundOnAppChanged);
+            this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._boundOnUiUpdated);
+            this.env.bus.addEventListener("NOVA:FAVORITES-CHANGED", this._boundOnFavoritesChanged);
+            this.env.bus.addEventListener("NOVA:PINS-CHANGED", this._boundOnPinsChanged);
         });
 
         onWillUnmount(() => {
-            document.body.classList.remove(
-                "nova-sidebar-open",
-                "nova-sidebar-collapsed"
-            );
-            this.env.bus.removeEventListener(
-                "ACTION_MANAGER:UI-UPDATED",
-                this._boundOnUpdate
-            );
-            window.removeEventListener("hashchange", this._boundOnHashChange);
+            document.body.classList.remove("nova-sidebar-open", "nova-sidebar-collapsed");
+            this.env.bus.removeEventListener("MENUS:APP-CHANGED", this._boundOnAppChanged);
+            this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._boundOnUiUpdated);
+            this.env.bus.removeEventListener("NOVA:FAVORITES-CHANGED", this._boundOnFavoritesChanged);
+            this.env.bus.removeEventListener("NOVA:PINS-CHANGED", this._boundOnPinsChanged);
         });
     }
 
-    _updateMenuItems() {
-        try {
-            const currentApp = this.menuService.getCurrentApp();
-            if (currentApp) {
-                const menuTree = this.menuService.getMenuAsTree(currentApp.id);
-                const newItems =
-                    menuTree && menuTree.childrenTree
-                        ? menuTree.childrenTree
-                        : [];
-                // Always update — menu tree is cheap and this ensures
-                // the sidebar reflects the current app immediately
-                this.state.menuItems = newItems;
-                this.state.currentAppId = currentApp.id;
-                document.body.classList.add("nova-sidebar-open");
-                document.body.classList.remove("nova-home-menu-visible");
-            } else {
-                this.state.menuItems = [];
-                this.state.currentAppId = null;
-                document.body.classList.remove("nova-sidebar-open");
-                document.body.classList.add("nova-home-menu-visible");
-            }
-        } catch (e) {
-            this.state.menuItems = [];
+    // ── Data loading ────────────────────────────────────────────────────
+
+    _loadFavorites() {
+        const ids = getFavoriteAppIds();
+        const allApps = this.menuService.getApps();
+        const appMap = Object.fromEntries(allApps.map((a) => [a.id, a]));
+        // Resolve IDs to app objects, skip obsolete ones
+        this.state.favoriteApps = ids.map((id) => appMap[id]).filter(Boolean);
+        this._updateVisibility();
+    }
+
+    _loadPins() {
+        this.state.pinnedPages = getPinnedPages();
+        this._updateVisibility();
+    }
+
+    // ── Visibility ──────────────────────────────────────────────────────
+
+    _updateVisibility() {
+        const currentApp = this.menuService.getCurrentApp();
+        const hasFavs = this.state.favoriteApps.length > 0;
+        const hasPins = this.state.pinnedPages.length > 0;
+        const hasContent = hasFavs || hasPins;
+
+        if (currentApp && hasContent) {
+            document.body.classList.add("nova-sidebar-open");
+            document.body.classList.remove("nova-home-menu-visible");
+        } else if (!currentApp) {
+            // Home menu — always hide sidebar
+            document.body.classList.remove("nova-sidebar-open");
+            document.body.classList.add("nova-home-menu-visible");
+        } else {
+            // In an app but no content — hide sidebar
+            document.body.classList.remove("nova-sidebar-open");
+            document.body.classList.remove("nova-home-menu-visible");
         }
-        // Bump tick to force re-render so isActive() is re-evaluated
-        this.state._tick++;
+
         this._updateBodyClasses();
     }
 
     _updateBodyClasses() {
-        document.body.classList.toggle(
-            "nova-sidebar-collapsed",
-            this.state.collapsed
-        );
+        document.body.classList.toggle("nova-sidebar-collapsed", this.state.collapsed);
     }
 
-    get menuItems() {
-        return this.state.menuItems;
+    // ── Favorites ───────────────────────────────────────────────────────
+
+    onFavoriteClick(app) {
+        this.menuService.selectMenu(app);
     }
+
+    isFavoriteActive(app) {
+        // Read _tick to force re-evaluation
+        void this.state._tick;
+        try {
+            const currentApp = this.menuService.getCurrentApp();
+            return currentApp && currentApp.id === app.id;
+        } catch {
+            return false;
+        }
+    }
+
+    getAppIconSrc(app) {
+        return `/web/image?model=ir.ui.menu&id=${app.id}&field=web_icon_data`;
+    }
+
+    // ── Pinned pages ────────────────────────────────────────────────────
+
+    get canPinCurrentPage() {
+        return !!this.menuService.getCurrentApp();
+    }
+
+    get isPageAlreadyPinned() {
+        // Read _tick to force re-evaluation
+        void this.state._tick;
+        try {
+            const current = this.router.current;
+            const actionId = (current.hash && current.hash.action) || current.action;
+            if (!actionId) return false;
+            return this.state.pinnedPages.some((p) => Number(p.actionID) === Number(actionId));
+        } catch {
+            return false;
+        }
+    }
+
+    pinCurrentPage() {
+        try {
+            const currentApp = this.menuService.getCurrentApp();
+            if (!currentApp) return;
+
+            const current = this.router.current;
+            const actionId = (current.hash && current.hash.action) || current.action;
+            if (!actionId) return;
+
+            // Deduplicate
+            if (this.state.pinnedPages.some((p) => Number(p.actionID) === Number(actionId))) return;
+
+            // Find the menu item by searching the menu tree recursively
+            const menuTree = this.menuService.getMenuAsTree(currentApp.id);
+            const menuItem = this._findMenuByAction(menuTree, Number(actionId));
+
+            if (!menuItem) return;
+
+            const pin = {
+                menuId: menuItem.id,
+                actionID: menuItem.actionID,
+                name: menuItem.name,
+                appId: currentApp.id,
+                appName: currentApp.name,
+            };
+
+            const pages = [...this.state.pinnedPages, pin];
+            setPinnedPages(pages);
+            this.state.pinnedPages = pages;
+            this._updateVisibility();
+            this.env.bus.trigger("NOVA:PINS-CHANGED");
+        } catch {
+            // ignore — menu might not be ready
+        }
+    }
+
+    _findMenuByAction(node, actionId) {
+        if (!node) return null;
+        if (Number(node.actionID) === actionId) return node;
+        const children = node.childrenTree || [];
+        for (const child of children) {
+            const found = this._findMenuByAction(child, actionId);
+            if (found) return found;
+        }
+        return null;
+    }
+
+    removePin(pin) {
+        const pages = this.state.pinnedPages.filter((p) => p.menuId !== pin.menuId);
+        setPinnedPages(pages);
+        this.state.pinnedPages = pages;
+        this._updateVisibility();
+        this.env.bus.trigger("NOVA:PINS-CHANGED");
+    }
+
+    isPinActive(pin) {
+        // Read _tick to force re-evaluation
+        void this.state._tick;
+        try {
+            const current = this.router.current;
+            const actionId = (current.hash && current.hash.action) || current.action;
+            return actionId && Number(pin.actionID) === Number(actionId);
+        } catch {
+            return false;
+        }
+    }
+
+    onPinClick(pin) {
+        if (pin.actionID) {
+            this.actionService.doAction(pin.actionID);
+        }
+    }
+
+    // ── Collapse ────────────────────────────────────────────────────────
 
     toggleCollapse() {
         this.state.collapsed = !this.state.collapsed;
         this._updateBodyClasses();
     }
 
-    /**
-     * Determines if a menu item is currently active by comparing its action ID
-     * with the current router action. Handles both Odoo 16 router formats:
-     *   - router.current.hash.action  (standard)
-     *   - router.current.action       (alternative)
-     */
-    isActive(item) {
-        if (!item.actionID) return false;
-        try {
-            const current = this.router.current;
-            const actionId =
-                (current.hash && current.hash.action) || current.action;
-            if (actionId) {
-                return Number(item.actionID) === Number(actionId);
-            }
-        } catch (e) {
-            // ignore — router might not be ready yet
-        }
-        return false;
-    }
-
-    onMenuClick(item) {
-        if (item.actionID) {
-            this.menuService.selectMenu(item);
-        }
-    }
+    // ── Menu icon mapping ───────────────────────────────────────────────
 
     getMenuIcon(item) {
         const iconMap = {

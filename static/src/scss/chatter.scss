@@ -303,26 +303,25 @@
     }
 
     // ─── Actions (react, reply, star) ──────────────────────────────────
-    .o_Message_actionList {
-        opacity: 0;
-        transition: opacity var(--nova-transition-fast);
-
-        .o_Message_actionButton {
-            width: 28px;
-            height: 28px;
-            border-radius: var(--nova-radius);
-            color: var(--nova-text-tertiary);
-            transition: all var(--nova-transition-fast);
-
-            &:hover {
-                background: var(--nova-accent-light);
-                color: var(--nova-accent);
-            }
-        }
+    // Odoo uses CSS vars: --MessageActionList-background-color (default: white)
+    //                      --MessageActionView-background-color--hover (default: gray)
+    .o_MessageActionList {
+        --MessageActionList-background-color: var(--nova-surface);
+        border: 1px solid var(--nova-border) !important;
+        border-radius: var(--nova-radius) !important;
+        box-shadow: var(--nova-shadow-xs) !important;
+        font-size: 0.85rem !important;
     }
 
-    &:hover .o_Message_actionList {
-        opacity: 1;
+    .o_MessageActionView {
+        --MessageActionView-background-color--hover: var(--nova-accent-light);
+        color: var(--nova-text-tertiary) !important;
+        padding: 4px 6px !important;
+        transition: color var(--nova-transition-fast), background var(--nova-transition-fast);
+
+        &:hover {
+            color: var(--nova-accent) !important;
+        }
     }
 
     // ─── Tracking values (field changes) ───────────────────────────────

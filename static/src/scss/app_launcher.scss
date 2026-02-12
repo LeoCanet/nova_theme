@@ -170,6 +170,7 @@
     padding: var(--nova-space-2);
     border-radius: var(--nova-radius-lg);
     transition: background var(--nova-transition-fast);
+    position: relative;
 
     // Stagger animation
     opacity: 0;
@@ -193,11 +194,53 @@
         .nova-app-tile__label {
             color: var(--nova-text);
         }
+
+        .nova-app-tile__star {
+            opacity: 1;
+        }
     }
 
     &:active {
         .nova-app-tile__icon {
             transform: scale(0.96);
+        }
+    }
+}
+
+// ─── Favorite Star Button ────────────────────────────────────────────────
+.nova-app-tile__star {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: var(--nova-radius-full);
+    background: transparent;
+    color: var(--nova-text-tertiary);
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity var(--nova-transition-fast),
+                color var(--nova-transition-fast),
+                transform var(--nova-transition-fast);
+    z-index: 2;
+
+    &:hover {
+        transform: scale(1.15);
+        color: var(--nova-warning, #f59e0b);
+    }
+
+    &--active {
+        opacity: 1;
+        color: var(--nova-warning, #f59e0b);
+
+        &:hover {
+            color: var(--nova-warning, #f59e0b);
+            transform: scale(1.15);
         }
     }
 }
