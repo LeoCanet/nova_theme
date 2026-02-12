@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Override ButtonBox: add nova-button-box class, remove Bootstrap text-end -->
+    <t t-name="nova_theme.Form.ButtonBox" t-inherit="web.Form.ButtonBox" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-form-buttonbox')]" position="attributes">
+            <attribute name="class">nova-button-box o-form-buttonbox oe_button_box position-relative</attribute>
+            <attribute name="t-attf-class">{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full'}} {{this.props.class}}</attribute>
+        </xpath>
+    </t>
+
+</templates>

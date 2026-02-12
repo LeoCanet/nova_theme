@@ -62,6 +62,7 @@
             "nova_theme/static/src/xml/app_launcher.xml",
             "nova_theme/static/src/xml/navbar.xml",
             "nova_theme/static/src/xml/sidebar.xml",
+            "nova_theme/static/src/xml/button_box.xml",
             "nova_theme/static/src/xml/dark_mode_toggle.xml",
         ],
     },

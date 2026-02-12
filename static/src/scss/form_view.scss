@@ -9,6 +9,9 @@
     .o_form_sheet_bg {
         background: var(--nova-bg);
         padding: var(--nova-space-4) var(--nova-space-6);
+        // Override Odoo's overflow:auto (xxl views) so the "More" dropdown
+        // can escape the sheet container
+        overflow: visible !important;
 
         .o_form_sheet {
             background: var(--nova-surface);
@@ -23,11 +26,12 @@
 
     // ─── Status Bar ────────────────────────────────────────────────────
     .o_form_statusbar {
-        background: var(--nova-bg-alt);
-        border-bottom: 1px solid var(--nova-border);
+        background: var(--nova-bg) !important;
+        border: none !important;
         padding: var(--nova-space-2) var(--nova-space-4);
         min-height: 46px;
-        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+        border-radius: 0 !important;
+        box-shadow: none !important;
 
         .o_statusbar_status {
             gap: var(--nova-space-1);
@@ -72,42 +76,164 @@
         }
     }
 
-    // ─── Stat / Smart Buttons ────────────────────────────────────────────
-    // Only override visual styles — DO NOT touch layout (display, flex, width, height)
+    // ─── Smart Buttons (unified container + vertical separators) ───────────
+    // Flush with sheet edges — negative margins match sheet padding per breakpoint
+    // Desktop sheet padding: var(--nova-space-8)=32px / var(--nova-space-6)=24px
+    .nova-button-box,
     .o-form-buttonbox {
-        box-shadow: inset 0 -1px 0 var(--nova-border-light);
+        --_sheet-h-pad: var(--nova-space-8);  // synced with sheet horizontal padding
+        --_sheet-v-pad: var(--nova-space-6);  // synced with sheet vertical padding
+
+        background: var(--nova-surface) !important;
+        border: none !important;
+        border-bottom: 1px solid var(--nova-border) !important;
+        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        margin-left: calc(-1 * var(--_sheet-h-pad)) !important;
+        margin-right: calc(-1 * var(--_sheet-h-pad)) !important;
+        margin-top: calc(-1 * var(--_sheet-v-pad)) !important;
+        margin-bottom: var(--nova-space-4) !important;
+        width: calc(100% + 2 * var(--_sheet-h-pad)) !important;
 
         .oe_stat_button {
-            border-left-color: var(--nova-border-light);
+            border: none !important;
+            border-left: 1px solid var(--nova-border) !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
             transition: background var(--nova-transition-fast);
 
-            &:hover {
-                background: var(--nova-accent-light);
+            &:first-child {
+                border-left: none !important;
+                border-top-left-radius: calc(var(--nova-radius-lg) - 1px) !important;
             }
 
+            &:last-child {
+                border-top-right-radius: calc(var(--nova-radius-lg) - 1px) !important;
+            }
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+            }
+
+            // ── Icon (flat accent color) ──
             > .o_button_icon {
-                color: var(--nova-text-tertiary);
+                color: var(--nova-accent) !important;
+                flex-shrink: 0;
 
                 &::before {
-                    font-size: 20px;
+                    font-size: 18px !important;
                 }
             }
 
+            // ── Text containers ──
             > .o_stat_info,
-            > span,
+            > span:not(.o_button_icon),
             > .o_field_statinfo {
-                .o_stat_value {
-                    font-weight: 700;
-                    color: var(--nova-text);
-                    font-variant-numeric: tabular-nums;
+                min-width: 0;
+                overflow: hidden;
+
+                > span {
+                    display: block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            // ── Values ──
+            .o_stat_value {
+                font-size: 1rem !important;
+                font-weight: 700 !important;
+                color: var(--nova-text) !important;
+                font-variant-numeric: tabular-nums;
+                line-height: 1.2;
+            }
+
+            // ── Labels (13px) ──
+            .o_stat_text,
+            .o_stat_info > span:not(.o_stat_value),
+            .o_field_statinfo > span:last-child {
+                font-size: 0.8125rem !important;
+                font-weight: 500 !important;
+                color: var(--nova-text-secondary) !important;
+                text-transform: none !important;
+                letter-spacing: normal !important;
+                line-height: 1.3;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            // ── "More" button (dropdown) ──
+            &.dropdown {
+                overflow: visible;
+
+                > .o_button_more {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 4px;
+                    width: 100%;
+                    height: 100%;
+                    background: transparent !important;
+                    border: none !important;
+                    color: var(--nova-text-secondary) !important;
+                    font-weight: 500;
+                    font-size: 0.8125rem;
+                    box-shadow: none !important;
+                    line-height: 1;
+
+                    &::after {
+                        content: "\f107" !important;
+                        font-family: "FontAwesome" !important;
+                        font-size: 0.875rem;
+                        border: none !important;
+                        width: auto !important;
+                        height: auto !important;
+                        color: var(--nova-text-tertiary) !important;
+                        margin: 0 !important;
+                        vertical-align: middle;
+                        display: inline !important;
+                    }
                 }
 
-                .o_stat_text {
-                    font-size: 0.6875rem;
-                    font-weight: 500;
-                    color: var(--nova-text-tertiary);
-                    text-transform: uppercase;
-                    letter-spacing: 0.02em;
+                &:hover > .o_button_more {
+                    color: var(--nova-text) !important;
+                }
+
+                .o_dropdown_more {
+                    z-index: 1070 !important;
+                    background: var(--nova-surface) !important;
+                    border: 1px solid var(--nova-border) !important;
+                    border-radius: var(--nova-radius-lg) !important;
+                    box-shadow: var(--nova-shadow-lg) !important;
+                    padding: var(--nova-space-2) !important;
+                    margin-top: 4px;
+
+                    > .dropdown-item {
+                        padding: 0 !important;
+                        border-radius: var(--nova-radius);
+                        background: transparent !important;
+
+                        + .dropdown-item {
+                            margin-top: 2px;
+                        }
+
+                        .oe_stat_button {
+                            border: none !important;
+                            background: transparent !important;
+                            box-shadow: none !important;
+                            border-radius: var(--nova-radius) !important;
+                            width: 100%;
+
+                            &:hover {
+                                background: var(--nova-accent-light) !important;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -136,20 +262,23 @@
         }
     }
 
+    // ─── Group separator — accent title + subtle gray line ──────────────
+    // Native Odoo uses box-shadow (not border!) for the separator line
+    .o_horizontal_separator {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--nova-accent) !important;
+        border: none !important;
+        box-shadow: 0 1px 0 var(--nova-border) !important;
+        outline: none !important;
+        padding-bottom: var(--nova-space-2);
+        margin-bottom: var(--nova-space-4);
+        margin-top: var(--nova-space-6);
+    }
+
     // ─── Form Groups / Labels ──────────────────────────────────────────
     .o_group {
         margin-bottom: var(--nova-space-4);
-
-        // Group title
-        .o_horizontal_separator {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--nova-text);
-            border-bottom: 1px solid var(--nova-border-light);
-            padding-bottom: var(--nova-space-2);
-            margin-bottom: var(--nova-space-4);
-            margin-top: var(--nova-space-6);
-        }
 
         // Labels
         label.o_form_label {
@@ -228,39 +357,65 @@
         }
     }
 
-    // ─── Notebooks (Tabs) ──────────────────────────────────────────────
+    // ─── Notebooks (Pill/Segment Tabs) ─────────────────────────────────
     .o_notebook {
         margin-top: var(--nova-space-6);
 
+        .o_notebook_headers {
+            background: var(--nova-bg-alt);
+            border-radius: var(--nova-radius);
+            padding: 3px;
+            margin-bottom: var(--nova-space-1);
+        }
+
         .nav-tabs {
-            border-bottom: 1px solid var(--nova-border);
-            gap: 0;
+            border-bottom: none !important;
+            gap: 2px;
             padding: 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-wrap: nowrap;
+            background: transparent !important;
+
+            // Hide scrollbar
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
 
             .nav-item {
-                margin-bottom: -1px;
+                margin-bottom: 0;
+                flex-shrink: 0;
             }
 
             .nav-link {
-                border: none;
-                border-bottom: 2px solid transparent;
-                border-radius: 0;
-                padding: var(--nova-space-3) var(--nova-space-4);
+                position: relative;
+                border: none !important;
+                border-radius: var(--nova-radius-sm);
+                padding: var(--nova-space-2) var(--nova-space-4);
                 font-size: 0.8125rem;
                 font-weight: 500;
                 color: var(--nova-text-secondary);
-                transition: all var(--nova-transition-fast);
+                background: transparent;
+                transition: color var(--nova-transition-fast),
+                            background var(--nova-transition-fast),
+                            box-shadow var(--nova-transition-fast);
+                white-space: nowrap;
 
-                &:hover {
+                // Remove underline from previous style
+                &::after {
+                    display: none !important;
+                }
+
+                &:hover:not(.active) {
                     color: var(--nova-text);
-                    border-bottom-color: var(--nova-text-tertiary);
+                    background: var(--nova-accent-light);
                 }
 
                 &.active {
-                    color: var(--nova-accent);
-                    border-bottom-color: var(--nova-accent);
-                    font-weight: 600;
-                    background: transparent;
+                    color: var(--nova-text) !important;
+                    background: var(--nova-surface) !important;
+                    box-shadow: var(--nova-shadow-xs);
                 }
             }
         }
@@ -300,15 +455,32 @@
     }
 
     // ─── Widget fields ─────────────────────────────────────────────────
-    .o_field_boolean input[type="checkbox"] {
-        border-radius: var(--nova-radius-sm);
-        border: 1.5px solid var(--nova-text-tertiary);
-        width: 16px;
-        height: 16px;
+    // Inline boolean fields: align checkbox + adjacent label vertically
+    .o_field_boolean .o-checkbox.form-check {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+        margin-right: 4px;
+    }
 
-        &:checked {
-            background-color: var(--nova-accent);
-            border-color: var(--nova-accent);
+    .o_field_boolean + .o_form_label {
+        vertical-align: middle;
+    }
+
+    .o_field_boolean {
+        display: inline-block;
+        vertical-align: middle;
+
+        input[type="checkbox"] {
+            border-radius: var(--nova-radius-sm);
+            border: 1.5px solid var(--nova-text-tertiary);
+            width: 16px;
+            height: 16px;
+
+            &:checked {
+                background-color: var(--nova-accent);
+                border-color: var(--nova-accent);
+            }
         }
     }
 

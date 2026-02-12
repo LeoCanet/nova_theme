@@ -37,11 +37,19 @@ export class NovaDarkModeToggle extends Component {
 
     _applyMode(isDark) {
         const htmlEl = document.documentElement;
+        // Disable all transitions during mode switch
+        htmlEl.classList.add("nova-switching");
         if (isDark) {
             htmlEl.classList.add("nova-dark");
         } else {
             htmlEl.classList.remove("nova-dark");
         }
+        // Force reflow so the class changes take effect instantly
+        void htmlEl.offsetHeight;
+        // Re-enable transitions on next frame
+        requestAnimationFrame(() => {
+            htmlEl.classList.remove("nova-switching");
+        });
     }
 
     async onToggle() {

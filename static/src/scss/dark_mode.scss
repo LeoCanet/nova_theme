@@ -3,24 +3,33 @@
 /// Applied when html.nova-dark is present
 ///============================================================================
 
+// ─── Instant mode switch (disable all transitions) ──────────────
+html.nova-switching,
+html.nova-switching *,
+html.nova-switching *::before,
+html.nova-switching *::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
 html.nova-dark {
-    // ─── Override CSS Custom Properties (Discord-inspired palette) ──────
-    // Surfaces — 2 main tones: bg/bg-alt share the dark base, surface is lighter
-    --nova-bg: #2b2d31;
-    --nova-bg-alt: #2e3035;
-    --nova-surface: #313338;
-    --nova-surface-raised: #383a40;
-    --nova-surface-overlay: #313338;
+    // ─── Override CSS Custom Properties ─────────────────────────────────
+    // Surfaces — #1B1C1E deepest, #232427 standard
+    --nova-bg: #1B1C1E;
+    --nova-bg-alt: #1F2023;
+    --nova-surface: #232427;
+    --nova-surface-raised: #2A2B2F;
+    --nova-surface-overlay: #232427;
 
     // Text
     --nova-text: #f2f3f5;
     --nova-text-secondary: #b5bac1;
     --nova-text-tertiary: #949ba4;
-    --nova-text-inverse: #2b2d31;
+    --nova-text-inverse: #1B1C1E;
 
     // Borders
-    --nova-border: #3f4147;
-    --nova-border-light: #35373c;
+    --nova-border: #2F3035;
+    --nova-border-light: #292A2E;
     --nova-border-focus: #5865f2;
 
     // Accent (Discord blurple)
@@ -686,22 +695,23 @@ html.nova-dark {
         }
     }
 
-    // ─── Nav tabs ────────────────────────────────────────────────────
+    // ─── Nav tabs (pill style) ──────────────────────────────────────
     .nav-tabs {
-        border-bottom-color: var(--nova-border) !important;
+        border-bottom: none !important;
 
         .nav-link {
             color: var(--nova-text-secondary) !important;
+            background: transparent !important;
+            border: none !important;
 
-            &:hover {
-                border-color: transparent !important;
+            &:hover:not(.active) {
                 color: var(--nova-text) !important;
+                background: var(--nova-accent-light) !important;
             }
 
             &.active {
-                background-color: transparent !important;
-                border-color: transparent transparent var(--nova-accent) !important;
-                color: var(--nova-accent) !important;
+                color: var(--nova-text) !important;
+                background: var(--nova-surface) !important;
             }
         }
     }
@@ -846,8 +856,8 @@ html.nova-dark {
         }
 
         .o_form_statusbar {
-            background: var(--nova-bg-alt) !important;
-            border-bottom-color: var(--nova-border) !important;
+            background: var(--nova-bg) !important;
+            border: none !important;
 
             .o_statusbar_status .o_arrow_button {
                 background: transparent !important;
@@ -868,8 +878,9 @@ html.nova-dark {
         }
 
         .o_group .o_horizontal_separator {
-            border-bottom-color: var(--nova-border) !important;
-            color: var(--nova-text) !important;
+            box-shadow: 0 1px 0 var(--nova-border) !important;
+            border: none !important;
+            color: var(--nova-accent) !important;
         }
 
         label.o_form_label {
@@ -880,26 +891,34 @@ html.nova-dark {
             color: var(--nova-text-secondary) !important;
         }
 
-        .o_notebook .nav-tabs {
-            border-bottom-color: var(--nova-border) !important;
+        .o_notebook {
+            .o_notebook_headers {
+                background: var(--nova-bg-alt) !important;
+            }
 
-            .nav-link {
-                color: var(--nova-text-secondary) !important;
+            .nav-tabs {
+                border-bottom: none !important;
+                background: transparent !important;
 
-                &:hover {
-                    color: var(--nova-text) !important;
-                }
+                .nav-link {
+                    color: var(--nova-text-secondary) !important;
+                    border: none !important;
 
-                &.active {
-                    color: var(--nova-accent) !important;
-                    border-bottom-color: var(--nova-accent) !important;
-                    background: transparent !important;
+                    &:hover:not(.active) {
+                        color: var(--nova-text) !important;
+                        background: var(--nova-accent-light) !important;
+                    }
+
+                    &.active {
+                        color: var(--nova-text) !important;
+                        background: var(--nova-surface) !important;
+                    }
                 }
             }
-        }
 
-        .o_notebook .tab-content {
-            background: transparent !important;
+            .tab-content {
+                background: transparent !important;
+            }
         }
 
         // Many2one fields
@@ -954,21 +973,32 @@ html.nova-dark {
             }
         }
 
-        // Stat buttons
+        // Stat buttons container
+        .o-form-buttonbox {
+            background: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
+        }
+
         .oe_stat_button {
             border-color: var(--nova-border) !important;
+            background: transparent !important;
             color: var(--nova-text) !important;
 
-            .o_stat_info .o_stat_text {
+            .o_stat_text {
                 color: var(--nova-text-secondary) !important;
+                text-transform: none !important;
             }
 
-            .o_stat_info .o_stat_value {
+            .o_stat_value {
                 color: var(--nova-text) !important;
             }
 
             &:hover {
-                background-color: var(--nova-accent-light) !important;
+                background: var(--nova-accent-light) !important;
+            }
+
+            > .o_button_icon {
+                color: var(--nova-accent) !important;
             }
         }
 
@@ -2068,24 +2098,32 @@ html.nova-dark {
 
     // Stat buttons
     .o_form_view .oe_button_box .oe_stat_button {
+        background: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
         color: var(--nova-text) !important;
-        background: transparent !important;
 
         &:hover {
-            background-color: var(--nova-accent-light) !important;
+            background: var(--nova-accent-light) !important;
         }
 
         .o_button_icon {
-            color: var(--nova-text-secondary) !important;
+            color: var(--nova-accent) !important;
         }
 
-        .o_stat_info {
-            .o_stat_value {
-                color: var(--nova-text) !important;
-            }
-            .o_stat_text {
-                color: var(--nova-text-secondary) !important;
+        .o_stat_value {
+            color: var(--nova-text) !important;
+        }
+
+        .o_stat_text {
+            color: var(--nova-text-secondary) !important;
+            text-transform: none !important;
+        }
+
+        &.dropdown > .o_button_more {
+            color: var(--nova-accent) !important;
+
+            &::after {
+                color: var(--nova-accent) !important;
             }
         }
     }
@@ -2373,38 +2411,41 @@ html.nova-dark {
     // ═══════════════════════════════════════════════════════════════════
 
     .o_notebook {
-        // Tab bar background (notebook.scss:22)
-        .nav {
-            background-color: var(--nova-surface) !important;
-        }
-
-        // Active tab — Odoo uses white bottom border to merge tab with pane
-        .nav-link.active {
-            border-bottom-color: var(--nova-surface) !important;
-            border-color: var(--nova-border) !important;
-            border-bottom-color: var(--nova-surface) !important;
-            background-color: var(--nova-surface) !important;
-            color: var(--nova-accent) !important;
-        }
-
-        .nav-link:not(.active) {
-            color: var(--nova-text-secondary) !important;
-        }
-
-        // Tab content pane (form_controller.scss:535)
-        > .tab-content {
+        // Override Odoo's compiled-in white backgrounds
+        .nav-tabs {
+            background: transparent !important;
             border-bottom-color: var(--nova-border) !important;
+        }
+
+        .nav-link {
+            color: var(--nova-text-secondary) !important;
+            border: none !important;
+            background: transparent !important;
+
+            &:hover {
+                color: var(--nova-text) !important;
+                background: var(--nova-accent-light) !important;
+            }
+
+            &.active {
+                color: var(--nova-accent) !important;
+                background: transparent !important;
+            }
+        }
+
+        // Tab content pane
+        > .tab-content {
             border-color: var(--nova-border) !important;
 
             > .tab-pane {
-                background-color: var(--nova-surface) !important;
+                background-color: transparent !important;
                 border-color: var(--nova-border) !important;
             }
         }
 
         // Notebook CSS custom properties
-        --notebook-link-border-color-active: var(--nova-border);
-        --notebook-link-border-color-active-accent: var(--nova-border);
+        --notebook-link-border-color-active: transparent;
+        --notebook-link-border-color-active-accent: transparent;
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -2516,24 +2557,26 @@ html.nova-dark {
         }
 
         .o_horizontal_separator {
-            border-color: var(--nova-border) !important;
-            color: var(--nova-text) !important;
+            box-shadow: 0 1px 0 var(--nova-border) !important;
+            border: none !important;
+            color: var(--nova-accent) !important;
         }
 
         // Stat / Smart buttons
         .o-form-buttonbox {
-            box-shadow: inset 0 -1px 0 var(--nova-border) !important;
+            box-shadow: none !important;
+            background: transparent !important;
 
             .oe_stat_button {
-                border-left-color: var(--nova-border) !important;
-                background: transparent !important;
+                background: var(--nova-surface) !important;
+                border-color: var(--nova-border) !important;
 
                 &:hover {
                     background: var(--nova-accent-light) !important;
                 }
 
                 > .o_button_icon {
-                    color: var(--nova-text-tertiary) !important;
+                    color: var(--nova-accent) !important;
                 }
 
                 .o_stat_value {
@@ -2541,15 +2584,40 @@ html.nova-dark {
                 }
 
                 .o_stat_text {
-                    color: var(--nova-text-tertiary) !important;
+                    color: var(--nova-text-secondary) !important;
+                    text-transform: none !important;
+                }
+
+                &.dropdown {
+                    > .o_button_more {
+                        color: var(--nova-accent) !important;
+
+                        &::after {
+                            color: var(--nova-accent) !important;
+                        }
+                    }
+
+                    .o_dropdown_more {
+                        background: var(--nova-surface) !important;
+                        border: 1px solid var(--nova-border) !important;
+
+                        .oe_stat_button {
+                            background: transparent !important;
+                            border: none !important;
+
+                            &:hover {
+                                background: var(--nova-accent-light) !important;
+                            }
+                        }
+                    }
                 }
             }
         }
 
         // Status bar
         .o_form_statusbar {
-            background-color: var(--nova-bg-alt) !important;
-            border-color: var(--nova-border) !important;
+            background: var(--nova-bg) !important;
+            border: none !important;
         }
 
         // Totals area at bottom of form

@@ -76,6 +76,12 @@
 
         .o_form_sheet {
             padding: var(--nova-space-4) var(--nova-space-5);
+
+            // Sync button box margins with sheet padding at this breakpoint
+            .o-form-buttonbox {
+                --_sheet-h-pad: var(--nova-space-5);
+                --_sheet-v-pad: var(--nova-space-4);
+            }
         }
     }
 }
@@ -137,6 +143,12 @@
         .o_form_sheet {
             padding: var(--nova-space-3) var(--nova-space-4);
             border-radius: var(--nova-radius);
+
+            // Sync button box margins with sheet padding at this breakpoint
+            .o-form-buttonbox {
+                --_sheet-h-pad: var(--nova-space-4);
+                --_sheet-v-pad: var(--nova-space-3);
+            }
         }
     }
 
