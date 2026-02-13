@@ -31,7 +31,7 @@
         padding: var(--nova-space-5) var(--nova-space-6);
 
         .modal-title {
-            font-size: 1.0625rem;
+            font-size: var(--nova-font-2xl);
             font-weight: 600;
             color: var(--nova-text);
         }
@@ -55,7 +55,7 @@
     .modal-body {
         padding: var(--nova-space-6);
         color: var(--nova-text);
-        font-size: $font-size-sm;
+        font-size: var(--nova-font-base);
         line-height: 1.6;
     }
 
@@ -122,12 +122,12 @@
 
         .o_notification_title {
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: var(--nova-font-md);
             color: var(--nova-text);
         }
 
         .o_notification_content {
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             color: var(--nova-text-secondary);
         }
 
@@ -183,11 +183,11 @@
         border-bottom: 1px solid var(--nova-border);
         border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
         font-weight: 600;
-        font-size: 0.8125rem;
+        font-size: var(--nova-font-base);
     }
 
     .popover-body {
-        font-size: 0.8125rem;
+        font-size: var(--nova-font-base);
         color: var(--nova-text);
     }
 }
@@ -205,7 +205,7 @@
     .ui-menu-item {
         border-radius: var(--nova-radius-sm);
         padding: var(--nova-space-2) var(--nova-space-3);
-        font-size: 0.875rem;
+        font-size: var(--nova-font-md);
         color: var(--nova-text);
         transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
         cursor: pointer;

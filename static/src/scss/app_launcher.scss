@@ -89,7 +89,7 @@
     color: inherit;
     padding: 0 var(--nova-space-3, 12px);
     cursor: pointer;
-    font-size: 1.35rem;
+    font-size: var(--nova-font-3xl);
     opacity: 0.8;
     transition: opacity 0.15s ease;
     height: 100%;
@@ -129,7 +129,7 @@
         border-radius: var(--nova-radius-xl);
         background: var(--nova-surface);
         padding: 0 var(--nova-space-5) 0 44px;
-        font-size: 1rem;
+        font-size: var(--nova-font-xl);
         color: var(--nova-text);
         transition: border-color var(--nova-transition-fast),
                     box-shadow var(--nova-transition-fast);
@@ -287,7 +287,7 @@
 
 // ─── App Label ────────────────────────────────────────────────────────────
 .nova-app-tile__label {
-    font-size: 0.8125rem;
+    font-size: var(--nova-font-base);
     font-weight: 500;
     color: var(--nova-text-secondary);
     text-align: center;
@@ -312,7 +312,7 @@
     }
 
     .nova-launcher-empty__text {
-        font-size: 0.9375rem;
+        font-size: var(--nova-font-lg);
         font-weight: 500;
     }
 }

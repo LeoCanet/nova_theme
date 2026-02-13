@@ -59,7 +59,7 @@
             > .o_nav_entry,
             > .dropdown > .dropdown-toggle {
                 padding: 0 var(--nova-space-2);
-                font-size: 0.75rem;
+                font-size: var(--nova-font-sm);
             }
         }
 
@@ -99,7 +99,7 @@
     }
 
     .nova-app-tile__label {
-        font-size: 0.6875rem;
+        font-size: var(--nova-font-xs);
         max-width: 72px;
     }
 
@@ -124,7 +124,7 @@
         padding: 0 var(--nova-space-2) !important;
 
         .o_menu_brand {
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             max-width: 120px;
         }
 

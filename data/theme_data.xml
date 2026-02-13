@@ -18,5 +18,13 @@
             <field name="key">nova_theme.sidebar_collapsed</field>
             <field name="value">False</field>
         </record>
+        <record id="nova_theme_font_size_default" model="ir.config_parameter">
+            <field name="key">nova_theme.font_size</field>
+            <field name="value">default</field>
+        </record>
+        <record id="nova_theme_font_family_default" model="ir.config_parameter">
+            <field name="key">nova_theme.font_family</field>
+            <field name="value">inter</field>
+        </record>
     </data>
 </odoo>

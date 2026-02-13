@@ -769,8 +769,23 @@ html.nova-dark {
 
     // ─── Alerts ──────────────────────────────────────────────────────
     .alert {
-        border-color: var(--nova-border) !important;
         color: var(--nova-text) !important;
+
+        &.alert-warning {
+            background-color: var(--nova-warning-light) !important;
+        }
+        &.alert-danger {
+            background-color: var(--nova-danger-light) !important;
+        }
+        &.alert-success {
+            background-color: var(--nova-success-light) !important;
+        }
+        &.alert-info {
+            background-color: var(--nova-info-light) !important;
+        }
+        &:not(.alert-warning):not(.alert-danger):not(.alert-success):not(.alert-info) {
+            background-color: var(--nova-surface-raised) !important;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -2006,10 +2021,8 @@ html.nova-dark {
         }
     }
 
-    // Follower list button
+    // Follower list button (flat style — no background/border override)
     .o_FollowerListMenu_buttonFollowers {
-        background: var(--nova-surface) !important;
-        border-color: var(--nova-border) !important;
         color: var(--nova-text-secondary) !important;
     }
 
@@ -2057,11 +2070,9 @@ html.nova-dark {
         }
     }
 
-    // Attachment buttons in chatter
+    // Attachment buttons in chatter (flat style — no background/border override)
     .o_ChatterTopbar_buttonToggleAttachments,
     .o_ChatterTopbar_buttonAddAttachments {
-        background: var(--nova-surface) !important;
-        border-color: var(--nova-border) !important;
         color: var(--nova-text-secondary) !important;
     }
 
@@ -2200,6 +2211,9 @@ html.nova-dark {
             color: var(--nova-accent) !important;
         }
     }
+
+    // Nova custom select — trigger inherits dark surface via CSS vars
+    // Dropdown already uses --nova-surface / --nova-border which switch in dark mode
 
     // Status bar buttons text
     .o_form_statusbar .btn:not(.o_arrow_button) {

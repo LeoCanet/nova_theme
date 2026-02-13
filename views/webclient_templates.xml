@@ -7,6 +7,8 @@
             <t t-set="nova_accent" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.accent_color', 'indigo')"/>
             <t t-set="nova_animations" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.animations', 'True')"/>
             <t t-set="nova_sidebar" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.sidebar_collapsed', 'False')"/>
+            <t t-set="nova_font_size" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.font_size', 'default')"/>
+            <t t-set="nova_font_family" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.font_family', 'inter')"/>
             <script type="text/javascript">
                 (function() {
                     var d = document.documentElement;
@@ -14,6 +16,8 @@
                     d.dataset.novaAccent = '<t t-esc="nova_accent"/>';
                     d.dataset.novaAnimations = '<t t-esc="nova_animations"/>';
                     d.dataset.novaSidebarCollapsed = '<t t-esc="nova_sidebar"/>';
+                    d.dataset.novaFontSize = '<t t-esc="nova_font_size"/>';
+                    d.dataset.novaFontFamily = '<t t-esc="nova_font_family"/>';
                     var m = d.dataset.novaMode;
                     if (m === 'dark' || (m === 'auto' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                         d.classList.add('nova-dark');

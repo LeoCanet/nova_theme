@@ -7,14 +7,14 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="Theme Nova" string="Theme Nova" data-key="nova_theme">
-                    <h2>Theme Nova Settings</h2>
+                    <h2>Paramètres du thème Nova</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="nova_theme_mode"/>
                                 <div class="text-muted">
-                                    Choose between Light, Dark or automatic system preference mode.
+                                    Choisissez entre le mode Clair, Sombre ou la préférence automatique du système.
                                 </div>
                                 <div class="content-group">
                                     <field name="nova_theme_mode" class="w-50"/>
@@ -26,10 +26,36 @@
                             <div class="o_setting_right_pane">
                                 <label for="nova_theme_accent_color"/>
                                 <div class="text-muted">
-                                    Select the primary accent color for the theme.
+                                    Sélectionnez la couleur d'accentuation principale du thème.
                                 </div>
                                 <div class="content-group">
                                     <field name="nova_theme_accent_color" class="w-50"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="nova_theme_font_size"/>
+                                <div class="text-muted">
+                                    Ajustez la taille générale du texte : Compact pour les vues denses, Grand pour la lisibilité.
+                                </div>
+                                <div class="content-group">
+                                    <field name="nova_theme_font_size" class="w-50"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="nova_theme_font_family"/>
+                                <div class="text-muted">
+                                    Choisissez la police utilisée dans toute l'interface.
+                                </div>
+                                <div class="content-group">
+                                    <field name="nova_theme_font_family" class="w-50"/>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +68,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="nova_theme_animations"/>
                                 <div class="text-muted">
-                                    Enable smooth animations and transitions throughout the interface.
+                                    Activer les animations et transitions fluides dans l'interface.
                                 </div>
                             </div>
                         </div>
@@ -53,7 +79,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="nova_theme_sidebar_collapsed"/>
                                 <div class="text-muted">
-                                    Start with the sidebar collapsed when entering an application.
+                                    Démarrer avec la barre latérale réduite à l'ouverture d'une application.
                                 </div>
                             </div>
                         </div>

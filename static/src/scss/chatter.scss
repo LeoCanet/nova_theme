@@ -2,45 +2,83 @@
 /// Theme Nova — Chatter (Discussion Thread) Redesign
 ///============================================================================
 
+// ─── Chatter width (side panel) ─────────────────────────────────────────────
+// Odoo native: flex-grow:1 + width:530px → chatter fills all remaining space.
+// We cap it to keep the form sheet dominant.
+.o_FormRenderer_chatterContainer.o-aside {
+    flex-grow: 0;
+    width: 450px;
+    min-width: 380px;
+    overflow: hidden;
+}
+
+// ─── Nova chatter topbar — compact toolbar ──────────────────────────────────
+.nova-chatter-topbar {
+    padding: 6px 10px;
+    gap: 0;
+
+    // Shared row style
+    .nova-chatter-topbar__primary,
+    .nova-chatter-topbar__secondary {
+        min-height: 28px;
+    }
+
+    // Subtle divider between the two rows
+    .nova-chatter-topbar__secondary {
+        border-top: 1px solid var(--nova-border-light);
+        padding-top: 4px;
+        margin-top: 4px;
+    }
+}
+
+// ─── Toolbar buttons (flat, compact, Notion-style) ──────────────────────────
+.nova-tb-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--nova-font-sm);
+    font-weight: 500;
+    padding: 3px 8px;
+    color: var(--nova-text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: var(--nova-radius-sm);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--nova-transition-fast);
+    line-height: 1;
+
+    .fa {
+        font-size: 11px;
+    }
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+
+    &.o-active {
+        background: var(--nova-accent);
+        color: white;
+    }
+}
+
+// ─── Vertical separator ─────────────────────────────────────────────────────
+.nova-tb-sep {
+    width: 1px;
+    height: 14px;
+    background: var(--nova-border);
+    margin: 0 6px;
+    flex-shrink: 0;
+}
+
 .o_ChatterContainer,
 .o_Chatter {
     background: var(--nova-bg);
-    border-top: 1px solid var(--nova-border);
-    margin-top: var(--nova-space-4);
 
-    // ─── Chatter header (Log note / Send message buttons) ──────────
+    // ─── Chatter header ──────────────────────────────────────────────
     .o_Chatter_topbar {
-        padding: var(--nova-space-3) var(--nova-space-4);
-        gap: var(--nova-space-2);
         border-bottom: 1px solid var(--nova-border-light);
-
-        .o_ChatterTopbar_button {
-            border-radius: var(--nova-radius);
-            font-size: 0.8125rem;
-            font-weight: 500;
-            padding: var(--nova-space-1) var(--nova-space-3);
-            color: var(--nova-text-secondary);
-            border: 1px solid var(--nova-border);
-            background: var(--nova-surface);
-            transition: all var(--nova-transition-fast);
-
-            &:hover {
-                background: var(--nova-accent-light);
-                border-color: var(--nova-accent);
-                color: var(--nova-accent);
-            }
-
-            &.o-active {
-                background: var(--nova-accent);
-                border-color: var(--nova-accent);
-                color: white;
-            }
-
-            .fa {
-                margin-right: var(--nova-space-1);
-                font-size: 13px;
-            }
-        }
+        padding: 0;
     }
 
     // ─── Activity section ──────────────────────────────────────────────
@@ -50,11 +88,11 @@
         }
 
         .o_Activity_info {
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
         }
 
         .o_Activity_note {
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             color: var(--nova-text-secondary);
         }
 
@@ -65,7 +103,7 @@
             margin-top: var(--nova-space-2);
 
             .o_Activity_toolButton.btn {
-                font-size: 0.75rem;
+                font-size: var(--nova-font-sm);
                 font-weight: 500;
                 padding: var(--nova-space-1) var(--nova-space-2) !important;
                 border-radius: var(--nova-radius);
@@ -130,7 +168,7 @@
     .o_ActivityBox {
         .o_ActivityBox_title {
             color: var(--nova-text-secondary);
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
         }
 
         .o_ActivityBox_titleLine {
@@ -139,101 +177,252 @@
         }
 
         .o_ActivityBox_titleBadge {
-            font-size: 0.6875rem;
+            font-size: var(--nova-font-xs);
             font-weight: 600;
             padding: 0.15em 0.5em;
             border-radius: var(--nova-radius-full);
         }
     }
 
-    // ─── Follow button ───────────────────────────────────────────────
+    // ─── Follow button (flat, compact) ────────────────────────────────
     .o_FollowButton {
-        .o_FollowButton_follow {
-            font-size: 0.8125rem;
-            font-weight: 500;
-            color: var(--nova-text-secondary) !important;
-            text-decoration: none !important;
-            padding: var(--nova-space-1) var(--nova-space-3) !important;
-            border: 1px solid var(--nova-border);
-            border-radius: var(--nova-radius);
-            background: var(--nova-surface);
-            transition: all var(--nova-transition-fast);
-
-            &:hover {
-                background: var(--nova-accent-light);
-                border-color: var(--nova-accent);
-                color: var(--nova-accent) !important;
-            }
-        }
-
+        .o_FollowButton_follow,
         .o_FollowButton_unfollow {
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-sm);
             font-weight: 500;
             text-decoration: none !important;
-            padding: var(--nova-space-1) var(--nova-space-3) !important;
-            border: 1px solid var(--nova-border);
-            border-radius: var(--nova-radius);
-            background: var(--nova-surface);
-            transition: all var(--nova-transition-fast);
-
-            &.o-following {
-                color: var(--nova-success) !important;
-                border-color: var(--nova-success);
-                background: var(--nova-success-light);
-            }
-
-            &.o-unfollow {
-                color: var(--nova-danger) !important;
-                border-color: var(--nova-danger);
-                background: var(--nova-danger-light);
-            }
-        }
-    }
-
-    // ─── Follower list menu ──────────────────────────────────────────
-    .o_FollowerListMenu {
-        .o_FollowerListMenu_buttonFollowers {
-            border: 1px solid var(--nova-border) !important;
-            background: var(--nova-surface) !important;
+            padding: 3px 8px !important;
+            border: none !important;
+            border-radius: var(--nova-radius-sm);
+            background: transparent !important;
             color: var(--nova-text-secondary) !important;
-            font-size: 0.8125rem;
-            border-radius: var(--nova-radius);
             transition: all var(--nova-transition-fast);
 
             &:hover {
                 background: var(--nova-accent-light) !important;
-                border-color: var(--nova-accent) !important;
                 color: var(--nova-accent) !important;
             }
         }
 
-        .o_Follower {
-            padding: var(--nova-space-2) var(--nova-space-3);
-            border-radius: var(--nova-radius);
+        .o_FollowButton_unfollow.o-following {
+            color: var(--nova-success) !important;
+        }
 
+        .o_FollowButton_unfollow.o-unfollow {
+            color: var(--nova-danger) !important;
             &:hover {
-                background: var(--nova-accent-light);
-            }
-
-            img {
-                border-radius: var(--nova-radius-full);
-                width: 28px;
-                height: 28px;
+                background: var(--nova-danger-light) !important;
             }
         }
     }
 
-    // ─── Attachment count button ─────────────────────────────────────
-    .o_ChatterTopbar_buttonToggleAttachments,
-    .o_ChatterTopbar_buttonAddAttachments {
-        border: 1px solid var(--nova-border) !important;
-        background: var(--nova-surface) !important;
-        color: var(--nova-text-secondary) !important;
+    // ─── Follower list menu (flat) ──────────────────────────────────
+    .o_FollowerListMenu {
+        .o_FollowerListMenu_buttonFollowers {
+            border: none !important;
+            background: transparent !important;
+            color: var(--nova-text-secondary) !important;
+            font-size: var(--nova-font-sm);
+            padding: 3px 8px;
+            border-radius: var(--nova-radius-sm);
+            transition: all var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        // Dropdown container
+        .o_FollowerListMenu_dropdown {
+            background: var(--nova-surface) !important;
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius) !important;
+            box-shadow: var(--nova-shadow-md) !important;
+            padding: var(--nova-space-1) 0 !important;
+
+            .dropdown-divider {
+                border-color: var(--nova-border-light);
+            }
+
+            // "Add Followers" link
+            .o_FollowerListMenu_addFollowersButton {
+                color: var(--nova-text-secondary) !important;
+                font-size: var(--nova-font-base);
+                padding: var(--nova-space-2) var(--nova-space-3);
+
+                &:hover {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+        }
+
+        // Individual follower row
+        .o_Follower {
+            padding: 0 !important;
+            border-radius: 0;
+
+            &:hover {
+                background: transparent !important;
+            }
+
+            .o_Follower_details {
+                padding: var(--nova-space-2) var(--nova-space-3) !important;
+                color: var(--nova-text) !important;
+                transition: background var(--nova-transition-fast);
+
+                &:hover {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            .o_Follower_avatar {
+                width: 28px;
+                height: 28px;
+            }
+
+            .o_Follower_button {
+                color: var(--nova-text-tertiary) !important;
+                transition: all var(--nova-transition-fast);
+
+                &:hover {
+                    color: var(--nova-accent) !important;
+                    background: var(--nova-accent-light) !important;
+                }
+            }
+
+            .o_Follower_removeButton:hover {
+                color: var(--nova-danger) !important;
+                background: var(--nova-danger-light) !important;
+            }
+        }
+    }
+}
+
+// ─── Attachment box ─────────────────────────────────────────────────────────
+.o_AttachmentBox {
+    padding: 0 var(--nova-space-3) var(--nova-space-3);
+
+    .o_AttachmentBox_title {
+        .o_AttachmentBox_dashedLine {
+            border-color: var(--nova-border-light);
+        }
+        .o_AttachmentBox_titleText {
+            color: var(--nova-text-secondary);
+            font-size: var(--nova-font-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: var(--nova-space-2) var(--nova-space-3) !important;
+        }
+    }
+
+    .o_AttachmentBox_buttonAdd {
+        align-self: center;
+        font-size: var(--nova-font-sm);
+        color: var(--nova-accent);
 
         &:hover {
-            background: var(--nova-accent-light) !important;
-            border-color: var(--nova-accent) !important;
-            color: var(--nova-accent) !important;
+            color: var(--nova-accent-hover);
+        }
+    }
+}
+
+// ─── Attachment list (images + cards) ───────────────────────────────────────
+.o_attachmentBox_attachmentList {
+    padding: 0 var(--nova-space-2);
+    gap: var(--nova-space-2);
+}
+
+// ─── Attachment images ──────────────────────────────────────────────────────
+.o_AttachmentImage {
+    border-radius: var(--nova-radius);
+    overflow: hidden;
+    border: 1px solid var(--nova-border);
+    max-width: 100%;
+    // Switch to column so actions sit below the image
+    flex-direction: column !important;
+
+    img {
+        max-width: 100% !important;
+    }
+
+    // Actions bar below image instead of overlay
+    .o_AttachmentImage_imageOverlay {
+        position: static !important;
+        opacity: 1 !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: var(--nova-space-1);
+        padding: 3px;
+        background: var(--nova-bg-alt) !important;
+        border-top: 1px solid var(--nova-border-light);
+        color: var(--nova-text-secondary);
+
+        .o_AttachmentImage_action {
+            background: transparent !important;
+            border: none !important;
+            opacity: 1 !important;
+            border-radius: var(--nova-radius-sm);
+            padding: 4px 8px;
+            font-size: var(--nova-font-md);
+            color: var(--nova-text-secondary);
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent);
+            }
+        }
+
+        .o_AttachmentImage_actionUnlink {
+            &:hover {
+                background: var(--nova-danger-light) !important;
+                color: var(--nova-danger);
+            }
+        }
+    }
+}
+
+// ─── Attachment cards (non-image files) ─────────────────────────────────────
+.o_AttachmentCard {
+    background: var(--nova-surface) !important;
+    border: 1px solid var(--nova-border) !important;
+    border-radius: var(--nova-radius) !important;
+    overflow: hidden;
+    max-width: 100%;
+
+    .o_AttachmentCard_details {
+        min-width: 0; // allow text truncation
+    }
+
+    .o_AttachmentCard_filename {
+        font-size: var(--nova-font-sm);
+        font-weight: 500;
+        color: var(--nova-text);
+    }
+
+    .o_AttachmentCard_extension {
+        color: var(--nova-text-tertiary);
+        font-size: var(--nova-font-2xs);
+    }
+
+    .o_AttachmentCard_aside {
+        .o_AttachmentCard_asideItem {
+            background: var(--nova-bg-alt) !important;
+            color: var(--nova-text-secondary) !important;
+            transition: all var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        .o_AttachmentCard_asideItemUnlink:hover {
+            background: var(--nova-danger-light) !important;
+            color: var(--nova-danger) !important;
         }
     }
 }
@@ -266,12 +455,12 @@
     .o_Message_header {
         .o_Message_authorName {
             font-weight: 600;
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             color: var(--nova-text);
         }
 
         .o_Message_date {
-            font-size: 0.6875rem;
+            font-size: var(--nova-font-xs);
             color: var(--nova-text-tertiary);
             font-weight: 400;
         }
@@ -279,7 +468,7 @@
 
     // ─── Content ───────────────────────────────────────────────────────
     .o_Message_content {
-        font-size: 0.8125rem;
+        font-size: var(--nova-font-base);
         color: var(--nova-text);
         line-height: 1.6;
         margin-top: var(--nova-space-1);
@@ -310,7 +499,7 @@
         border: 1px solid var(--nova-border) !important;
         border-radius: var(--nova-radius) !important;
         box-shadow: var(--nova-shadow-xs) !important;
-        font-size: 0.85rem !important;
+        font-size: var(--nova-font-md) !important;
     }
 
     .o_MessageActionView {
@@ -327,7 +516,7 @@
     // ─── Tracking values (field changes) ───────────────────────────────
     .o_Message_trackingValues {
         .o_Message_trackingValue {
-            font-size: 0.75rem;
+            font-size: var(--nova-font-sm);
             color: var(--nova-text-secondary);
             padding: var(--nova-space-1) 0;
 
@@ -363,7 +552,7 @@
         border: 1px solid var(--nova-border);
         border-radius: var(--nova-radius-lg);
         padding: var(--nova-space-3) var(--nova-space-4);
-        font-size: 0.8125rem;
+        font-size: var(--nova-font-base);
         min-height: 80px;
         resize: vertical;
         transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
@@ -393,7 +582,7 @@
     border-radius: var(--nova-radius);
     padding: var(--nova-space-2) var(--nova-space-3);
     background: var(--nova-bg-alt);
-    font-size: 0.75rem;
+    font-size: var(--nova-font-sm);
     transition: all var(--nova-transition-fast);
 
     &:hover {

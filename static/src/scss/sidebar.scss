@@ -85,7 +85,7 @@
     }
 
     .nova-sidebar__section-title {
-        font-size: 0.6875rem;
+        font-size: var(--nova-font-xs);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -190,7 +190,7 @@
         padding: var(--nova-space-2) var(--nova-space-3);
         border-radius: var(--nova-radius);
         color: var(--nova-text-secondary);
-        font-size: 0.8125rem;
+        font-size: var(--nova-font-base);
         font-weight: 450;
         cursor: pointer;
         transition: padding var(--nova-transition-slow),
@@ -268,7 +268,7 @@
         }
 
         span {
-            font-size: 0.75rem;
+            font-size: var(--nova-font-sm);
             line-height: 1.4;
             max-width: 140px;
         }

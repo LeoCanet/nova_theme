@@ -21,19 +21,12 @@ export class NovaSidebar extends Component {
             _tick: 0,
         });
 
-        // MENUS:APP-CHANGED fires AFTER setCurrentMenu() sets currentAppId,
-        // so getCurrentApp() is guaranteed correct. This is the right event
-        // for visibility — unlike ACTION_MANAGER:UI-UPDATED which fires
-        // before setCurrentMenu() during the boot sequence.
         this._boundOnAppChanged = () => {
             this._loadFavorites();
             this._updateVisibility();
             this.state._tick++;
         };
 
-        // ACTION_MANAGER:UI-UPDATED fires on every action change (sub-page
-        // navigation within an app). We only bump _tick to re-evaluate
-        // active states — no visibility update needed here.
         this._boundOnUiUpdated = () => {
             this.state._tick++;
         };
@@ -66,13 +59,19 @@ export class NovaSidebar extends Component {
         const ids = getFavoriteAppIds();
         const allApps = this.menuService.getApps();
         const appMap = Object.fromEntries(allApps.map((a) => [a.id, a]));
-        // Resolve IDs to app objects, skip obsolete ones
         this.state.favoriteApps = ids.map((id) => appMap[id]).filter(Boolean);
         this._updateVisibility();
     }
 
     _loadPins() {
-        this.state.pinnedPages = getPinnedPages();
+        // Migrate legacy pins that lack a key
+        const pages = getPinnedPages().map((p) => {
+            if (!p.key) {
+                p.key = this._pinKey(p);
+            }
+            return p;
+        });
+        this.state.pinnedPages = pages;
         this._updateVisibility();
     }
 
@@ -80,19 +79,16 @@ export class NovaSidebar extends Component {
 
     _updateVisibility() {
         const currentApp = this.menuService.getCurrentApp();
-        const hasFavs = this.state.favoriteApps.length > 0;
-        const hasPins = this.state.pinnedPages.length > 0;
-        const hasContent = hasFavs || hasPins;
+        const hasContent =
+            this.state.favoriteApps.length > 0 || this.state.pinnedPages.length > 0;
 
         if (currentApp && hasContent) {
             document.body.classList.add("nova-sidebar-open");
             document.body.classList.remove("nova-home-menu-visible");
         } else if (!currentApp) {
-            // Home menu — always hide sidebar
             document.body.classList.remove("nova-sidebar-open");
             document.body.classList.add("nova-home-menu-visible");
         } else {
-            // In an app but no content — hide sidebar
             document.body.classList.remove("nova-sidebar-open");
             document.body.classList.remove("nova-home-menu-visible");
         }
@@ -111,7 +107,6 @@ export class NovaSidebar extends Component {
     }
 
     isFavoriteActive(app) {
-        // Read _tick to force re-evaluation
         void this.state._tick;
         try {
             const currentApp = this.menuService.getCurrentApp();
@@ -125,64 +120,185 @@ export class NovaSidebar extends Component {
         return `/web/image?model=ir.ui.menu&id=${app.id}&field=web_icon_data`;
     }
 
+    // ── Page info helpers ────────────────────────────────────────────────
+    //
+    // A "page" is identified by (actionId, viewType, resId).
+    //   - Contacts list  → { actionId: 123, viewType: "list",  resId: null }
+    //   - Contact form   → { actionId: 123, viewType: "form",  resId: 42   }
+    // These are different pages even though they share the same action.
+
+    /**
+     * Build a unique key string for a pin or page info object.
+     * Handles both new pins (actionId) and legacy pins (actionID).
+     */
+    _pinKey(p) {
+        const aid = p.actionId ?? p.actionID ?? "";
+        const vt = p.viewType ?? "";
+        const rid = p.resId ?? "";
+        return `${aid}:${vt}:${rid}`;
+    }
+
+    /**
+     * Snapshot of the page currently displayed. Uses actionService.currentController
+     * as primary source (synchronous, always up-to-date) with router hash as fallback.
+     * Returns null when no action is loaded (e.g. home screen).
+     */
+    _currentPage() {
+        // Primary: action service — updated synchronously BEFORE
+        // ACTION_MANAGER:UI-UPDATED fires (unlike the debounced router hash).
+        try {
+            const ct = this.actionService.currentController;
+            if (ct && ct.action) {
+                const action = ct.action;
+                const props = ct.props || {};
+                const actionId =
+                    action.id || (action.type === "ir.actions.client" ? action.tag : null);
+                if (actionId != null) {
+                    return {
+                        actionId,
+                        viewType: props.type || null,
+                        model: props.resModel || null,
+                        resId: props.resId || (props.state && props.state.resId) || null,
+                        displayName: ct.displayName || null,
+                    };
+                }
+            }
+        } catch { /* controller not ready */ }
+
+        // Fallback: router hash (may lag one tick behind after navigation)
+        try {
+            const h = this.router.current.hash;
+            if (h && h.action != null) {
+                return {
+                    actionId: h.action,
+                    viewType: h.view_type || null,
+                    model: h.model || null,
+                    resId: h.id || null,
+                    displayName: null,
+                };
+            }
+        } catch { /* ignore */ }
+
+        return null;
+    }
+
     // ── Pinned pages ────────────────────────────────────────────────────
 
     get canPinCurrentPage() {
-        return !!this.menuService.getCurrentApp();
+        void this.state._tick;
+        return !!this.menuService.getCurrentApp() && this._currentPage() != null;
     }
 
     get isPageAlreadyPinned() {
-        // Read _tick to force re-evaluation
         void this.state._tick;
-        try {
-            const current = this.router.current;
-            const actionId = (current.hash && current.hash.action) || current.action;
-            if (!actionId) return false;
-            return this.state.pinnedPages.some((p) => Number(p.actionID) === Number(actionId));
-        } catch {
-            return false;
-        }
+        const page = this._currentPage();
+        if (!page) return false;
+        const key = this._pinKey(page);
+        return this.state.pinnedPages.some((p) => (p.key || this._pinKey(p)) === key);
     }
 
     pinCurrentPage() {
+        const currentApp = this.menuService.getCurrentApp();
+        if (!currentApp) return;
+
+        const page = this._currentPage();
+        if (!page) return;
+
+        const key = this._pinKey(page);
+
+        // Deduplicate
+        if (this.state.pinnedPages.some((p) => (p.key || this._pinKey(p)) === key)) return;
+
+        // Try to find a menu-item name for the action
+        let menuName = null;
         try {
-            const currentApp = this.menuService.getCurrentApp();
-            if (!currentApp) return;
+            const tree = this.menuService.getMenuAsTree(currentApp.id);
+            const mi = this._findMenuByAction(tree, page.actionId);
+            if (mi) menuName = mi.name;
+        } catch { /* ignore */ }
 
-            const current = this.router.current;
-            const actionId = (current.hash && current.hash.action) || current.action;
-            if (!actionId) return;
+        // Pick the best display name:
+        //   form view  → controller display name (record name)
+        //   list/other → menu item name > controller name > document title
+        let name;
+        if (page.resId && page.displayName) {
+            name = page.displayName;
+        } else {
+            name =
+                menuName ||
+                page.displayName ||
+                (document.title || "").replace(/\s*[-–—|].*$/, "").trim() ||
+                `Page ${page.actionId}`;
+        }
 
-            // Deduplicate
-            if (this.state.pinnedPages.some((p) => Number(p.actionID) === Number(actionId))) return;
+        const pin = {
+            key,
+            actionID: page.actionId,
+            viewType: page.viewType,
+            model: page.model,
+            resId: page.resId,
+            name,
+            appId: currentApp.id,
+            appName: currentApp.name,
+        };
 
-            // Find the menu item by searching the menu tree recursively
-            const menuTree = this.menuService.getMenuAsTree(currentApp.id);
-            const menuItem = this._findMenuByAction(menuTree, Number(actionId));
+        const pages = [...this.state.pinnedPages, pin];
+        setPinnedPages(pages);
+        this.state.pinnedPages = pages;
+        this._updateVisibility();
+        this.env.bus.trigger("NOVA:PINS-CHANGED");
+    }
 
-            if (!menuItem) return;
+    removePin(pin) {
+        const target = pin.key || this._pinKey(pin);
+        const pages = this.state.pinnedPages.filter(
+            (p) => (p.key || this._pinKey(p)) !== target
+        );
+        setPinnedPages(pages);
+        this.state.pinnedPages = pages;
+        this._updateVisibility();
+        this.env.bus.trigger("NOVA:PINS-CHANGED");
+    }
 
-            const pin = {
-                menuId: menuItem.id,
-                actionID: menuItem.actionID,
-                name: menuItem.name,
-                appId: currentApp.id,
-                appName: currentApp.name,
-            };
+    isPinActive(pin) {
+        void this.state._tick;
+        const page = this._currentPage();
+        if (!page) return false;
+        return (pin.key || this._pinKey(pin)) === this._pinKey(page);
+    }
 
-            const pages = [...this.state.pinnedPages, pin];
-            setPinnedPages(pages);
-            this.state.pinnedPages = pages;
-            this._updateVisibility();
-            this.env.bus.trigger("NOVA:PINS-CHANGED");
-        } catch {
-            // ignore — menu might not be ready
+    /**
+     * Navigate to a pinned page.
+     * Uses doAction with viewType + resId so Odoo opens exactly the right
+     * view instead of always falling back to the default list.
+     */
+    onPinClick(pin) {
+        if (!pin.actionID) return;
+
+        if (pin.resId && pin.model) {
+            // Specific record → inline action descriptor
+            this.actionService.doAction({
+                type: "ir.actions.act_window",
+                res_model: pin.model,
+                res_id: pin.resId,
+                views: [[false, "form"]],
+                target: "current",
+            });
+        } else {
+            // List / kanban / other multi-record views
+            const options = {};
+            if (pin.viewType) {
+                options.viewType = pin.viewType;
+            }
+            this.actionService.doAction(pin.actionID, options);
         }
     }
 
+    // ── Helpers ──────────────────────────────────────────────────────────
+
     _findMenuByAction(node, actionId) {
         if (!node) return null;
-        if (Number(node.actionID) === actionId) return node;
+        if (node.actionID != null && String(node.actionID) === String(actionId)) return node;
         const children = node.childrenTree || [];
         for (const child of children) {
             const found = this._findMenuByAction(child, actionId);
@@ -191,40 +307,10 @@ export class NovaSidebar extends Component {
         return null;
     }
 
-    removePin(pin) {
-        const pages = this.state.pinnedPages.filter((p) => p.menuId !== pin.menuId);
-        setPinnedPages(pages);
-        this.state.pinnedPages = pages;
-        this._updateVisibility();
-        this.env.bus.trigger("NOVA:PINS-CHANGED");
-    }
-
-    isPinActive(pin) {
-        // Read _tick to force re-evaluation
-        void this.state._tick;
-        try {
-            const current = this.router.current;
-            const actionId = (current.hash && current.hash.action) || current.action;
-            return actionId && Number(pin.actionID) === Number(actionId);
-        } catch {
-            return false;
-        }
-    }
-
-    onPinClick(pin) {
-        if (pin.actionID) {
-            this.actionService.doAction(pin.actionID);
-        }
-    }
-
-    // ── Collapse ────────────────────────────────────────────────────────
-
     toggleCollapse() {
         this.state.collapsed = !this.state.collapsed;
         this._updateBodyClasses();
     }
-
-    // ── Menu icon mapping ───────────────────────────────────────────────
 
     getMenuIcon(item) {
         const iconMap = {

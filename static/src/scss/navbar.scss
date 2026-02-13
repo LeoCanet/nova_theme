@@ -18,7 +18,7 @@
 
     // ─── Logo / Brand ──────────────────────────────────────────────────
     .o_menu_brand {
-        font-size: 0.9375rem;
+        font-size: var(--nova-font-lg);
         font-weight: 600;
         color: var(--nova-text) !important;
         margin: 0;
@@ -74,7 +74,7 @@
             display: flex;
             align-items: center;
             padding: 0 var(--nova-space-3);
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             font-weight: 500;
             color: var(--nova-text-secondary);
             border-radius: 0;
@@ -154,7 +154,7 @@
             border: none !important;
             box-shadow: none !important;
             transition: all var(--nova-transition-fast);
-            font-size: 15px;
+            font-size: var(--nova-font-lg);
             padding: 0 var(--nova-space-1) !important;
             position: relative;
 
@@ -185,7 +185,7 @@
             min-width: 20px;
             height: 20px;
             padding: 0 6px;
-            font-size: 0.6rem;
+            font-size: var(--nova-font-2xs);
             font-weight: 700;
             border-radius: var(--nova-radius-full) !important;
             background: var(--nova-accent) !important;
@@ -208,7 +208,7 @@
                 gap: var(--nova-space-1);
 
                 .oe_topbar_name {
-                    font-size: 0.8125rem;
+                    font-size: var(--nova-font-base);
                     font-weight: 500;
                     color: var(--nova-text) !important;
                     max-width: 140px;
@@ -236,7 +236,7 @@
             }
 
             .oe_topbar_name {
-                font-size: 0.8125rem;
+                font-size: var(--nova-font-base);
                 font-weight: 500;
                 color: var(--nova-text) !important;
                 max-width: 120px;
@@ -262,7 +262,7 @@
         .dropdown-item {
             border-radius: var(--nova-radius-sm);
             padding: var(--nova-space-2) var(--nova-space-3);
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             font-weight: 450;
             color: var(--nova-text);
             transition: background var(--nova-transition-fast);

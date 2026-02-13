@@ -25,6 +25,7 @@
     "depends": [
         "base",
         "web",
+        "mail",
         "base_setup",
     ],
     "data": [
@@ -60,10 +61,13 @@
             "nova_theme/static/src/js/nova_sidebar.js",
             "nova_theme/static/src/js/nova_dark_mode.js",
             "nova_theme/static/src/js/nova_settings.js",
+            "nova_theme/static/src/js/nova_selection_field.js",
             "nova_theme/static/src/xml/app_launcher.xml",
+            "nova_theme/static/src/xml/nova_selection_field.xml",
             "nova_theme/static/src/xml/navbar.xml",
             "nova_theme/static/src/xml/sidebar.xml",
             "nova_theme/static/src/xml/button_box.xml",
+            "nova_theme/static/src/xml/chatter_topbar.xml",
             "nova_theme/static/src/xml/dark_mode_toggle.xml",
         ],
     },

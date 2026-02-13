@@ -69,7 +69,7 @@
                 // Unified transition — button + pseudo-elements use identical timing
                 transition: background-color .15s ease-in-out, color .15s ease-in-out, border-color .15s ease-in-out !important;
 
-                font-size: 0.75rem !important;
+                font-size: var(--nova-font-sm) !important;
                 font-weight: 600;
                 letter-spacing: 0.06em;
                 text-transform: uppercase;
@@ -217,7 +217,7 @@
 
             // ── Values ──
             .o_stat_value {
-                font-size: 1rem !important;
+                font-size: var(--nova-font-xl) !important;
                 font-weight: 700 !important;
                 color: var(--nova-text) !important;
                 font-variant-numeric: tabular-nums;
@@ -228,7 +228,7 @@
             .o_stat_text,
             .o_stat_info > span:not(.o_stat_value),
             .o_field_statinfo > span:last-child {
-                font-size: 0.8125rem !important;
+                font-size: var(--nova-font-base) !important;
                 font-weight: 500 !important;
                 color: var(--nova-text-secondary) !important;
                 text-transform: none !important;
@@ -254,14 +254,14 @@
                     border: none !important;
                     color: var(--nova-text-secondary) !important;
                     font-weight: 500;
-                    font-size: 0.8125rem;
+                    font-size: var(--nova-font-base);
                     box-shadow: none !important;
                     line-height: 1;
 
                     &::after {
                         content: "\f107" !important;
                         font-family: "FontAwesome" !important;
-                        font-size: 0.875rem;
+                        font-size: var(--nova-font-md);
                         border: none !important;
                         width: auto !important;
                         height: auto !important;
@@ -315,7 +315,7 @@
     .oe_title {
         .o_field_widget {
             input, textarea {
-                font-size: 1.5rem;
+                font-size: var(--nova-font-3xl);
                 font-weight: 700;
                 color: var(--nova-text);
                 border: none;
@@ -337,7 +337,7 @@
     // ─── Group separator — accent title + subtle gray line ──────────────
     // Native Odoo uses box-shadow (not border!) for the separator line
     .o_horizontal_separator {
-        font-size: 0.875rem;
+        font-size: var(--nova-font-md);
         font-weight: 600;
         color: var(--nova-accent) !important;
         border: none !important;
@@ -354,7 +354,7 @@
 
         // Labels
         label.o_form_label {
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             font-weight: 500;
             color: var(--nova-text-secondary);
         }
@@ -369,7 +369,7 @@
             border: 1px solid var(--nova-border);
             border-radius: var(--nova-radius);
             padding: var(--nova-space-2) var(--nova-space-3);
-            font-size: $font-size-sm;
+            font-size: var(--nova-font-base);
             color: var(--nova-text);
             background: var(--nova-surface);
             transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
@@ -539,7 +539,7 @@
                 width: 0 !important;    // override Odoo's .o_input { width: 100% }
                 min-width: 80px;
                 padding: 2px 4px;
-                font-size: $font-size-sm;
+                font-size: var(--nova-font-base);
                 color: var(--nova-text);
                 cursor: text;
             }
@@ -555,7 +555,7 @@
 
         .badge {
             border-radius: var(--nova-radius-sm) !important;
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             font-weight: 500;
             padding: 4px 8px;
             line-height: 1.3;
@@ -619,7 +619,7 @@
                 border: none !important;
                 border-radius: var(--nova-radius-sm);
                 padding: var(--nova-space-2) var(--nova-space-4);
-                font-size: 0.8125rem;
+                font-size: var(--nova-font-base);
                 font-weight: 500;
                 color: var(--nova-text-secondary);
                 background: transparent;
@@ -655,7 +655,7 @@
     .o_inner_group {
         .o_td_label {
             label {
-                font-size: 0.8125rem;
+                font-size: var(--nova-font-base);
                 color: var(--nova-text-secondary);
             }
         }
@@ -663,15 +663,41 @@
 
     // ─── One2many / Many2many List inside forms ────────────────────────
     .o_field_one2many, .o_field_many2many {
-        .o_list_view {
+        .o_list_view,
+        .o_list_renderer {
             .o_list_table {
                 border-radius: var(--nova-radius);
             }
         }
 
+        // Force font-size on ALL list cells (readonly + edit)
+        // Must target both .o_list_view and .o_list_renderer
+        .o_list_table {
+            tbody td,
+            tbody .o_data_row td,
+            tbody .o_data_row td.o_data_cell,
+            tbody td .o_field_widget,
+            tbody td .o_field_widget span,
+            tbody td .o_field_widget div,
+            tbody td .o_field_widget input,
+            tbody td span,
+            tbody td a {
+                font-size: var(--nova-font-base) !important;
+            }
+
+            // Readonly rows (non-selected) — Odoo sets display:inline on field widgets
+            tbody .o_data_row:not(.o_selected_row) td .o_field_widget {
+                font-size: var(--nova-font-base) !important;
+
+                * {
+                    font-size: inherit !important;
+                }
+            }
+        }
+
         .o_field_x2many_list_row_add a {
             color: var(--nova-accent);
-            font-size: 0.8125rem;
+            font-size: var(--nova-font-base);
             font-weight: 500;
 
             &:hover {

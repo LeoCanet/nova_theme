@@ -21,7 +21,7 @@
                 background: var(--nova-bg-alt);
                 border-bottom: 1px solid var(--nova-border);
                 color: var(--nova-text-secondary);
-                font-size: 0.75rem;
+                font-size: var(--nova-font-sm);
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.04em;
@@ -57,7 +57,7 @@
                 td {
                     padding: var(--nova-space-3) var(--nova-space-4);
                     border-bottom: 1px solid var(--nova-border-light);
-                    font-size: $font-size-sm;
+                    font-size: var(--nova-font-base);
                     color: var(--nova-text);
                     vertical-align: middle;
                     max-width: 300px;
@@ -100,7 +100,7 @@
                 background: var(--nova-bg-alt);
                 border-top: 1px solid var(--nova-border);
                 font-weight: 600;
-                font-size: $font-size-sm;
+                font-size: var(--nova-font-base);
                 color: var(--nova-text);
                 padding: var(--nova-space-3) var(--nova-space-4);
             }

@@ -5,7 +5,7 @@
 // ─── Base Button Reset ─────────────────────────────────────────────────────
 .btn {
     border-radius: var(--nova-radius);
-    font-size: 0.8125rem;
+    font-size: var(--nova-font-base);
     font-weight: 500;
     padding: var(--nova-space-2) var(--nova-space-4);
     transition: all var(--nova-transition-fast);
@@ -21,14 +21,14 @@
 
     // Small buttons
     &.btn-sm {
-        font-size: 0.75rem;
+        font-size: var(--nova-font-sm);
         padding: var(--nova-space-1) var(--nova-space-3);
         border-radius: var(--nova-radius-sm);
     }
 
     // Large buttons
     &.btn-lg {
-        font-size: 0.9375rem;
+        font-size: var(--nova-font-lg);
         padding: var(--nova-space-3) var(--nova-space-6);
         border-radius: var(--nova-radius);
     }
@@ -39,13 +39,11 @@
     background: var(--nova-accent);
     border-color: var(--nova-accent);
     color: white;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
     &:hover, &:focus {
         background: var(--nova-accent-hover);
         border-color: var(--nova-accent-hover);
         color: white;
-        box-shadow: var(--nova-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         transform: translateY(-1px);
     }
 
@@ -237,7 +235,7 @@
 // ─── Odoo-specific button overrides ────────────────────────────────────────
 .o_form_view .o_form_statusbar .btn:not(.o_arrow_button) {
     border-radius: var(--nova-radius);
-    font-size: 0.8125rem;
+    font-size: var(--nova-font-base);
     padding: var(--nova-space-1) var(--nova-space-4);
 }
 

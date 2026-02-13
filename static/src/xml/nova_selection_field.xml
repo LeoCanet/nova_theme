@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="nova_theme.SelectionField" owl="1">
+        <t t-if="props.readonly">
+            <span t-esc="string" t-att-raw-value="value" />
+        </t>
+        <t t-else="">
+            <div class="nova-select" t-ref="container">
+                <div
+                    class="nova-select__trigger o_input"
+                    t-on-click="toggleDropdown"
+                    t-att-id="props.id"
+                    tabindex="0"
+                >
+                    <span
+                        class="nova-select__value"
+                        t-att-class="{ 'nova-select__placeholder': isEmpty }"
+                        t-esc="currentLabel"
+                    />
+                    <i class="fa fa-chevron-down nova-select__arrow"
+                       t-att-class="{ 'nova-select__arrow--open': state.isOpen }"
+                    />
+                </div>
+                <div t-if="state.isOpen" class="nova-select__dropdown">
+                    <t t-if="!isRequired">
+                        <div
+                            class="nova-select__option"
+                            t-att-class="{ 'active': false === value }"
+                            t-on-click="() => this.selectOption(false)"
+                        >
+                            <span class="text-muted" t-esc="props.placeholder || '—'"/>
+                        </div>
+                    </t>
+                    <t t-foreach="options" t-as="option" t-key="option[0]">
+                        <div
+                            class="nova-select__option"
+                            t-att-class="{ 'active': option[0] === value }"
+                            t-on-click="() => this.selectOption(option[0])"
+                        >
+                            <t t-esc="option[1]"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

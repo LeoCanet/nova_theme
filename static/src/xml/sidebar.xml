@@ -39,7 +39,7 @@
                     </button>
                 </div>
                 <t t-if="state.pinnedPages.length">
-                    <t t-foreach="state.pinnedPages" t-as="pin" t-key="pin.menuId">
+                    <t t-foreach="state.pinnedPages" t-as="pin" t-key="pin.key || pin.menuId">
                         <a class="nova-sidebar__item nova-sidebar__pin-item"
                            t-att-class="{'active': isPinActive(pin)}"
                            t-on-click.prevent="() => this.onPinClick(pin)"
