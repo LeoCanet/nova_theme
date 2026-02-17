@@ -5,24 +5,24 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { NavBar } from "@web/webclient/navbar/navbar";
-import { getFavoriteAppIds, setFavoriteAppIds } from "./nova_storage";
 
 export class NovaAppLauncher extends Component {
     setup() {
         this.menuService = useService("menu");
         this.hotkeyService = useService("hotkey");
+        this.storage = useService("novaStorage");
         this.searchInput = useRef("novaSearchInput");
         this.state = useState({
             isOpen: false,
             searchQuery: "",
             _menuVersion: 0,
-            favoriteAppIds: getFavoriteAppIds(),
+            favoriteAppIds: this.storage.getFavoriteAppIds(),
         });
 
         this._boundToggle = this._onToggle.bind(this);
         this._boundRefreshApps = this._refreshApps.bind(this);
         this._boundOnFavoritesChanged = () => {
-            this.state.favoriteAppIds = getFavoriteAppIds();
+            this.state.favoriteAppIds = this.storage.getFavoriteAppIds();
         };
         this._removeHotkey = this.hotkeyService.add("h", () => this._onToggle());
 
@@ -115,7 +115,7 @@ export class NovaAppLauncher extends Component {
         } else {
             ids.push(app.id);
         }
-        setFavoriteAppIds(ids);
+        this.storage.setFavoriteAppIds(ids);
         this.state.favoriteAppIds = ids;
         this.env.bus.trigger("NOVA:FAVORITES-CHANGED");
     }

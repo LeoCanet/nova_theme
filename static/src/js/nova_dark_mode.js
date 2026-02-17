@@ -3,6 +3,7 @@
 import { Component, useState, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 export class NovaDarkModeToggle extends Component {
     setup() {
@@ -62,9 +63,9 @@ export class NovaDarkModeToggle extends Component {
 
         try {
             await this.orm.call(
-                "ir.config_parameter",
-                "set_param",
-                ["nova_theme.mode", newMode]
+                "res.users",
+                "write",
+                [[session.uid], { nova_theme_mode: newMode }]
             );
         } catch (e) {
             // Silently fail — the toggle still works locally

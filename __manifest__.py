@@ -20,20 +20,25 @@
     "author": "Arpasys",
     "website": "https://www.arpasys.com",
     "category": "Tools",
-    "version": "16.0.1.0.0",
+    "version": "16.0.3.0.0",
     "license": "LGPL-3",
     "depends": [
         "base",
         "web",
         "mail",
-        "base_setup",
+        "auth_signup",
     ],
     "data": [
         "data/theme_data.xml",
-        "views/res_config_settings_views.xml",
+        "views/res_users_views.xml",
         "views/webclient_templates.xml",
+        "views/login_templates.xml",
     ],
     "assets": {
+        "web.assets_frontend": [
+            "nova_theme/static/src/scss/login_fonts.scss",
+            "nova_theme/static/src/scss/login.scss",
+        ],
         "web._assets_primary_variables": [
             ("prepend", "nova_theme/static/src/scss/primary_variables.scss"),
         ],

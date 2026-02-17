@@ -3,12 +3,13 @@
     <!-- Inject theme configuration into the webclient -->
     <template id="nova_theme_assets" inherit_id="web.layout" name="Theme Nova Layout">
         <xpath expr="//head" position="inside">
-            <t t-set="nova_mode" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.mode', 'light')"/>
-            <t t-set="nova_accent" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.accent_color', 'indigo')"/>
-            <t t-set="nova_animations" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.animations', 'True')"/>
-            <t t-set="nova_sidebar" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.sidebar_collapsed', 'False')"/>
-            <t t-set="nova_font_size" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.font_size', 'default')"/>
-            <t t-set="nova_font_family" t-value="request.env['ir.config_parameter'].sudo().get_param('nova_theme.font_family', 'inter')"/>
+            <t t-set="nova_user" t-value="request.env.user"/>
+            <t t-set="nova_mode" t-value="nova_user.nova_theme_mode or 'light'"/>
+            <t t-set="nova_accent" t-value="nova_user.nova_theme_accent_color or 'indigo'"/>
+            <t t-set="nova_animations" t-value="'True' if nova_user.nova_theme_animations else 'False'"/>
+            <t t-set="nova_sidebar" t-value="'True' if nova_user.nova_theme_sidebar_collapsed else 'False'"/>
+            <t t-set="nova_font_size" t-value="nova_user.nova_theme_font_size or 'default'"/>
+            <t t-set="nova_font_family" t-value="nova_user.nova_theme_font_family or 'inter'"/>
             <script type="text/javascript">
                 (function() {
                     var d = document.documentElement;

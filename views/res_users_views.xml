@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- User Preferences form (Avatar → Préférences) -->
+    <record id="res_users_view_form_simple_modif_nova" model="ir.ui.view">
+        <field name="name">res.users.form.simple.modif.nova</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences_page']" position="after">
+                <page string="Theme Nova" name="nova_theme">
+                    <group string="Apparence">
+                        <group>
+                            <field name="nova_theme_mode" readonly="0"/>
+                            <field name="nova_theme_accent_color" readonly="0"/>
+                        </group>
+                        <group>
+                            <field name="nova_theme_font_family" readonly="0"/>
+                            <field name="nova_theme_font_size" readonly="0"/>
+                        </group>
+                    </group>
+                    <group string="Comportement">
+                        <group>
+                            <field name="nova_theme_animations" readonly="0"/>
+                            <field name="nova_theme_sidebar_collapsed" readonly="0"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Admin user form (Settings → Utilisateurs) -->
+    <record id="res_users_view_form_nova" model="ir.ui.view">
+        <field name="name">res.users.form.nova</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']" position="after">
+                <page string="Theme Nova" name="nova_theme">
+                    <group string="Apparence">
+                        <group>
+                            <field name="nova_theme_mode"/>
+                            <field name="nova_theme_accent_color"/>
+                        </group>
+                        <group>
+                            <field name="nova_theme_font_family"/>
+                            <field name="nova_theme_font_size"/>
+                        </group>
+                    </group>
+                    <group string="Comportement">
+                        <group>
+                            <field name="nova_theme_animations"/>
+                            <field name="nova_theme_sidebar_collapsed"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

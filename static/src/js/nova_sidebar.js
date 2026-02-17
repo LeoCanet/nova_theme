@@ -3,13 +3,15 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { getFavoriteAppIds, getPinnedPages, setPinnedPages } from "./nova_storage";
+import { session } from "@web/session";
 
 export class NovaSidebar extends Component {
     setup() {
         this.menuService = useService("menu");
         this.actionService = useService("action");
         this.router = useService("router");
+        this.orm = useService("orm");
+        this.storage = useService("novaStorage");
 
         const sidebarCollapsed =
             document.documentElement.dataset.novaSidebarCollapsed === "True";
@@ -56,7 +58,7 @@ export class NovaSidebar extends Component {
     // ── Data loading ────────────────────────────────────────────────────
 
     _loadFavorites() {
-        const ids = getFavoriteAppIds();
+        const ids = this.storage.getFavoriteAppIds();
         const allApps = this.menuService.getApps();
         const appMap = Object.fromEntries(allApps.map((a) => [a.id, a]));
         this.state.favoriteApps = ids.map((id) => appMap[id]).filter(Boolean);
@@ -65,7 +67,7 @@ export class NovaSidebar extends Component {
 
     _loadPins() {
         // Migrate legacy pins that lack a key
-        const pages = getPinnedPages().map((p) => {
+        const pages = this.storage.getPinnedPages().map((p) => {
             if (!p.key) {
                 p.key = this._pinKey(p);
             }
@@ -243,7 +245,7 @@ export class NovaSidebar extends Component {
         };
 
         const pages = [...this.state.pinnedPages, pin];
-        setPinnedPages(pages);
+        this.storage.setPinnedPages(pages);
         this.state.pinnedPages = pages;
         this._updateVisibility();
         this.env.bus.trigger("NOVA:PINS-CHANGED");
@@ -254,7 +256,7 @@ export class NovaSidebar extends Component {
         const pages = this.state.pinnedPages.filter(
             (p) => (p.key || this._pinKey(p)) !== target
         );
-        setPinnedPages(pages);
+        this.storage.setPinnedPages(pages);
         this.state.pinnedPages = pages;
         this._updateVisibility();
         this.env.bus.trigger("NOVA:PINS-CHANGED");
@@ -310,6 +312,11 @@ export class NovaSidebar extends Component {
     toggleCollapse() {
         this.state.collapsed = !this.state.collapsed;
         this._updateBodyClasses();
+        this.orm.call(
+            "res.users",
+            "write",
+            [[session.uid], { nova_theme_sidebar_collapsed: this.state.collapsed }]
+        ).catch(() => {});
     }
 
     getMenuIcon(item) {

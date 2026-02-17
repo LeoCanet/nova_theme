@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Override login layout with Nova split-screen design -->
+    <template id="nova_login_layout" inherit_id="web.login_layout" name="Nova Login Layout">
+        <xpath expr="//div[hasclass('container')]" position="replace">
+            <div class="nova-login">
+
+                <!-- Left panel: Brand -->
+                <div class="nova-login__brand">
+                    <div class="nova-login__decor-circle-1"/>
+                    <div class="nova-login__decor-circle-2"/>
+                    <img class="nova-login__brand-logo"
+                         src="/nova_theme/static/description/logo-one.png"
+                         alt="One par Arpasys"/>
+                    <p class="nova-login__brand-tagline">Votre espace de gestion</p>
+                </div>
+
+                <!-- Right panel: Form -->
+                <div class="nova-login__form-panel">
+                    <div class="nova-login__form-wrapper">
+                        <!-- Mobile logo (hidden on desktop) -->
+                        <div class="nova-login__mobile-logo text-center">
+                            <img src="/nova_theme/static/description/logo-one.png"
+                                 alt="One par Arpasys" style="max-height: 48px;"/>
+                        </div>
+
+                        <h1 class="nova-login__title">Connexion</h1>
+                        <p class="nova-login__subtitle">Accédez à votre espace</p>
+
+                        <!-- Login form slot (web.login injects here) -->
+                        <t t-out="0"/>
+                    </div>
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+
+    <!-- French labels, placeholders, validation + hide DB selector via CSS -->
+    <template id="nova_login_override" inherit_id="web.login" name="Nova Login — Overrides">
+        <!-- Translate "Email" label to French -->
+        <xpath expr="//label[@for='login']" position="replace">
+            <label for="login" class="form-label">Adresse e-mail</label>
+        </xpath>
+
+        <!-- French validation + placeholder on login input -->
+        <xpath expr="//input[@id='login']" position="attributes">
+            <attribute name="placeholder">nom@entreprise.com</attribute>
+            <attribute name="oninvalid">this.setCustomValidity('Veuillez saisir votre adresse e-mail')</attribute>
+            <attribute name="oninput">this.setCustomValidity('')</attribute>
+        </xpath>
+
+        <!-- Translate "Password" label to French -->
+        <xpath expr="//label[@for='password']" position="replace">
+            <label for="password" class="form-label">Mot de passe</label>
+        </xpath>
+
+        <!-- French validation + placeholder on password input -->
+        <xpath expr="//input[@id='password']" position="attributes">
+            <attribute name="placeholder">Votre mot de passe</attribute>
+            <attribute name="oninvalid">this.setCustomValidity('Veuillez saisir votre mot de passe')</attribute>
+            <attribute name="oninput">this.setCustomValidity('')</attribute>
+        </xpath>
+
+        <!-- Translate "Log in" button to French -->
+        <xpath expr="//button[@type='submit'][1]" position="replace">
+            <button type="submit" class="btn btn-primary">Se connecter</button>
+        </xpath>
+    </template>
+
+    <!-- ═══ auth_signup: Translate links on login page ═══ -->
+    <template id="nova_auth_signup_login" inherit_id="auth_signup.login" name="Nova — Auth Signup Links FR">
+        <xpath expr="//a[@t-if='signup_enabled']" position="attributes">
+            <attribute name="t-translation">off</attribute>
+        </xpath>
+        <xpath expr="//a[@t-if='signup_enabled']" position="replace">
+            <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}">Pas encore de compte ?</a>
+        </xpath>
+        <xpath expr="//a[@t-if='reset_password_enabled']" position="replace">
+            <a t-if="reset_password_enabled" t-attf-href="/web/reset_password?{{ keep_query() }}">Mot de passe oublié ?</a>
+        </xpath>
+    </template>
+
+    <!-- ═══ auth_signup: Translate reset password page ═══ -->
+    <template id="nova_auth_reset_password" inherit_id="auth_signup.reset_password" name="Nova — Reset Password FR">
+        <!-- "Back to Login" link (message shown) -->
+        <xpath expr="//a[@href='/web/login'][1]" position="replace">
+            <a href="/web/login" class="btn btn-link btn-sm float-start" role="button">Retour à la connexion</a>
+        </xpath>
+
+        <!-- "Your Email" label -->
+        <xpath expr="//label[@for='login']" position="replace">
+            <label for="login" class="col-form-label">Votre adresse e-mail</label>
+        </xpath>
+
+        <!-- Email input: placeholder + validation -->
+        <xpath expr="//form[hasclass('oe_reset_password_form')]//input[@id='login']" position="attributes">
+            <attribute name="placeholder">nom@entreprise.com</attribute>
+            <attribute name="oninvalid">this.setCustomValidity('Veuillez saisir votre adresse e-mail')</attribute>
+            <attribute name="oninput">this.setCustomValidity('')</attribute>
+        </xpath>
+
+        <!-- "Reset Password" button -->
+        <xpath expr="//button[@type='submit']" position="replace">
+            <button type="submit" class="btn btn-primary">Réinitialiser le mot de passe</button>
+        </xpath>
+
+        <!-- "Back to Login" links in form -->
+        <xpath expr="//a[@t-if='not token']" position="replace">
+            <a t-if="not token" t-attf-href="/web/login?{{ keep_query() }}">Retour à la connexion</a>
+        </xpath>
+        <xpath expr="//a[@t-if='invalid_token']" position="replace">
+            <a t-if="invalid_token" href="/web/login">Retour à la connexion</a>
+        </xpath>
+    </template>
+
+    <!-- ═══ auth_signup: Translate signup page ═══ -->
+    <template id="nova_auth_signup" inherit_id="auth_signup.signup" name="Nova — Signup FR">
+        <!-- "Sign up" button -->
+        <xpath expr="//button[@type='submit']" position="replace">
+            <button type="submit" class="btn btn-primary">Créer un compte</button>
+        </xpath>
+
+        <!-- "Already have an account?" link -->
+        <xpath expr="//a[hasclass('btn-link')]" position="replace">
+            <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link btn-sm" role="button">Déjà un compte ? Se connecter</a>
+        </xpath>
+    </template>
+
+    <!-- ═══ auth_signup: Translate shared form fields ═══ -->
+    <template id="nova_auth_signup_fields" inherit_id="auth_signup.fields" name="Nova — Signup Fields FR">
+        <!-- "Your Email" -->
+        <xpath expr="//div[hasclass('field-login')]/label" position="replace">
+            <label for="login">Adresse e-mail</label>
+        </xpath>
+
+        <!-- "Your Name" -->
+        <xpath expr="//div[hasclass('field-name')]/label" position="replace">
+            <label for="name">Votre nom</label>
+        </xpath>
+        <xpath expr="//input[@id='name']" position="attributes">
+            <attribute name="placeholder">ex. Jean Dupont</attribute>
+        </xpath>
+
+        <!-- "Password" -->
+        <xpath expr="//div[hasclass('field-password')]/label" position="replace">
+            <label for="password">Mot de passe</label>
+        </xpath>
+
+        <!-- "Confirm Password" -->
+        <xpath expr="//div[hasclass('field-confirm_password')]/label" position="replace">
+            <label for="confirm_password">Confirmer le mot de passe</label>
+        </xpath>
+    </template>
+
+</odoo>

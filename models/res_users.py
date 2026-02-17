@@ -1,8 +1,19 @@
-from odoo import api, fields, models
+from odoo import fields, models
+
+NOVA_THEME_FIELDS = [
+    "nova_theme_mode",
+    "nova_theme_accent_color",
+    "nova_theme_animations",
+    "nova_theme_sidebar_collapsed",
+    "nova_theme_font_size",
+    "nova_theme_font_family",
+    "nova_favorite_app_ids",
+    "nova_pinned_pages",
+]
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+class ResUsers(models.Model):
+    _inherit = "res.users"
 
     nova_theme_mode = fields.Selection(
         selection=[
@@ -12,7 +23,6 @@ class ResConfigSettings(models.TransientModel):
         ],
         string="Mode du thème",
         default="light",
-        config_parameter="nova_theme.mode",
     )
     nova_theme_accent_color = fields.Selection(
         selection=[
@@ -25,17 +35,14 @@ class ResConfigSettings(models.TransientModel):
         ],
         string="Couleur d'accent",
         default="indigo",
-        config_parameter="nova_theme.accent_color",
     )
     nova_theme_animations = fields.Boolean(
         string="Activer les animations",
         default=True,
-        config_parameter="nova_theme.animations",
     )
     nova_theme_sidebar_collapsed = fields.Boolean(
         string="Barre latérale réduite par défaut",
         default=False,
-        config_parameter="nova_theme.sidebar_collapsed",
     )
     nova_theme_font_size = fields.Selection(
         selection=[
@@ -45,7 +52,6 @@ class ResConfigSettings(models.TransientModel):
         ],
         string="Taille de police",
         default="default",
-        config_parameter="nova_theme.font_size",
     )
     nova_theme_font_family = fields.Selection(
         selection=[
@@ -59,5 +65,18 @@ class ResConfigSettings(models.TransientModel):
         ],
         string="Police de caractères",
         default="inter",
-        config_parameter="nova_theme.font_family",
     )
+    nova_favorite_app_ids = fields.Text(
+        string="Applications favorites",
+        default="[]",
+    )
+    nova_pinned_pages = fields.Text(
+        string="Pages épinglées",
+        default="[]",
+    )
+
+    def __init__(self, pool, cr, inst):
+        init_res = super().__init__(pool, cr, inst)
+        type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + NOVA_THEME_FIELDS
+        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + NOVA_THEME_FIELDS
+        return init_res
