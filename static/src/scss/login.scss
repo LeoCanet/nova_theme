@@ -1,196 +1,149 @@
 ///============================================================================
-/// Theme Nova — Login Page (Split Screen)
+/// Theme Nova — Login Page (Single Screen with Glassmorphism Card)
 /// Standalone — does NOT depend on design_system.scss (backend only)
 ///============================================================================
 
-// ─── Local Tokens (subset of design_system.scss) ─────────────────────────────
-// web.assets_frontend does NOT load backend tokens, so we redeclare here.
+// ─── Local Tokens ────────────────────────────────────────────────────────────
 
 .nova-login {
-    // Surfaces
-    --nova-login-bg: #FFFFFF;
-    --nova-login-surface: #F8FAFC;
-    --nova-login-input-bg: #F8FAFC;
-
-    // Text
-    --nova-login-text: #1E293B;
-    --nova-login-text-secondary: #64748B;
-    --nova-login-text-tertiary: #94A3B8;
-
-    // Borders
-    --nova-login-border: #E2E8F0;
-    --nova-login-border-focus: #4F46E5;
-
-    // Brand blue — midpoint of gradient (indigo→cyan), used for button + links
-    --nova-login-blue: #2B7DE9;
-    --nova-login-blue-hover: #1E6FD9;
-    --nova-login-blue-glow: rgba(43, 125, 233, 0.3);
-    --nova-login-blue-ring: rgba(43, 125, 233, 0.12);
-
-    // Shadows
-    --nova-login-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --nova-login-shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
-
-    // Radius
-    --nova-login-radius: 8px;
-    --nova-login-radius-lg: 12px;
-    --nova-login-radius-xl: 16px;
-
     // Gradient
     --nova-login-gradient-start: #4F46E5;
     --nova-login-gradient-end: #06B6D4;
+
+    // Card
+    --nova-login-card-bg: rgba(255, 255, 255, 0.12);
+    --nova-login-card-border: rgba(255, 255, 255, 0.18);
+    --nova-login-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+    // Inputs
+    --nova-login-input-bg: rgba(255, 255, 255, 0.12);
+    --nova-login-input-border: rgba(255, 255, 255, 0.2);
+    --nova-login-input-focus-border: rgba(255, 255, 255, 0.5);
+    --nova-login-input-focus-ring: rgba(255, 255, 255, 0.15);
+
+    // Text — all white on gradient
+    --nova-login-text: #FFFFFF;
+    --nova-login-text-secondary: rgba(255, 255, 255, 0.7);
+    --nova-login-text-tertiary: rgba(255, 255, 255, 0.5);
+    --nova-login-text-placeholder: rgba(255, 255, 255, 0.4);
+
+    // Button
+    --nova-login-btn-bg: rgba(255, 255, 255, 0.2);
+    --nova-login-btn-hover: rgba(255, 255, 255, 0.3);
+    --nova-login-btn-glow: rgba(255, 255, 255, 0.15);
+
+    // Radius
+    --nova-login-radius: 10px;
+    --nova-login-radius-lg: 20px;
 }
 
 
-// ─── Main Container ──────────────────────────────────────────────────────────
+// ─── Main Container (full-screen gradient) ───────────────────────────────────
 
 .nova-login {
     display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 100vh;
+    background: linear-gradient(135deg, var(--nova-login-gradient-start) 0%, var(--nova-login-gradient-end) 100%);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-
-// ─── Brand Panel (Left) ─────────────────────────────────────────────────────
-
-.nova-login__brand {
-    flex: 1;
-    background: linear-gradient(135deg, var(--nova-login-gradient-start) 0%, var(--nova-login-gradient-end) 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     position: relative;
     overflow: hidden;
-    padding: 3rem;
-
-    // Dot grid — base layer (always visible, subtle)
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px);
-        background-size: 24px 24px;
-        pointer-events: none;
-    }
-
-    // Dot grid — wave highlight layer (brighter dots revealed by animated mask)
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.38) 1px, transparent 1px);
-        background-size: 24px 24px;
-        pointer-events: none;
-        -webkit-mask-image: radial-gradient(ellipse 50% 40% at center, black 0%, transparent 70%);
-        -webkit-mask-size: 200% 200%;
-        -webkit-mask-repeat: no-repeat;
-        mask-image: radial-gradient(ellipse 50% 40% at center, black 0%, transparent 70%);
-        mask-size: 200% 200%;
-        mask-repeat: no-repeat;
-        animation: novaDotsWave 10s ease-in-out infinite;
-    }
+    padding: 2rem;
 }
 
-.nova-login__brand-logo {
-    max-width: 280px;
-    width: 80%;
-    position: relative;
-    z-index: 1;
-    filter: brightness(0) invert(1);
-    animation: novaLoginFadeInUp 0.6s ease-out both;
+
+// ─── Wave Canvas ─────────────────────────────────────────────────────────────
+
+.nova-login__wave-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.nova-login__brand-tagline {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.125rem;
-    font-weight: 400;
-    margin-top: 1.5rem;
-    letter-spacing: 0.01em;
-    position: relative;
-    z-index: 1;
-    animation: novaLoginFadeInUp 0.6s ease-out 0.1s both;
-}
 
-// Decorative blurred circles
+// ─── Decorative Circles ──────────────────────────────────────────────────────
+
 .nova-login__decor-circle-1 {
     position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 240px;
-    height: 240px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    filter: blur(40px);
-    pointer-events: none;
-}
-
-.nova-login__decor-circle-2 {
-    position: absolute;
-    bottom: -80px;
-    left: -40px;
+    top: -80px;
+    right: -80px;
     width: 300px;
     height: 300px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.06);
     filter: blur(50px);
     pointer-events: none;
+    z-index: 0;
+}
+
+.nova-login__decor-circle-2 {
+    position: absolute;
+    bottom: -100px;
+    left: -60px;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 
-// ─── Form Panel (Right) ─────────────────────────────────────────────────────
+// ─── Glassmorphism Card ──────────────────────────────────────────────────────
 
-.nova-login__form-panel {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--nova-login-bg);
-    padding: 2rem;
+.nova-login__card {
     position: relative;
+    z-index: 1;
+    max-width: 420px;
+    width: 100%;
+    background: var(--nova-login-card-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--nova-login-card-border);
+    border-radius: var(--nova-login-radius-lg);
+    box-shadow: var(--nova-login-card-shadow);
+    padding: 2.5rem 2.25rem;
+    text-align: center;
+    animation: novaLoginFadeInUp 0.6s ease-out both;
+}
+
+.nova-login__brand-logo {
+    max-width: 200px;
+    width: 60%;
+    filter: brightness(0) invert(1);
+    margin-bottom: 0.25rem;
+    animation: novaLoginFadeInUp 0.5s ease-out 0.05s both;
+}
+
+.nova-login__brand-tagline {
+    color: var(--nova-login-text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    letter-spacing: 0.01em;
+    animation: novaLoginFadeInUp 0.5s ease-out 0.1s both;
 }
 
 .nova-login__form-wrapper {
-    max-width: 400px;
-    width: 100%;
-}
-
-.nova-login__mobile-logo {
-    display: none;
-    margin-bottom: 2rem;
-
-    img {
-        max-height: 48px;
-    }
-}
-
-.nova-login__title {
-    font-size: 1.625rem;
-    font-weight: 700;
-    color: var(--nova-login-text);
-    margin-bottom: 0.375rem;
-    letter-spacing: -0.02em;
-    animation: novaLoginFadeInUp 0.5s ease-out 0.15s both;
-}
-
-.nova-login__subtitle {
-    font-size: 0.9375rem;
-    color: var(--nova-login-text-secondary);
-    margin-bottom: 2rem;
-    animation: novaLoginFadeInUp 0.5s ease-out 0.2s both;
+    text-align: left;
 }
 
 
-// ─── Form Elements ──────────────────────────────────────────────────────────
+
+// ─── Form Elements ───────────────────────────────────────────────────────────
 
 .nova-login {
 
-    // Field groups with staggered animation
     .field-login,
     .field-password {
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.125rem;
     }
 
     .field-login {
@@ -204,32 +157,32 @@
     // Labels
     label.form-label,
     label[for] {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         font-weight: 500;
-        color: var(--nova-login-text);
+        color: var(--nova-login-text-secondary);
         margin-bottom: 0.375rem;
     }
 
-    // Input fields
+    // Input fields — glass style
     .form-control {
         height: 44px;
         padding: 0.5rem 0.875rem;
         font-size: 0.9375rem;
         font-family: 'Inter', sans-serif;
-        color: var(--nova-login-text);
-        background-color: var(--nova-login-input-bg);
-        border: 1px solid var(--nova-login-border);
+        color: var(--nova-login-text) !important;
+        background-color: var(--nova-login-input-bg) !important;
+        border: 1px solid var(--nova-login-input-border) !important;
         border-radius: var(--nova-login-radius);
         transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 
         &::placeholder {
-            color: var(--nova-login-text-tertiary);
+            color: var(--nova-login-text-placeholder) !important;
         }
 
         &:focus {
-            background-color: var(--nova-login-bg) !important;
-            border-color: var(--nova-login-border-focus) !important;
-            box-shadow: 0 0 0 3px var(--nova-login-blue-ring) !important;
+            background-color: rgba(255, 255, 255, 0.18) !important;
+            border-color: var(--nova-login-input-focus-border) !important;
+            box-shadow: 0 0 0 3px var(--nova-login-input-focus-ring) !important;
             outline: none;
         }
     }
@@ -241,7 +194,7 @@
         display: none !important;
     }
 
-    // Primary button — !important needed to override theme_kea's $primary
+    // Primary button — frosted glass style
     .btn-primary {
         width: 100%;
         height: 44px;
@@ -250,19 +203,20 @@
         font-family: 'Inter', sans-serif;
         letter-spacing: 0.01em;
         border-radius: var(--nova-login-radius);
-        background: var(--nova-login-blue) !important;
-        background-color: var(--nova-login-blue) !important;
-        border-color: var(--nova-login-blue) !important;
+        background: var(--nova-login-btn-bg) !important;
+        background-color: var(--nova-login-btn-bg) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
         color: #FFFFFF !important;
         cursor: pointer;
+        backdrop-filter: blur(8px);
         transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
         animation: novaLoginFadeInUp 0.5s ease-out 0.35s both;
 
-        &:hover, &:focus, &:active {
-            background: var(--nova-login-blue-hover) !important;
-            background-color: var(--nova-login-blue-hover) !important;
-            border-color: var(--nova-login-blue-hover) !important;
-            box-shadow: 0 4px 12px var(--nova-login-blue-glow) !important;
+        &:hover, &:focus {
+            background: var(--nova-login-btn-hover) !important;
+            background-color: var(--nova-login-btn-hover) !important;
+            border-color: rgba(255, 255, 255, 0.35) !important;
+            box-shadow: 0 4px 16px var(--nova-login-btn-glow) !important;
             color: #FFFFFF !important;
         }
 
@@ -271,37 +225,38 @@
         }
     }
 
-    // Links — !important to override theme_kea
+    // Links
     a {
-        color: var(--nova-login-blue) !important;
+        color: var(--nova-login-text) !important;
         text-decoration: none;
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         font-weight: 500;
-        transition: color 0.15s ease;
+        opacity: 0.8;
+        transition: opacity 0.15s ease;
 
         &:hover {
-            color: var(--nova-login-blue-hover) !important;
+            opacity: 1;
             text-decoration: underline;
         }
     }
 
     // Error alerts
     .alert-danger {
-        background: rgba(239, 68, 68, 0.08);
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        color: #DC2626;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #FCA5A5;
         border-radius: var(--nova-login-radius);
         padding: 0.75rem 1rem;
         font-size: 0.875rem;
         margin-bottom: 1.25rem;
 
         a {
-            color: #DC2626;
+            color: #FCA5A5;
             font-weight: 600;
+            opacity: 1;
         }
     }
 
-    // Divider text ("or")
     .o_login_auth {
         margin-top: 1.5rem;
     }
@@ -309,96 +264,62 @@
     // Footer area
     .text-center.mt-2,
     .text-center.small {
-        margin-top: 1.5rem !important;
+        margin-top: 1.25rem !important;
         font-size: 0.8125rem;
         color: var(--nova-login-text-tertiary);
         animation: novaLoginFadeInUp 0.5s ease-out 0.4s both;
     }
 
-    // Powered by Odoo footer
     .o_login_footer,
     .text-muted {
         color: var(--nova-login-text-tertiary) !important;
         font-size: 0.75rem;
     }
-
 }
 
 
-// ─── Dark Mode ──────────────────────────────────────────────────────────────
+// ─── Dark Mode ───────────────────────────────────────────────────────────────
 
 .nova-dark .nova-login {
-    // Surfaces
-    --nova-login-bg: #1B1C1E;
-    --nova-login-surface: #232427;
-    --nova-login-input-bg: #232427;
+    --nova-login-gradient-start: #1e1b4b;
+    --nova-login-gradient-end: #0c4a6e;
 
-    // Text
-    --nova-login-text: #F2F3F5;
-    --nova-login-text-secondary: #B5BAC1;
-    --nova-login-text-tertiary: #949BA4;
+    --nova-login-card-bg: rgba(255, 255, 255, 0.08);
+    --nova-login-card-border: rgba(255, 255, 255, 0.12);
+    --nova-login-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
-    // Borders
-    --nova-login-border: #2F3035;
-    --nova-login-border-focus: #6366F1;
-
-    // Brand blue (dark)
-    --nova-login-blue: #6366F1;
-    --nova-login-blue-hover: #818CF8;
-    --nova-login-blue-glow: rgba(99, 102, 241, 0.35);
-    --nova-login-blue-ring: rgba(99, 102, 241, 0.2);
-
-    // Shadows
-    --nova-login-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.32), 0 2px 4px -2px rgba(0, 0, 0, 0.28);
-    --nova-login-shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.5), 0 8px 16px -4px rgba(0, 0, 0, 0.4);
-
-    // Gradient (darkened)
-    --nova-login-gradient-start: #3730A3;
-    --nova-login-gradient-end: #0E7490;
+    --nova-login-input-bg: rgba(255, 255, 255, 0.08);
+    --nova-login-input-border: rgba(255, 255, 255, 0.12);
 
     .alert-danger {
-        background: rgba(218, 55, 60, 0.12);
-        border-color: rgba(218, 55, 60, 0.25);
-        color: #F87171;
+        background: rgba(218, 55, 60, 0.15);
+        border-color: rgba(218, 55, 60, 0.3);
+        color: #FCA5A5;
 
-        a { color: #F87171; }
+        a { color: #FCA5A5; }
     }
 }
 
 
+// ─── Responsive ──────────────────────────────────────────────────────────────
 
-// ─── Responsive ─────────────────────────────────────────────────────────────
-
-@media (max-width: 991.98px) {
-    .nova-login__brand {
-        display: none;
-    }
-
+@media (max-width: 480px) {
     .nova-login {
-        justify-content: center;
+        padding: 1rem;
     }
 
-    .nova-login__form-panel {
-        flex: none;
-        width: 100%;
-        min-height: 100vh;
+    .nova-login__card {
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
     }
 
-    .nova-login__mobile-logo {
-        display: block;
+    .nova-login__brand-logo {
+        max-width: 160px;
     }
 }
 
 
-// ─── Animations ─────────────────────────────────────────────────────────────
-
-@keyframes novaDotsWave {
-    0%   { -webkit-mask-position: 0% 0%;     mask-position: 0% 0%; }
-    25%  { -webkit-mask-position: 100% 30%;   mask-position: 100% 30%; }
-    50%  { -webkit-mask-position: 60% 100%;   mask-position: 60% 100%; }
-    75%  { -webkit-mask-position: -20% 60%;   mask-position: -20% 60%; }
-    100% { -webkit-mask-position: 0% 0%;      mask-position: 0% 0%; }
-}
+// ─── Animations ──────────────────────────────────────────────────────────────
 
 @keyframes novaLoginFadeInUp {
     from {

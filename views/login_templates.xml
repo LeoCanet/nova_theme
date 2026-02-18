@@ -5,34 +5,25 @@
     <template id="nova_login_layout" inherit_id="web.login_layout" name="Nova Login Layout">
         <xpath expr="//div[hasclass('container')]" position="replace">
             <div class="nova-login">
+                <!-- Full-screen background with waves -->
+                <canvas id="nova-wave-canvas" class="nova-login__wave-canvas"/>
+                <div class="nova-login__decor-circle-1"/>
+                <div class="nova-login__decor-circle-2"/>
 
-                <!-- Left panel: Brand -->
-                <div class="nova-login__brand">
-                    <div class="nova-login__decor-circle-1"/>
-                    <div class="nova-login__decor-circle-2"/>
+                <!-- Centered card with logo + form -->
+                <div class="nova-login__card">
                     <img class="nova-login__brand-logo"
                          src="/nova_theme/static/description/logo-one.png"
                          alt="One par Arpasys"/>
                     <p class="nova-login__brand-tagline">Votre espace de gestion</p>
-                </div>
 
-                <!-- Right panel: Form -->
-                <div class="nova-login__form-panel">
                     <div class="nova-login__form-wrapper">
-                        <!-- Mobile logo (hidden on desktop) -->
-                        <div class="nova-login__mobile-logo text-center">
-                            <img src="/nova_theme/static/description/logo-one.png"
-                                 alt="One par Arpasys" style="max-height: 48px;"/>
-                        </div>
-
-                        <h1 class="nova-login__title">Connexion</h1>
-                        <p class="nova-login__subtitle">Accédez à votre espace</p>
-
                         <!-- Login form slot (web.login injects here) -->
                         <t t-out="0"/>
                     </div>
                 </div>
 
+                <script src="/nova_theme/static/src/js/nova_login_waves.js"/>
             </div>
         </xpath>
     </template>
