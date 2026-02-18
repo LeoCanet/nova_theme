@@ -81,6 +81,24 @@
         padding: 0;
     }
 
+    // ─── Chatter topbar buttons — accent hover ───────────────────────
+    .o_ChatterTopbar .btn {
+        &:hover {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
+
+    // ─── Follow button ───────────────────────────────────────────────
+    .o_FollowButton_follow {
+        transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+
+        &:hover {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
+
     // ─── Activity section ──────────────────────────────────────────────
     .o_Activity {
         .o_Activity_sidebar {

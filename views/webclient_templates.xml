@@ -3,6 +3,10 @@
     <!-- Inject theme configuration into the webclient -->
     <template id="nova_theme_assets" inherit_id="web.layout" name="Theme Nova Layout">
         <xpath expr="//head" position="inside">
+            <!-- Google Fonts (loaded only when needed) -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;display=swap"/>
             <t t-set="nova_user" t-value="request.env.user"/>
             <t t-set="nova_mode" t-value="nova_user.nova_theme_mode or 'light'"/>
             <t t-set="nova_accent" t-value="nova_user.nova_theme_accent_color or 'indigo'"/>

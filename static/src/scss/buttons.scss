@@ -124,8 +124,8 @@
     color: white;
 
     &:hover, &:focus {
-        background: #DC2626;
-        border-color: #DC2626;
+        background: color-mix(in srgb, var(--nova-danger) 85%, black);
+        border-color: color-mix(in srgb, var(--nova-danger) 85%, black);
         color: white;
         transform: translateY(-1px);
         box-shadow: var(--nova-shadow-sm);
@@ -150,8 +150,8 @@
     color: white;
 
     &:hover, &:focus {
-        background: #059669;
-        border-color: #059669;
+        background: color-mix(in srgb, var(--nova-success) 85%, black);
+        border-color: color-mix(in srgb, var(--nova-success) 85%, black);
         color: white;
     }
 }
@@ -163,8 +163,8 @@
     color: white;
 
     &:hover, &:focus {
-        background: #D97706;
-        border-color: #D97706;
+        background: color-mix(in srgb, var(--nova-warning) 85%, black);
+        border-color: color-mix(in srgb, var(--nova-warning) 85%, black);
         color: white;
     }
 }
@@ -176,8 +176,8 @@
     color: white;
 
     &:hover, &:focus {
-        background: #0891B2;
-        border-color: #0891B2;
+        background: color-mix(in srgb, var(--nova-info) 85%, black);
+        border-color: color-mix(in srgb, var(--nova-info) 85%, black);
         color: white;
     }
 }

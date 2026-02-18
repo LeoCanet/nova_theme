@@ -560,6 +560,27 @@ html.nova-dark {
         border-color: var(--nova-border) !important;
     }
 
+    // ─── Optional columns toggle (global — covers list views + one2many) ──
+    .o_optional_columns_dropdown_toggle {
+        color: var(--nova-text-tertiary) !important;
+        border: none !important;
+        background: transparent !important;
+
+        &:hover {
+            color: var(--nova-accent) !important;
+        }
+    }
+
+    .o_optional_columns_dropdown {
+        border: none !important;
+
+        > .btn {
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+    }
+
     // ─── Buttons ─────────────────────────────────────────────────────
     .btn-light {
         background-color: var(--nova-surface-raised) !important;
@@ -645,8 +666,9 @@ html.nova-dark {
 
     // ─── Dropdowns ───────────────────────────────────────────────────
     .dropdown-menu,
-    .o-dropdown-menu {
+    .o-dropdown--menu {
         background: var(--nova-surface) !important;
+        background-color: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
         color: var(--nova-text) !important;
 
@@ -654,12 +676,39 @@ html.nova-dark {
             color: var(--nova-text) !important;
 
             &:hover, &:focus {
-                background: none !important;
+                background: var(--nova-accent-light) !important;
                 color: var(--nova-accent) !important;
             }
 
             &.active, &.selected {
                 background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        // Search bar menu items (Filters, Group By, Favorites)
+        .o_menu_item {
+            color: var(--nova-text) !important;
+
+            &:hover, &.focus {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+
+            &.selected {
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        .o_item_option {
+            color: var(--nova-text) !important;
+
+            &:hover, &.focus {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+
+            &.selected {
                 color: var(--nova-accent) !important;
             }
         }
@@ -670,6 +719,40 @@ html.nova-dark {
 
         .dropdown-header {
             color: var(--nova-text-tertiary) !important;
+        }
+
+        // Custom filter inputs inside dropdown
+        input, select {
+            background-color: var(--nova-bg-alt) !important;
+            border-color: var(--nova-border) !important;
+            color: var(--nova-text) !important;
+        }
+
+        .btn {
+            color: var(--nova-text) !important;
+        }
+    }
+
+    // ─── Search bar filter/groupby/favorite menus (explicit) ─────────
+    .o_filter_menu,
+    .o_group_by_menu,
+    .o_favorite_menu,
+    .o_comparison_menu {
+        > .o-dropdown--menu,
+        > .dropdown-menu {
+            background: var(--nova-surface) !important;
+            background-color: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
+            box-shadow: var(--nova-shadow-lg) !important;
+        }
+
+        // Nested sub-dropdown (date period menus)
+        .o-dropdown > .o-dropdown--menu,
+        .o-dropdown > .dropdown-menu {
+            background: var(--nova-surface) !important;
+            background-color: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
+            box-shadow: var(--nova-shadow-lg) !important;
         }
     }
 
@@ -1077,6 +1160,26 @@ html.nova-dark {
                     border-color: var(--nova-border) !important;
                     color: var(--nova-text) !important;
                 }
+
+                // Delete button (trash icon) at end of row
+                .o_list_record_remove {
+                    border: none !important;
+
+                    button {
+                        color: var(--nova-text-tertiary) !important;
+                        border: none !important;
+                        background: none !important;
+
+                        &:hover {
+                            color: var(--nova-danger) !important;
+                        }
+                    }
+                }
+
+                // Row handle (drag icon)
+                .o_handle_cell .o_row_handle {
+                    color: var(--nova-text-tertiary) !important;
+                }
             }
         }
 
@@ -1179,7 +1282,18 @@ html.nova-dark {
             }
         }
 
-        // Optional columns
+        // Optional columns toggle icon (positioned absolute in thead)
+        .o_optional_columns_dropdown_toggle {
+            color: var(--nova-text-tertiary) !important;
+            border: none !important;
+            background: transparent !important;
+
+            &:hover {
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        // Optional columns dropdown menu
         .o_optional_columns_dropdown .dropdown-menu {
             background: var(--nova-surface) !important;
         }
@@ -2399,19 +2513,33 @@ html.nova-dark {
 
     }
 
-    // Section rows — Odoo hard-codes background-color: #DDDDDD on tr
-    // Selector matches Odoo's: table.o_section_and_note_list_view tr.o_data_row.o_is_line_section
-    table.o_section_and_note_list_view tr.o_data_row.o_is_line_section {
-        background-color: var(--nova-bg-alt) !important;
+    // Section rows — Odoo hard-codes background-color: #DDDDDD and border: #BBB
+    table.o_section_and_note_list_view {
+        tr.o_data_row.o_is_line_section {
+            background-color: var(--nova-bg-alt) !important;
+            border-color: var(--nova-border) !important;
 
-        td {
-            background: var(--nova-bg-alt) !important;
+            td {
+                background: var(--nova-bg-alt) !important;
+                border-color: var(--nova-border) !important;
+                color: var(--nova-text) !important;
+            }
+
+            &:hover,
+            &:hover td {
+                background: var(--nova-accent-light) !important;
+                background-color: var(--nova-accent-light) !important;
+            }
         }
 
-        &:hover,
-        &:hover td {
-            background: var(--nova-accent-light) !important;
-            background-color: var(--nova-accent-light) !important;
+        // Note rows
+        tr.o_data_row.o_is_line_note td {
+            color: var(--nova-text-secondary) !important;
+        }
+
+        // All rows — fix white border-bottom
+        tr.o_data_row td {
+            border-color: var(--nova-border) !important;
         }
     }
 
@@ -2869,6 +2997,10 @@ html.nova-dark {
         border-color: var(--nova-border) !important;
     }
 
+    .table-bordered > :not(caption) > * > * {
+        border-color: var(--nova-border) !important;
+    }
+
     // Bootstrap border utilities
     .border {
         border-color: var(--nova-border) !important;
@@ -2958,4 +3090,214 @@ html.nova-dark {
             background-color: var(--nova-bg) !important;
         }
     }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // BOOTSTRAP CONTEXTUAL TABLE CLASSES
+    // ═══════════════════════════════════════════════════════════════════
+
+    .table-info,
+    .table > tbody > tr.table-info > td,
+    .table > tbody > tr.table-info > th {
+        --bs-table-bg: color-mix(in srgb, var(--nova-info) 12%, transparent) !important;
+        --bs-table-border-color: var(--nova-border) !important;
+        background-color: color-mix(in srgb, var(--nova-info) 12%, var(--nova-bg)) !important;
+        color: var(--nova-text) !important;
+    }
+
+    .table-danger,
+    .table > tbody > tr.table-danger > td,
+    .table > tbody > tr.table-danger > th,
+    .table > tbody > tr > td.table-danger {
+        --bs-table-bg: color-mix(in srgb, var(--nova-danger) 12%, transparent) !important;
+        --bs-table-border-color: var(--nova-border) !important;
+        background-color: color-mix(in srgb, var(--nova-danger) 12%, var(--nova-bg)) !important;
+        color: var(--nova-text) !important;
+    }
+
+    .table-warning,
+    .table > tbody > tr.table-warning > td,
+    .table > tbody > tr.table-warning > th {
+        --bs-table-bg: color-mix(in srgb, var(--nova-warning) 12%, transparent) !important;
+        --bs-table-border-color: var(--nova-border) !important;
+        background-color: color-mix(in srgb, var(--nova-warning) 12%, var(--nova-bg)) !important;
+        color: var(--nova-text) !important;
+    }
+
+    .table-success,
+    .table > tbody > tr.table-success > td,
+    .table > tbody > tr.table-success > th {
+        --bs-table-bg: color-mix(in srgb, var(--nova-success) 12%, transparent) !important;
+        --bs-table-border-color: var(--nova-border) !important;
+        background-color: color-mix(in srgb, var(--nova-success) 12%, var(--nova-bg)) !important;
+        color: var(--nova-text) !important;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // STOCK FORECAST PAGE
+    // ═══════════════════════════════════════════════════════════════════
+
+    .o_stock_forecasted_page {
+        color: var(--nova-text) !important;
+
+        // ─── Header (product name + quantity summary) ─────────────────
+        .o_report_replenishment_header {
+            .o_product_name {
+                h3, h6 {
+                    color: var(--nova-text) !important;
+                }
+
+                a {
+                    color: var(--nova-accent) !important;
+
+                    &:hover {
+                        color: var(--nova-accent-hover) !important;
+                    }
+                }
+            }
+
+            // Quantity stat boxes (On Hand, Incoming, Outgoing, Forecasted)
+            .col-md-auto {
+                h3 {
+                    color: var(--nova-text) !important;
+
+                    a {
+                        color: var(--nova-accent) !important;
+
+                        &:hover {
+                            color: var(--nova-accent-hover) !important;
+                        }
+                    }
+                }
+
+                div {
+                    color: var(--nova-text-secondary) !important;
+                }
+
+                // Plus/minus/equals operators
+                &.h3 {
+                    color: var(--nova-text-tertiary) !important;
+                }
+            }
+
+            // Negative forecasted qty
+            .text-danger {
+                color: var(--nova-danger) !important;
+            }
+        }
+
+        // ─── Details table ────────────────────────────────────────────
+        .o_report_replenishment {
+            background-color: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
+
+            thead {
+                tr {
+                    background-color: var(--nova-bg-alt) !important;
+
+                    &.bg-light {
+                        background-color: var(--nova-bg-alt) !important;
+                    }
+
+                    td, th {
+                        background-color: var(--nova-bg-alt) !important;
+                        color: var(--nova-text-secondary) !important;
+                        border-color: var(--nova-border) !important;
+                        font-weight: 600;
+                    }
+                }
+
+                // Forecasted summary rows
+                tr.o_forecasted_row {
+                    background-color: var(--nova-bg-alt) !important;
+
+                    td {
+                        background-color: var(--nova-bg-alt) !important;
+                        color: var(--nova-text) !important;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            tbody {
+                tr {
+                    background-color: var(--nova-surface) !important;
+
+                    td {
+                        background-color: var(--nova-surface) !important;
+                        color: var(--nova-text) !important;
+                        border-color: var(--nova-border) !important;
+                    }
+
+                    // Matched supply/demand rows
+                    &.o_grid_match {
+                        td {
+                            background-color: color-mix(in srgb, var(--nova-info) 12%, var(--nova-surface)) !important;
+                        }
+                    }
+
+                    // Warning/late cells
+                    td.o_grid_warning {
+                        background-color: color-mix(in srgb, var(--nova-danger) 12%, var(--nova-surface)) !important;
+                        color: var(--nova-danger) !important;
+                    }
+
+                    &:hover td {
+                        background-color: var(--nova-accent-light) !important;
+                    }
+                }
+            }
+
+            // Links inside table
+            a {
+                color: var(--nova-accent) !important;
+
+                &:hover {
+                    color: var(--nova-accent-hover) !important;
+                }
+
+                &.fw-bold {
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            // Muted text
+            .text-muted {
+                color: var(--nova-text-tertiary) !important;
+            }
+
+            // Action buttons inside table
+            .btn-primary {
+                background-color: var(--nova-accent) !important;
+                border-color: var(--nova-accent) !important;
+                color: #fff !important;
+            }
+
+            .btn-sm {
+                font-size: var(--nova-font-sm);
+            }
+        }
+
+        // ─── Graph container ──────────────────────────────────────────
+        // Chart.js renders on <canvas> — CSS cannot style its internals.
+        // We ensure the container has proper dark background so chart
+        // boundaries blend. Chart.js colors are set via JS config.
+        .o_graph_renderer,
+        .o_view_controller {
+            background-color: var(--nova-bg) !important;
+        }
+
+        canvas {
+            // Invert the chart colors for dark mode readability
+            filter: invert(0.88) hue-rotate(180deg);
+        }
+    }
+
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STOCK FORECAST PAGE — HEIGHT FIX (both modes)
+// ═══════════════════════════════════════════════════════════════════════════
+// Prevent the page from growing indefinitely (height bug)
+.o_stock_forecasted_page {
+    overflow: auto;
 }

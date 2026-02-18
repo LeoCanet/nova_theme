@@ -29,7 +29,8 @@
                 white-space: nowrap;
 
                 &:hover {
-                    background: var(--nova-border);
+                    background: var(--nova-accent-light);
+                    color: var(--nova-accent);
                 }
 
                 &.o_column_sortable {
@@ -114,20 +115,34 @@
             font-weight: 600;
             color: var(--nova-text);
             border-bottom: 1px solid var(--nova-border);
+            transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+        }
+
+        &:hover td {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent);
         }
     }
 
-    // ─── Optional columns dropdown ─────────────────────────────────────
-    .o_optional_columns_dropdown {
-        .dropdown-toggle {
-            border-radius: var(--nova-radius);
-            color: var(--nova-text-tertiary);
+}
 
-            &:hover {
-                color: var(--nova-accent);
-                background: var(--nova-accent-light);
-            }
-        }
+// ─── Optional columns dropdown (global — works in list views + one2many) ──
+.o_optional_columns_dropdown {
+    border: none !important;
+
+    > .btn {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+}
+
+i.o_optional_columns_dropdown_toggle {
+    color: var(--nova-text-tertiary) !important;
+    transition: color var(--nova-transition-fast);
+
+    &:hover {
+        color: var(--nova-accent) !important;
     }
 }
 

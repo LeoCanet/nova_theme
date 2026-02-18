@@ -673,6 +673,16 @@
         // Force font-size on ALL list cells (readonly + edit)
         // Must target both .o_list_view and .o_list_renderer
         .o_list_table {
+            // Header hover
+            thead th:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+
+            // Row hover
+            tbody tr.o_data_row:not(.o_selected_row):hover td {
+                background: var(--nova-accent-light) !important;
+            }
             tbody td,
             tbody .o_data_row td,
             tbody .o_data_row td.o_data_cell,
@@ -693,6 +703,121 @@
                     font-size: inherit !important;
                 }
             }
+
+            // ── Inline editable row — seamless fields ──
+            tbody .o_data_row.o_selected_row {
+
+                td {
+                    // Consistent vertical padding for edit-mode cells
+                    padding-top: 2px !important;
+                    padding-bottom: 2px !important;
+                    vertical-align: middle;
+                }
+
+                // Strip all inner borders/radius — fields blend into the table
+                .o_field_widget {
+
+                    // All inputs, selects, textareas — flat inline style
+                    input.o_input,
+                    textarea.o_input,
+                    select.o_input {
+                        border: none !important;
+                        border-radius: 0 !important;
+                        box-shadow: none !important;
+                        background: transparent !important;
+                        padding: var(--nova-space-1) var(--nova-space-2) !important;
+                        min-height: 32px;
+                        outline: none !important;
+
+                        &:focus {
+                            border-bottom: 2px solid var(--nova-accent) !important;
+                            box-shadow: none !important;
+                        }
+                    }
+
+                    // Wrapper containers (many2one, date, etc.)
+                    div.o_input,
+                    .o_input_dropdown,
+                    .o_field_many2one_selection {
+                        border: none !important;
+                        border-radius: 0 !important;
+                        box-shadow: none !important;
+                        background: transparent !important;
+
+                        &:focus-within {
+                            border-bottom: 2px solid var(--nova-accent) !important;
+                            box-shadow: none !important;
+                        }
+
+                        input, select, textarea,
+                        div.o_input, .o_input,
+                        .o_input_dropdown,
+                        .o_field_many2one_selection {
+                            border: none !important;
+                            border-radius: 0 !important;
+                            box-shadow: none !important;
+                            background: transparent !important;
+                        }
+                    }
+
+                    // Many2many tags — flat inline
+                    &.o_field_many2many_tags {
+                        > .o_input,
+                        > div.o_input {
+                            border: none !important;
+                            border-radius: 0 !important;
+                            box-shadow: none !important;
+                            background: transparent !important;
+                            padding: 2px 0 !important;
+                            min-height: 32px;
+
+                            &:focus-within {
+                                border-bottom: 2px solid var(--nova-accent) !important;
+                                box-shadow: none !important;
+                            }
+                        }
+
+                        .badge {
+                            border-radius: var(--nova-radius-sm) !important;
+                            font-size: var(--nova-font-sm) !important;
+                            padding: 2px 6px !important;
+                        }
+                    }
+
+                    // Dropdown caret
+                    .o_dropdown_button {
+                        border: none !important;
+                        background: transparent !important;
+                    }
+
+                    // External link button
+                    .o_external_button {
+                        border: none !important;
+                        background: transparent !important;
+                        box-shadow: none !important;
+                    }
+                }
+            }
+        }
+
+        // Delete button (trash icon) at end of row
+        .o_list_record_remove {
+            border: none !important;
+
+            button {
+                color: var(--nova-text-tertiary);
+                border: none;
+                background: none;
+
+                &:hover {
+                    color: var(--nova-danger);
+                }
+            }
+        }
+
+        // Row handle (drag icon)
+        .o_handle_cell .o_row_handle {
+            color: var(--nova-text-tertiary);
         }
 
         .o_field_x2many_list_row_add a {
@@ -751,5 +876,14 @@
                 color: var(--nova-warning);
             }
         }
+    }
+}
+
+// ─── Monetary — symbol after value (French convention: 1,00 €) ───────────
+.o_field_widget.o_field_monetary > div {
+    > span {
+        order: 1;
+        margin-left: var(--nova-space-1);
+        margin-right: var(--nova-space-1);
     }
 }

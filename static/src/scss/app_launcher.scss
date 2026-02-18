@@ -231,15 +231,15 @@
 
     &:hover {
         transform: scale(1.15);
-        color: var(--nova-warning, #f59e0b);
+        color: var(--nova-warning);
     }
 
     &--active {
         opacity: 1;
-        color: var(--nova-warning, #f59e0b);
+        color: var(--nova-warning);
 
         &:hover {
-            color: var(--nova-warning, #f59e0b);
+            color: var(--nova-warning);
             transform: scale(1.15);
         }
     }

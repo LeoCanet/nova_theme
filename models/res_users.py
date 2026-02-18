@@ -62,6 +62,7 @@ class ResUsers(models.Model):
             ("montserrat", "Montserrat"),
             ("open-sans", "Open Sans"),
             ("ibm-plex", "IBM Plex Sans"),
+            ("open-sauce", "Open Sauce One"),
         ],
         string="Police de caractères",
         default="inter",

@@ -4,7 +4,7 @@
 
 // ─── Modal Backdrop ────────────────────────────────────────────────────────
 .modal-backdrop {
-    background: rgba(15, 23, 42, 0.4);
+    background: color-mix(in srgb, var(--nova-text) 40%, transparent);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
@@ -82,7 +82,7 @@
     &.o_error_dialog {
         .modal-header {
             background: var(--nova-danger-light);
-            border-bottom-color: rgba(239, 68, 68, 0.15);
+            border-bottom-color: color-mix(in srgb, var(--nova-danger) 15%, transparent);
 
             .modal-title {
                 color: var(--nova-danger);
@@ -139,8 +139,8 @@
             height: 28px;
 
             &:hover {
-                background: rgba(0, 0, 0, 0.15) !important;
-                color: white;
+                background: var(--nova-bg-alt) !important;
+                color: var(--nova-text) !important;
             }
         }
 
@@ -150,13 +150,20 @@
 
             .o_notification_title { color: white !important; }
             .o_notification_content { color: rgba(255, 255, 255, 0.85) !important; }
-            .o_notification_close { color: rgba(255, 255, 255, 0.7) !important; }
+            .o_notification_close {
+                color: rgba(255, 255, 255, 0.7) !important;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.15) !important;
+                    color: white !important;
+                }
+            }
         }
 
-        &.border-success { background: #1a6944 !important; }
-        &.border-warning { background: #92600a !important; }
-        &.border-danger  { background: #9b2222 !important; }
-        &.border-info    { background: #0e7490 !important; }
+        &.border-success { background: color-mix(in srgb, var(--nova-success) 80%, black) !important; }
+        &.border-warning { background: color-mix(in srgb, var(--nova-warning) 70%, black) !important; }
+        &.border-danger  { background: color-mix(in srgb, var(--nova-danger) 70%, black) !important; }
+        &.border-info    { background: color-mix(in srgb, var(--nova-info) 80%, black) !important; }
     }
 }
 

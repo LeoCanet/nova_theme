@@ -159,6 +159,7 @@
 [data-nova-font-family="montserrat"]{ --nova-font-family: 'Montserrat', sans-serif; }
 [data-nova-font-family="open-sans"] { --nova-font-family: 'Open Sans', sans-serif; }
 [data-nova-font-family="ibm-plex"] { --nova-font-family: 'IBM Plex Sans', sans-serif; }
+[data-nova-font-family="open-sauce"]{ --nova-font-family: 'Open Sauce One', sans-serif; }
 
 // ─── Global Reset & Base Styles ────────────────────────────────────────────
 body {
@@ -229,11 +230,11 @@ small.text-muted {
 // Show scrollbar thumb only when hovering the scrollable area
 *:hover > ::-webkit-scrollbar-thumb,
 *:hover::-webkit-scrollbar-thumb {
-    background: rgba(128, 128, 128, 0.3);
+    background: color-mix(in srgb, var(--nova-text) 20%, transparent);
 }
 *:hover > ::-webkit-scrollbar-thumb:hover,
 *:hover::-webkit-scrollbar-thumb:hover {
-    background: rgba(128, 128, 128, 0.5);
+    background: color-mix(in srgb, var(--nova-text) 35%, transparent);
 }
 // Firefox — thin + auto-hide on hover
 * {
@@ -241,7 +242,7 @@ small.text-muted {
     scrollbar-color: transparent transparent;
 }
 *:hover {
-    scrollbar-color: rgba(128, 128, 128, 0.3) transparent;
+    scrollbar-color: color-mix(in srgb, var(--nova-text) 20%, transparent) transparent;
 }
 
 // ─── Selection ─────────────────────────────────────────────────────────────
@@ -389,12 +390,112 @@ a {
     }
 }
 
+// ─── Search Bar Menus (Filters / Group By / Favorites) ─────────────────────
+.o_filter_menu,
+.o_group_by_menu,
+.o_favorite_menu,
+.o_comparison_menu {
+    .o-dropdown--menu,
+    > .dropdown-menu {
+        background: var(--nova-surface);
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-lg);
+        box-shadow: var(--nova-shadow-lg);
+        padding: var(--nova-space-1);
+
+        .o_menu_item,
+        .o_item_option {
+            color: var(--nova-text);
+            border-radius: var(--nova-radius-sm);
+            padding: var(--nova-space-2) var(--nova-space-3);
+            transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+
+            &:hover, &.focus {
+                background: var(--nova-accent-light);
+                color: var(--nova-accent);
+            }
+
+            &.selected {
+                color: var(--nova-accent);
+                font-weight: 500;
+            }
+        }
+
+        .dropdown-divider {
+            border-color: var(--nova-border);
+        }
+
+        // Custom filter / group-by inputs
+        input, select {
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius);
+            background: var(--nova-surface);
+            color: var(--nova-text);
+            padding: var(--nova-space-2) var(--nova-space-3);
+            font-size: var(--nova-font-base);
+
+            &:focus {
+                border-color: var(--nova-accent);
+                box-shadow: 0 0 0 3px var(--nova-accent-light);
+                outline: none;
+            }
+        }
+    }
+
+    // Nested sub-dropdown (date period submenu)
+    .o-dropdown > .o-dropdown--menu,
+    .o-dropdown > .dropdown-menu {
+        background: var(--nova-surface);
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-lg);
+        box-shadow: var(--nova-shadow-lg);
+        padding: var(--nova-space-1);
+    }
+}
+
 // ─── Pager ─────────────────────────────────────────────────────────────────
 .o_pager {
     .o_pager_counter {
         font-size: var(--nova-font-base);
         color: var(--nova-text-secondary);
         font-variant-numeric: tabular-nums;
+    }
+
+    button {
+        color: var(--nova-text-secondary);
+        transition: color var(--nova-transition-fast);
+
+        &:hover {
+            color: var(--nova-accent);
+        }
+    }
+}
+
+// ─── Activity menu ─────────────────────────────────────────────────────────
+.o_ActivityMenuView_activityGroup {
+    transition: background var(--nova-transition-fast);
+
+    &:hover {
+        background-color: var(--nova-accent-light);
+    }
+}
+
+// ─── Notification mark as read ─────────────────────────────────────────────
+.o_NotificationListItem_markAsRead {
+    transition: color var(--nova-transition-fast);
+
+    &:hover {
+        color: var(--nova-accent);
+    }
+}
+
+// ─── Search panel (left sidebar) ───────────────────────────────────────────
+.o_search_panel {
+    .o_search_panel_category_value,
+    .o_search_panel_filter_group {
+        &:hover {
+            background-color: var(--nova-accent-light);
+        }
     }
 }
 

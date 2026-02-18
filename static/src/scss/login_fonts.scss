@@ -17,3 +17,19 @@
     font-display: swap;
     src: url('/nova_theme/static/src/fonts/InterVariable-Italic.woff2') format('woff2');
 }
+
+@font-face {
+    font-family: 'Open Sauce One';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('/nova_theme/static/src/fonts/OpenSauceOneVF.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Open Sauce One';
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('/nova_theme/static/src/fonts/OpenSauceOneVF-Italic.woff2') format('woff2');
+}
