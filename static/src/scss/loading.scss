@@ -1,0 +1,88 @@
+///============================================================================
+/// Theme Nova — Loading & BlockUI Overrides
+///============================================================================
+
+// ─── Enhanced Loading Bar ────────────────────────────────────────────────────
+
+@keyframes novaLoadingShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+.o_loading_indicator {
+    background: var(--nova-accent) !important;
+    height: 2.5px !important;
+    box-shadow: 0 0 10px var(--nova-accent), 0 0 4px var(--nova-accent);
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent
+        );
+        animation: novaLoadingShine 1.2s ease infinite;
+    }
+}
+
+// ─── BlockUI Overlay — Glassmorphism + Nova Spinner ──────────────────────────
+
+.o_blockUI,
+.blockUI.blockOverlay {
+    background: rgba(248, 250, 252, 0.6) !important; // fallback for older browsers
+    background: color-mix(in srgb, var(--nova-bg) 60%, transparent) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    opacity: 1 !important;
+    cursor: wait !important;
+}
+
+.blockUI.blockMsg {
+    background: transparent !important;
+    border: none !important;
+    width: auto !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    cursor: wait !important;
+}
+
+// Nova custom BlockUI content (replaces default spinner)
+.nova-blockui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-4);
+
+    &__spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--nova-border);
+        border-top-color: var(--nova-accent);
+        border-radius: 50%;
+        animation: novaSpin 0.7s linear infinite;
+    }
+
+    &__text {
+        font-family: var(--nova-font-family);
+        font-size: var(--nova-font-sm);
+        color: var(--nova-text-secondary);
+        font-weight: 500;
+        letter-spacing: 0.01em;
+    }
+}
+
+// Override jQuery BlockUI default spinner image
+.blockUI .loading_icon,
+.blockUI img {
+    display: none !important;
+}

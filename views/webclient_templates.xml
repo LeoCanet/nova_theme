@@ -14,6 +14,7 @@
             <t t-set="nova_sidebar" t-value="'True' if nova_user.nova_theme_sidebar_collapsed else 'False'"/>
             <t t-set="nova_font_size" t-value="nova_user.nova_theme_font_size or 'default'"/>
             <t t-set="nova_font_family" t-value="nova_user.nova_theme_font_family or 'inter'"/>
+            <t t-set="nova_has_sidebar" t-value="(nova_user.nova_favorite_app_ids and nova_user.nova_favorite_app_ids != '[]') or (nova_user.nova_pinned_pages and nova_user.nova_pinned_pages != '[]')"/>
             <script type="text/javascript">
                 (function() {
                     var d = document.documentElement;
@@ -29,6 +30,819 @@
                     }
                 })();
             </script>
+            <!-- Nova Skeleton Loading Screen -->
+            <style>
+                @keyframes _novaShimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+                #nova-skeleton {
+                    position: fixed; inset: 0; z-index: 9999;
+                    display: flex; flex-direction: column;
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    background: #F8FAFC;
+                    transition: opacity 0.25s ease-out;
+                }
+                #nova-skeleton.nova-skeleton--ready {
+                    /* Stop shimmer before fading — freeze the skeleton in place */
+                }
+                #nova-skeleton.nova-skeleton--ready .sk {
+                    animation: none !important;
+                }
+                #nova-skeleton.nova-skeleton--hidden {
+                    opacity: 0; pointer-events: none;
+                }
+                #nova-skeleton .sk {
+                    background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 37%, #E2E8F0 63%);
+                    background-size: 400% 100%;
+                    animation: _novaShimmer 1.4s ease infinite;
+                    border-radius: 6px; flex-shrink: 0;
+                }
+
+                /* ── Navbar ── */
+                #nova-skeleton .sk-navbar {
+                    height: 48px; min-height: 48px; background: #FFFFFF;
+                    border-bottom: 1px solid #E2E8F0;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    display: flex; align-items: center; padding: 0 16px; gap: 8px; flex-shrink: 0;
+                }
+
+                /* ── Sidebar ── */
+                #nova-skeleton .sk-sidebar {
+                    position: fixed; top: 48px; left: 0; bottom: 0; width: 240px;
+                    background: #FFFFFF; border-right: 1px solid #E2E8F0;
+                    padding: 12px 8px; display: none; flex-direction: column; gap: 4px;
+                    overflow: hidden; z-index: 1020;
+                }
+                #nova-skeleton .sk-sidebar-section { padding: 12px 12px 4px 12px; }
+                #nova-skeleton .sk-sidebar-item {
+                    display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 8px;
+                }
+                #nova-skeleton .sk-sidebar-divider {
+                    height: 1px; background: #F1F5F9; margin: 8px 12px;
+                }
+                #nova-skeleton .sk-sidebar-footer {
+                    margin-top: auto; padding: 8px 12px; border-top: 1px solid #F1F5F9;
+                }
+                #nova-skeleton[data-sidebar="expanded"] .sk-sidebar { display: flex; }
+                #nova-skeleton[data-sidebar="expanded"] .sk-main { margin-left: 240px; }
+                #nova-skeleton[data-sidebar="collapsed"] .sk-sidebar {
+                    display: flex; width: 56px; padding: 12px 4px; align-items: center;
+                }
+                #nova-skeleton[data-sidebar="collapsed"] .sk-sidebar .sk-sidebar-section,
+                #nova-skeleton[data-sidebar="collapsed"] .sk-sidebar .sk-sidebar-label { display: none; }
+                #nova-skeleton[data-sidebar="collapsed"] .sk-sidebar .sk-sidebar-item {
+                    padding: 8px; justify-content: center; gap: 0;
+                }
+                #nova-skeleton[data-sidebar="collapsed"] .sk-sidebar .sk-sidebar-divider {
+                    margin: 8px 4px; width: calc(100% - 8px);
+                }
+                #nova-skeleton[data-sidebar="collapsed"] .sk-main { margin-left: 56px; }
+
+                /* ── Main / Control panel ── */
+                #nova-skeleton .sk-main {
+                    flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #F8FAFC;
+                }
+                #nova-skeleton .sk-cp {
+                    background: #FFFFFF; border-bottom: 1px solid #E2E8F0;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    padding: 12px 24px; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+                }
+
+                /* ── Shared: table card ── */
+                #nova-skeleton .sk-table {
+                    background: #FFFFFF; border: 1px solid #E2E8F0;
+                    border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); overflow: hidden;
+                }
+                #nova-skeleton .sk-table-flex .sk-thead {
+                    background: #F1F5F9; border-bottom: 1px solid #E2E8F0;
+                    display: flex; align-items: center; padding: 12px 16px; gap: 16px;
+                }
+                #nova-skeleton .sk-table-flex .sk-row {
+                    display: flex; align-items: center; padding: 12px 16px; gap: 16px;
+                    border-bottom: 1px solid #F1F5F9;
+                }
+                #nova-skeleton .sk-table-flex .sk-row:last-child { border-bottom: none; }
+                #nova-skeleton .sk-table-flex .sk-row:nth-child(even) { background: #F1F5F9; }
+
+                /* ── Checkbox placeholder ── */
+                #nova-skeleton .sk-check {
+                    width: 16px; height: 16px; border-radius: 6px;
+                    border: 1.5px solid #CBD5E1; background: transparent;
+                    flex-shrink: 0;
+                }
+
+                /* ═══ VIEW: LIST ═══ */
+                #nova-skeleton .sk-view-list { flex: 1; padding: 0; overflow: hidden; }
+                #nova-skeleton .sk-list {
+                    background: #FFFFFF; border: 1px solid #E2E8F0;
+                    border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); overflow: hidden;
+                }
+                #nova-skeleton .sk-list .sk-thead,
+                #nova-skeleton .sk-list .sk-row {
+                    display: grid;
+                    grid-template-columns: 40px 2.5fr 1.5fr 1fr 1fr 90px;
+                    align-items: center;
+                }
+                #nova-skeleton .sk-list .sk-thead {
+                    background: #F1F5F9; border-bottom: 1px solid #E2E8F0;
+                }
+                #nova-skeleton .sk-list .sk-thead > div,
+                #nova-skeleton .sk-list .sk-row > div {
+                    padding: 12px 16px; display: flex; align-items: center;
+                }
+                #nova-skeleton .sk-list .sk-thead > div:first-child,
+                #nova-skeleton .sk-list .sk-row > div:first-child {
+                    justify-content: center;
+                }
+                #nova-skeleton .sk-list .sk-row {
+                    border-bottom: 1px solid #F1F5F9;
+                }
+                #nova-skeleton .sk-list .sk-row:last-child { border-bottom: none; }
+                #nova-skeleton .sk-list .sk-row:nth-child(even) { background: #F1F5F9; }
+
+                /* ═══ VIEW: KANBAN (shared) ═══ */
+                #nova-skeleton .sk-kanban-card {
+                    background: #FFFFFF; border: 1px solid #E2E8F0;
+                    border-radius: 10px; padding: 12px;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    display: flex; flex-direction: column; gap: 8px;
+                }
+                #nova-skeleton .sk-kanban-card-bottom {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding-top: 8px; border-top: 1px solid #F1F5F9; margin-top: 4px;
+                }
+
+                /* ── Kanban GROUPED (pipeline columns) ── */
+                #nova-skeleton .sk-view-kanban-grouped {
+                    flex: 1; padding: 16px; display: flex; gap: 16px; overflow-x: auto;
+                }
+                #nova-skeleton .sk-kanban-col {
+                    min-width: 280px; width: 280px; flex-shrink: 0;
+                    background: #F1F5F9; border-radius: 12px;
+                    border: 1px solid #F1F5F9; padding: 12px;
+                    display: flex; flex-direction: column; gap: 8px;
+                }
+                #nova-skeleton .sk-kanban-col-header {
+                    display: flex; align-items: center; gap: 8px;
+                    padding-bottom: 8px; margin-bottom: 4px;
+                }
+
+                /* ── Kanban UNGROUPED (card grid) ── */
+                #nova-skeleton .sk-view-kanban-ungrouped {
+                    flex: 1; padding: 16px 24px; overflow: hidden;
+                    display: flex; flex-wrap: wrap; gap: 16px;
+                    align-content: flex-start;
+                }
+                #nova-skeleton .sk-view-kanban-ungrouped .sk-kanban-card {
+                    width: 280px; flex-shrink: 0;
+                }
+
+                /* ═══ VIEW: CALENDAR ═══ */
+                #nova-skeleton .sk-view-calendar {
+                    flex: 1; padding: 16px 24px; overflow: hidden;
+                }
+                #nova-skeleton .sk-cal {
+                    background: #FFFFFF; border: 1px solid #E2E8F0;
+                    border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    overflow: hidden;
+                }
+                #nova-skeleton .sk-cal-toolbar {
+                    display: flex; align-items: center; padding: 12px 16px; gap: 8px;
+                }
+                #nova-skeleton .sk-cal-header {
+                    display: grid; grid-template-columns: repeat(7, 1fr);
+                    background: #F1F5F9; border-bottom: 1px solid #E2E8F0;
+                }
+                #nova-skeleton .sk-cal-header > div {
+                    padding: 8px; display: flex; justify-content: center;
+                }
+                #nova-skeleton .sk-cal-grid {
+                    display: grid; grid-template-columns: repeat(7, 1fr);
+                }
+                #nova-skeleton .sk-cal-cell {
+                    min-height: 90px; padding: 6px 8px;
+                    border-right: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;
+                }
+                #nova-skeleton .sk-cal-cell:nth-child(7n) { border-right: none; }
+
+                /* ═══ VIEW: GRAPH ═══ */
+                #nova-skeleton .sk-view-graph {
+                    flex: 1; padding: 16px 24px; overflow: hidden;
+                }
+                #nova-skeleton .sk-graph {
+                    background: #FFFFFF; border: 1px solid #E2E8F0;
+                    border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    padding: 24px; height: 400px;
+                    display: flex; align-items: flex-end; gap: 24px;
+                    justify-content: center;
+                }
+                #nova-skeleton .sk-graph-bar {
+                    width: 40px; border-radius: 6px 6px 0 0; flex-shrink: 0;
+                }
+
+                /* ═══ VIEW: PIVOT ═══ */
+                #nova-skeleton .sk-view-pivot { flex: 1; padding: 16px 24px; overflow: hidden; }
+
+                /* ═══ VIEW: FORM (with chatter) ═══ */
+                #nova-skeleton .sk-view-form { flex: 1; display: flex; overflow: hidden; }
+                #nova-skeleton .sk-statusbar {
+                    background: #F8FAFC; border-bottom: 1px solid #E2E8F0;
+                    padding: 8px 16px; display: flex; align-items: center; gap: 0; flex-shrink: 0;
+                }
+                #nova-skeleton .sk-statusbar-step {
+                    padding: 6px 24px; border: 1px solid #E2E8F0; border-right: none;
+                    display: flex; align-items: center;
+                }
+                #nova-skeleton .sk-statusbar-step:first-child { border-radius: 6px 0 0 6px; }
+                #nova-skeleton .sk-statusbar-step:last-child {
+                    border-right: 1px solid #E2E8F0; border-radius: 0 6px 6px 0;
+                }
+                #nova-skeleton .sk-sheet-area {
+                    flex: 1; padding: 16px 16px; overflow: hidden;
+                }
+                #nova-skeleton .sk-sheet {
+                    background: #FFFFFF; border: 1px solid #E2E8F0;
+                    border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                    padding: 24px 32px; width: 100%; box-sizing: border-box;
+                }
+                #nova-skeleton .sk-smartbtns {
+                    display: flex; gap: 0; border-bottom: 1px solid #E2E8F0;
+                    margin: -24px -32px 20px -32px; border-radius: 12px 12px 0 0; overflow: hidden;
+                }
+                #nova-skeleton .sk-smartbtn {
+                    flex: 1; padding: 10px 16px; border-right: 1px solid #E2E8F0;
+                    display: flex; flex-direction: column; align-items: center; gap: 4px;
+                }
+                #nova-skeleton .sk-smartbtn:last-child { border-right: none; }
+                #nova-skeleton .sk-field-group {
+                    display: grid; grid-template-columns: 140px 1fr; gap: 12px 16px; margin-bottom: 24px;
+                }
+                #nova-skeleton .sk-field-group--2col {
+                    grid-template-columns: 140px 1fr 140px 1fr;
+                }
+                #nova-skeleton .sk-tabs {
+                    display: flex; gap: 2px; background: #F1F5F9;
+                    border-radius: 8px; padding: 3px; margin-top: 24px; margin-bottom: 16px;
+                }
+                #nova-skeleton .sk-tab { padding: 8px 16px; border-radius: 6px; }
+                #nova-skeleton .sk-tab--active {
+                    background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+                }
+                /* Chatter */
+                #nova-skeleton .sk-chatter {
+                    width: 450px; min-width: 380px; flex-shrink: 0;
+                    background: #F8FAFC; border-left: 1px solid #E2E8F0;
+                    display: flex; flex-direction: column;
+                }
+                #nova-skeleton .sk-chatter-topbar {
+                    padding: 8px 12px; border-bottom: 1px solid #F1F5F9;
+                    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+                }
+                #nova-skeleton .sk-chatter-msgs { flex: 1; padding: 0; overflow: hidden; }
+                #nova-skeleton .sk-msg {
+                    padding: 16px; border-bottom: 1px solid #F1F5F9; display: flex; gap: 12px;
+                }
+                #nova-skeleton .sk-msg-body {
+                    flex: 1; display: flex; flex-direction: column; gap: 6px;
+                }
+
+                /* ── View visibility toggle ── */
+                #nova-skeleton .sk-view-list, #nova-skeleton .sk-view-kanban-grouped,
+                #nova-skeleton .sk-view-kanban-ungrouped,
+                #nova-skeleton .sk-view-calendar, #nova-skeleton .sk-view-graph,
+                #nova-skeleton .sk-view-pivot, #nova-skeleton .sk-view-form { display: none; }
+                #nova-skeleton[data-view="list"] .sk-view-list { display: block; }
+                #nova-skeleton[data-view="kanban"][data-kanban="grouped"] .sk-view-kanban-grouped { display: flex; }
+                #nova-skeleton[data-view="kanban"][data-kanban="ungrouped"] .sk-view-kanban-ungrouped { display: flex; }
+                #nova-skeleton[data-view="calendar"] .sk-view-calendar { display: block; }
+                #nova-skeleton[data-view="graph"] .sk-view-graph { display: block; }
+                #nova-skeleton[data-view="pivot"] .sk-view-pivot { display: block; }
+                #nova-skeleton[data-view="form"] .sk-view-form,
+                #nova-skeleton[data-view="form"] .sk-statusbar { display: flex; }
+
+                /* ══ DARK MODE ══ */
+                .nova-dark #nova-skeleton { background: #1B1C1E; }
+                .nova-dark #nova-skeleton .sk {
+                    background: linear-gradient(90deg, #2A2B2F 25%, #333438 37%, #2A2B2F 63%);
+                    background-size: 400% 100%;
+                }
+                .nova-dark #nova-skeleton .sk-navbar {
+                    background: #232427; border-bottom-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-sidebar {
+                    background: #232427; border-right-color: #2F3035;
+                }
+                .nova-dark #nova-skeleton .sk-sidebar-divider { background: #292A2E; }
+                .nova-dark #nova-skeleton .sk-sidebar-footer { border-top-color: #292A2E; }
+                .nova-dark #nova-skeleton .sk-main { background: #1B1C1E; }
+                .nova-dark #nova-skeleton .sk-cp {
+                    background: #232427; border-bottom-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-table,
+                .nova-dark #nova-skeleton .sk-list {
+                    background: #232427; border-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-thead {
+                    background: #1F2023; border-bottom-color: #2F3035;
+                }
+                .nova-dark #nova-skeleton .sk-row { border-bottom-color: #292A2E; }
+                .nova-dark #nova-skeleton .sk-row:nth-child(even) { background: #1F2023; }
+                .nova-dark #nova-skeleton .sk-check { border-color: #4A4B50; }
+                /* Dark kanban */
+                .nova-dark #nova-skeleton .sk-kanban-col {
+                    background: #1F2023; border-color: #292A2E;
+                }
+                .nova-dark #nova-skeleton .sk-kanban-card {
+                    background: #232427; border-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-kanban-card-bottom { border-top-color: #292A2E; }
+                .nova-dark #nova-skeleton .sk-view-kanban-ungrouped { background: #1B1C1E; }
+                /* Dark calendar */
+                .nova-dark #nova-skeleton .sk-cal {
+                    background: #232427; border-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-cal-header { background: #1F2023; border-bottom-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-cal-cell { border-color: #292A2E; }
+                /* Dark graph */
+                .nova-dark #nova-skeleton .sk-graph {
+                    background: #232427; border-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                /* Dark form */
+                .nova-dark #nova-skeleton .sk-statusbar { background: #1B1C1E; border-bottom-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-statusbar-step { border-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-sheet {
+                    background: #232427; border-color: #2F3035;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-smartbtns { border-bottom-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-smartbtn { border-right-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-tabs { background: #1F2023; }
+                .nova-dark #nova-skeleton .sk-tab--active {
+                    background: #232427; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                .nova-dark #nova-skeleton .sk-chatter { background: #1B1C1E; border-left-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-chatter-topbar { border-bottom-color: #2F3035; }
+                .nova-dark #nova-skeleton .sk-msg { border-bottom-color: #292A2E; }
+            </style>
+        </xpath>
+        <xpath expr="//body" position="inside">
+            <t t-if="request.session.uid">
+            <div id="nova-skeleton" t-att-data-has-sidebar="'true' if nova_has_sidebar else 'false'">
+                <script>
+                    (function() {
+                        var h = window.location.hash || '';
+                        var el = document.getElementById('nova-skeleton');
+                        if (!el) return;
+                        var vt = (h.match(/view_type=(\w+)/i) || [])[1];
+                        var model = (h.match(/model=([^&amp;]+)/i) || [])[1] || '';
+                        // Settings pages are form views but look nothing like forms
+                        var settingsModels = /^(res\.config\.settings|base\.setup\.installer)$/;
+                        if (vt === 'form' &amp;&amp; settingsModels.test(model)) {
+                            vt = 'list';
+                        }
+                        el.dataset.view = vt ? vt.toLowerCase() : 'list';
+                        // Kanban: detect grouped (pipeline) vs ungrouped (grid)
+                        if (el.dataset.view === 'kanban') {
+                            var grouped = /^(project\.task|crm\.lead|crm\.opportunity|helpdesk\.ticket|project\.project)$/.test(model);
+                            el.dataset.kanban = grouped ? 'grouped' : 'ungrouped';
+                        }
+                        if (el.dataset.hasSidebar === 'true') {
+                            var collapsed = document.documentElement.dataset.novaSidebarCollapsed === 'True';
+                            el.dataset.sidebar = collapsed ? 'collapsed' : 'expanded';
+                        }
+                    })();
+                </script>
+
+                <!-- ═══ NAVBAR ═══ -->
+                <div class="sk-navbar">
+                    <div class="sk" style="width:36px;height:36px;border-radius:8px;"/>
+                    <div class="sk" style="width:110px;height:16px;border-radius:4px;"/>
+                    <div class="sk" style="width:64px;height:14px;border-radius:4px;margin-left:8px;"/>
+                    <div class="sk" style="width:72px;height:14px;border-radius:4px;"/>
+                    <div class="sk" style="width:56px;height:14px;border-radius:4px;"/>
+                    <div style="flex:1;"/>
+                    <div class="sk" style="width:34px;height:34px;border-radius:8px;"/>
+                    <div class="sk" style="width:34px;height:34px;border-radius:8px;"/>
+                    <div class="sk" style="width:34px;height:34px;border-radius:8px;"/>
+                    <div class="sk" style="width:34px;height:34px;border-radius:50%;"/>
+                </div>
+
+                <!-- ═══ SIDEBAR ═══ -->
+                <div class="sk-sidebar">
+                    <div class="sk-sidebar-section">
+                        <div class="sk" style="width:50px;height:9px;border-radius:3px;opacity:0.5;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:24px;height:24px;border-radius:6px;"/>
+                        <div class="sk sk-sidebar-label" style="width:75%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:24px;height:24px;border-radius:6px;"/>
+                        <div class="sk sk-sidebar-label" style="width:60%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:24px;height:24px;border-radius:6px;"/>
+                        <div class="sk sk-sidebar-label" style="width:85%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:24px;height:24px;border-radius:6px;"/>
+                        <div class="sk sk-sidebar-label" style="width:65%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-divider"/>
+                    <div class="sk-sidebar-section">
+                        <div class="sk" style="width:70px;height:9px;border-radius:3px;opacity:0.5;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:20px;height:20px;border-radius:50%;"/>
+                        <div class="sk sk-sidebar-label" style="width:80%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:20px;height:20px;border-radius:50%;"/>
+                        <div class="sk sk-sidebar-label" style="width:55%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-item">
+                        <div class="sk" style="width:20px;height:20px;border-radius:50%;"/>
+                        <div class="sk sk-sidebar-label" style="width:70%;height:14px;border-radius:4px;"/>
+                    </div>
+                    <div class="sk-sidebar-footer">
+                        <div class="sk" style="width:32px;height:32px;border-radius:8px;"/>
+                    </div>
+                </div>
+
+                <div class="sk-main">
+
+                    <!-- ═══ CONTROL PANEL ═══ -->
+                    <div class="sk-cp">
+                        <div class="sk" style="width:140px;height:20px;border-radius:4px;"/>
+                        <div style="color:#94A3B8;font-size:16px;line-height:1;">›</div>
+                        <div class="sk" style="width:180px;height:20px;border-radius:4px;"/>
+                        <div style="flex:1;"/>
+                        <div class="sk" style="width:90px;height:32px;border-radius:6px;"/>
+                        <div class="sk" style="width:90px;height:32px;border-radius:6px;"/>
+                    </div>
+
+                    <!-- ═══ LIST VIEW ═══ -->
+                    <div class="sk-view-list"><div class="sk-list">
+                        <!-- Header: checkbox | Nom | Date | Montant | Responsable | Statut -->
+                        <div class="sk-thead">
+                            <div><div class="sk-check"/></div>
+                            <div><div class="sk" style="width:60%;height:12px;border-radius:3px;opacity:0.55;"/></div>
+                            <div><div class="sk" style="width:50%;height:12px;border-radius:3px;opacity:0.55;"/></div>
+                            <div><div class="sk" style="width:55%;height:12px;border-radius:3px;opacity:0.55;"/></div>
+                            <div><div class="sk" style="width:65%;height:12px;border-radius:3px;opacity:0.55;"/></div>
+                            <div><div class="sk" style="width:70%;height:12px;border-radius:3px;opacity:0.55;"/></div>
+                        </div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:80%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:60px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:52px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:90%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:45%;height:14px;"/></div><div><div class="sk" style="width:75%;height:14px;"/></div><div><div class="sk" style="width:66px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:58px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:85%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:62px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:45%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:80%;height:14px;"/></div><div><div class="sk" style="width:54px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:75%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:70px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:56px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:85%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:45%;height:14px;"/></div><div><div class="sk" style="width:64px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:58px;height:22px;border-radius:9999px;"/></div></div>
+                    </div></div>
+
+                    <!-- ═══ KANBAN VIEW — GROUPED (pipeline) ═══ -->
+                    <div class="sk-view-kanban-grouped">
+                        <!-- Column 1 -->
+                        <div class="sk-kanban-col">
+                            <div class="sk-kanban-col-header">
+                                <div class="sk" style="width:80px;height:14px;border-radius:4px;"/>
+                                <div class="sk" style="width:22px;height:18px;border-radius:9999px;opacity:0.5;"/>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:70%;height:14px;"/>
+                                <div class="sk" style="width:50%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div style="display:flex;gap:4px;"><div class="sk" style="width:50px;height:18px;border-radius:9999px;"/><div class="sk" style="width:40px;height:18px;border-radius:9999px;"/></div>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:85%;height:14px;"/>
+                                <div class="sk" style="width:40%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div class="sk" style="width:55px;height:18px;border-radius:9999px;"/>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:60%;height:14px;"/>
+                                <div class="sk" style="width:55%;height:12px;opacity:0.6;"/>
+                            </div>
+                        </div>
+                        <!-- Column 2 -->
+                        <div class="sk-kanban-col">
+                            <div class="sk-kanban-col-header">
+                                <div class="sk" style="width:95px;height:14px;border-radius:4px;"/>
+                                <div class="sk" style="width:22px;height:18px;border-radius:9999px;opacity:0.5;"/>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:75%;height:14px;"/>
+                                <div class="sk" style="width:65%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div class="sk" style="width:45px;height:18px;border-radius:9999px;"/>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:55%;height:14px;"/>
+                                <div class="sk" style="width:45%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div style="display:flex;gap:4px;"><div class="sk" style="width:48px;height:18px;border-radius:9999px;"/></div>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Column 3 -->
+                        <div class="sk-kanban-col">
+                            <div class="sk-kanban-col-header">
+                                <div class="sk" style="width:70px;height:14px;border-radius:4px;"/>
+                                <div class="sk" style="width:22px;height:18px;border-radius:9999px;opacity:0.5;"/>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:80%;height:14px;"/>
+                                <div class="sk" style="width:50%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div style="display:flex;gap:4px;"><div class="sk" style="width:42px;height:18px;border-radius:9999px;"/><div class="sk" style="width:52px;height:18px;border-radius:9999px;"/></div>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:65%;height:14px;"/>
+                                <div class="sk" style="width:35%;height:12px;opacity:0.6;"/>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:90%;height:14px;"/>
+                                <div class="sk" style="width:60%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div class="sk" style="width:50px;height:18px;border-radius:9999px;"/>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Column 4 -->
+                        <div class="sk-kanban-col">
+                            <div class="sk-kanban-col-header">
+                                <div class="sk" style="width:60px;height:14px;border-radius:4px;"/>
+                                <div class="sk" style="width:22px;height:18px;border-radius:9999px;opacity:0.5;"/>
+                            </div>
+                            <div class="sk-kanban-card">
+                                <div class="sk" style="width:70%;height:14px;"/>
+                                <div class="sk" style="width:55%;height:12px;opacity:0.6;"/>
+                                <div class="sk-kanban-card-bottom">
+                                    <div class="sk" style="width:46px;height:18px;border-radius:9999px;"/>
+                                    <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══ KANBAN VIEW — UNGROUPED (card grid) ═══ -->
+                    <div class="sk-view-kanban-ungrouped">
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:70%;height:14px;"/>
+                            <div class="sk" style="width:50%;height:12px;opacity:0.6;"/>
+                            <div class="sk-kanban-card-bottom">
+                                <div style="display:flex;gap:4px;"><div class="sk" style="width:50px;height:18px;border-radius:9999px;"/><div class="sk" style="width:40px;height:18px;border-radius:9999px;"/></div>
+                                <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                            </div>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:85%;height:14px;"/>
+                            <div class="sk" style="width:40%;height:12px;opacity:0.6;"/>
+                            <div class="sk-kanban-card-bottom">
+                                <div class="sk" style="width:55px;height:18px;border-radius:9999px;"/>
+                                <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                            </div>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:60%;height:14px;"/>
+                            <div class="sk" style="width:55%;height:12px;opacity:0.6;"/>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:75%;height:14px;"/>
+                            <div class="sk" style="width:65%;height:12px;opacity:0.6;"/>
+                            <div class="sk-kanban-card-bottom">
+                                <div class="sk" style="width:45px;height:18px;border-radius:9999px;"/>
+                                <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                            </div>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:90%;height:14px;"/>
+                            <div class="sk" style="width:35%;height:12px;opacity:0.6;"/>
+                            <div class="sk-kanban-card-bottom">
+                                <div style="display:flex;gap:4px;"><div class="sk" style="width:42px;height:18px;border-radius:9999px;"/><div class="sk" style="width:52px;height:18px;border-radius:9999px;"/></div>
+                                <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                            </div>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:55%;height:14px;"/>
+                            <div class="sk" style="width:45%;height:12px;opacity:0.6;"/>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:80%;height:14px;"/>
+                            <div class="sk" style="width:50%;height:12px;opacity:0.6;"/>
+                            <div class="sk-kanban-card-bottom">
+                                <div class="sk" style="width:48px;height:18px;border-radius:9999px;"/>
+                                <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                            </div>
+                        </div>
+                        <div class="sk-kanban-card">
+                            <div class="sk" style="width:65%;height:14px;"/>
+                            <div class="sk" style="width:60%;height:12px;opacity:0.6;"/>
+                            <div class="sk-kanban-card-bottom">
+                                <div class="sk" style="width:50px;height:18px;border-radius:9999px;"/>
+                                <div class="sk" style="width:24px;height:24px;border-radius:50%;"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══ CALENDAR VIEW ═══ -->
+                    <div class="sk-view-calendar"><div class="sk-cal">
+                        <div class="sk-cal-toolbar">
+                            <div class="sk" style="width:32px;height:32px;border-radius:8px;"/>
+                            <div class="sk" style="width:32px;height:32px;border-radius:8px;"/>
+                            <div class="sk" style="width:160px;height:22px;border-radius:4px;margin:0 8px;"/>
+                            <div style="flex:1;"/>
+                            <div class="sk" style="width:60px;height:30px;border-radius:8px;"/>
+                            <div class="sk" style="width:70px;height:30px;border-radius:8px;"/>
+                            <div class="sk" style="width:60px;height:30px;border-radius:8px;"/>
+                        </div>
+                        <div class="sk-cal-header">
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            <div><div class="sk" style="width:24px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                        </div>
+                        <div class="sk-cal-grid">
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/><div class="sk" style="width:80%;height:18px;border-radius:4px;margin-top:6px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/><div class="sk" style="width:70%;height:18px;border-radius:4px;margin-top:6px;"/><div class="sk" style="width:60%;height:18px;border-radius:4px;margin-top:4px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/><div class="sk" style="width:90%;height:18px;border-radius:4px;margin-top:6px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/><div class="sk" style="width:75%;height:18px;border-radius:4px;margin-top:6px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/><div class="sk" style="width:85%;height:18px;border-radius:4px;margin-top:6px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/><div class="sk" style="width:65%;height:18px;border-radius:4px;margin-top:6px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                            <div class="sk-cal-cell"><div class="sk" style="width:16px;height:14px;border-radius:3px;opacity:0.4;"/></div>
+                        </div>
+                    </div></div>
+
+                    <!-- ═══ GRAPH VIEW ═══ -->
+                    <div class="sk-view-graph"><div class="sk-graph">
+                        <div class="sk sk-graph-bar" style="height:45%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:72%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:58%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:85%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:40%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:68%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:52%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:78%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:35%;width:40px;"/>
+                        <div class="sk sk-graph-bar" style="height:62%;width:40px;"/>
+                    </div></div>
+
+                    <!-- ═══ PIVOT VIEW ═══ -->
+                    <div class="sk-view-pivot"><div class="sk-table sk-table-flex">
+                        <div class="sk-thead">
+                            <div class="sk" style="width:20%;height:11px;border-radius:3px;opacity:0.6;"/>
+                            <div class="sk" style="width:12%;height:11px;border-radius:3px;opacity:0.6;"/>
+                            <div class="sk" style="width:12%;height:11px;border-radius:3px;opacity:0.6;"/>
+                            <div class="sk" style="width:12%;height:11px;border-radius:3px;opacity:0.6;"/>
+                            <div style="flex:1;"/>
+                            <div class="sk" style="width:10%;height:11px;border-radius:3px;opacity:0.6;"/>
+                        </div>
+                        <div class="sk-row"><div class="sk" style="width:18%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:8%;height:13px;"/></div>
+                        <div class="sk-row"><div class="sk" style="width:22%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:8%;height:13px;"/></div>
+                        <div class="sk-row"><div class="sk" style="width:16%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:8%;height:13px;"/></div>
+                        <div class="sk-row"><div class="sk" style="width:20%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:8%;height:13px;"/></div>
+                        <div class="sk-row"><div class="sk" style="width:14%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div class="sk" style="width:8%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:8%;height:13px;"/></div>
+                    </div></div>
+
+                    <!-- ═══ FORM VIEW ═══ -->
+                    <div class="sk-statusbar">
+                        <div class="sk" style="width:90px;height:30px;border-radius:6px;margin-right:16px;"/>
+                        <div class="sk-statusbar-step"><div class="sk" style="width:60px;height:11px;border-radius:3px;"/></div>
+                        <div class="sk-statusbar-step"><div class="sk" style="width:70px;height:11px;border-radius:3px;"/></div>
+                        <div class="sk-statusbar-step"><div class="sk" style="width:55px;height:11px;border-radius:3px;"/></div>
+                        <div class="sk-statusbar-step"><div class="sk" style="width:65px;height:11px;border-radius:3px;"/></div>
+                    </div>
+                    <div class="sk-view-form">
+                        <div class="sk-sheet-area"><div class="sk-sheet">
+                            <div class="sk-smartbtns">
+                                <div class="sk-smartbtn"><div class="sk" style="width:28px;height:18px;border-radius:4px;"/><div class="sk" style="width:50px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                                <div class="sk-smartbtn"><div class="sk" style="width:20px;height:18px;border-radius:4px;"/><div class="sk" style="width:60px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                                <div class="sk-smartbtn"><div class="sk" style="width:32px;height:18px;border-radius:4px;"/><div class="sk" style="width:45px;height:10px;border-radius:3px;opacity:0.6;"/></div>
+                            </div>
+                            <div class="sk" style="width:45%;height:26px;border-radius:4px;margin-bottom:20px;"/>
+                            <div class="sk-field-group sk-field-group--2col">
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                                <div class="sk" style="height:14px;border-radius:3px;opacity:0.6;"/><div class="sk" style="height:32px;border-radius:8px;"/>
+                            </div>
+                            <div class="sk-tabs">
+                                <div class="sk-tab sk-tab--active"><div class="sk" style="width:70px;height:13px;border-radius:3px;"/></div>
+                                <div class="sk-tab"><div class="sk" style="width:55px;height:13px;border-radius:3px;"/></div>
+                                <div class="sk-tab"><div class="sk" style="width:80px;height:13px;border-radius:3px;"/></div>
+                            </div>
+                            <div class="sk-table sk-table-flex" style="margin-top:8px;">
+                                <div class="sk-thead">
+                                    <div class="sk" style="width:20%;height:11px;border-radius:3px;opacity:0.6;"/>
+                                    <div class="sk" style="width:15%;height:11px;border-radius:3px;opacity:0.6;"/>
+                                    <div class="sk" style="width:12%;height:11px;border-radius:3px;opacity:0.6;"/>
+                                    <div style="flex:1;"/>
+                                    <div class="sk" style="width:10%;height:11px;border-radius:3px;opacity:0.6;"/>
+                                </div>
+                                <div class="sk-row"><div class="sk" style="width:24%;height:13px;"/><div class="sk" style="width:14%;height:13px;"/><div class="sk" style="width:10%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:50px;height:20px;border-radius:10px;"/></div>
+                                <div class="sk-row"><div class="sk" style="width:20%;height:13px;"/><div class="sk" style="width:16%;height:13px;"/><div class="sk" style="width:11%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:56px;height:20px;border-radius:10px;"/></div>
+                                <div class="sk-row"><div class="sk" style="width:28%;height:13px;"/><div class="sk" style="width:12%;height:13px;"/><div class="sk" style="width:13%;height:13px;"/><div style="flex:1;"/><div class="sk" style="width:44px;height:20px;border-radius:10px;"/></div>
+                            </div>
+                        </div></div>
+                        <!-- Chatter -->
+                        <div class="sk-chatter">
+                            <div class="sk-chatter-topbar">
+                                <div class="sk" style="width:80px;height:24px;border-radius:4px;"/>
+                                <div class="sk" style="width:70px;height:24px;border-radius:4px;"/>
+                                <div class="sk" style="width:60px;height:24px;border-radius:4px;"/>
+                                <div style="flex:1;"/>
+                                <div class="sk" style="width:60px;height:24px;border-radius:4px;"/>
+                            </div>
+                            <div class="sk-chatter-msgs">
+                                <div class="sk-msg">
+                                    <div class="sk" style="width:36px;height:36px;border-radius:50%;"/>
+                                    <div class="sk-msg-body">
+                                        <div style="display:flex;gap:8px;align-items:center;"><div class="sk" style="width:90px;height:13px;border-radius:3px;"/><div class="sk" style="width:50px;height:10px;border-radius:3px;opacity:0.5;"/></div>
+                                        <div class="sk" style="width:85%;height:12px;border-radius:3px;"/>
+                                        <div class="sk" style="width:60%;height:12px;border-radius:3px;"/>
+                                    </div>
+                                </div>
+                                <div class="sk-msg">
+                                    <div class="sk" style="width:36px;height:36px;border-radius:50%;"/>
+                                    <div class="sk-msg-body">
+                                        <div style="display:flex;gap:8px;align-items:center;"><div class="sk" style="width:70px;height:13px;border-radius:3px;"/><div class="sk" style="width:55px;height:10px;border-radius:3px;opacity:0.5;"/></div>
+                                        <div class="sk" style="width:90%;height:12px;border-radius:3px;"/>
+                                        <div class="sk" style="width:75%;height:12px;border-radius:3px;"/>
+                                        <div class="sk" style="width:40%;height:12px;border-radius:3px;"/>
+                                    </div>
+                                </div>
+                                <div class="sk-msg">
+                                    <div class="sk" style="width:36px;height:36px;border-radius:50%;"/>
+                                    <div class="sk-msg-body">
+                                        <div style="display:flex;gap:8px;align-items:center;"><div class="sk" style="width:100px;height:13px;border-radius:3px;"/><div class="sk" style="width:45px;height:10px;border-radius:3px;opacity:0.5;"/></div>
+                                        <div class="sk" style="width:70%;height:12px;border-radius:3px;"/>
+                                    </div>
+                                </div>
+                                <div class="sk-msg">
+                                    <div class="sk" style="width:36px;height:36px;border-radius:50%;"/>
+                                    <div class="sk-msg-body">
+                                        <div style="display:flex;gap:8px;align-items:center;"><div class="sk" style="width:80px;height:13px;border-radius:3px;"/><div class="sk" style="width:60px;height:10px;border-radius:3px;opacity:0.5;"/></div>
+                                        <div class="sk" style="width:95%;height:12px;border-radius:3px;"/>
+                                        <div class="sk" style="width:50%;height:12px;border-radius:3px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </t>
         </xpath>
     </template>
 </odoo>

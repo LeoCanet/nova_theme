@@ -167,12 +167,7 @@
     animation: novaSpin 0.6s linear infinite;
 }
 
-// Odoo loading bar override
-.o_loading_indicator {
-    background: var(--nova-accent) !important;
-    height: 2px !important;
-    box-shadow: 0 0 8px var(--nova-accent);
-}
+// Odoo loading bar override — see loading.scss for full styles
 
 // ─── Smooth transitions on interactive elements ────────────────────────────
 

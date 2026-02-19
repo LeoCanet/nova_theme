@@ -8,10 +8,6 @@
     // ─── Sheet (main form area) ────────────────────────────────────────
     .o_form_sheet_bg {
         background: var(--nova-bg);
-        padding: var(--nova-space-4) var(--nova-space-6);
-        // Override Odoo's overflow:auto (xxl views) so the "More" dropdown
-        // can escape the sheet container
-        overflow: visible !important;
 
         .o_form_sheet {
             background: var(--nova-surface);
@@ -19,8 +15,13 @@
             border-radius: var(--nova-radius-lg);
             box-shadow: var(--nova-shadow-xs);
             padding: var(--nova-space-6) var(--nova-space-8);
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 100% !important;
+            margin: var(--nova-space-4) 0 0 0 !important;
+        }
+
+        // When status bar is present, sheet doesn't need top margin
+        .o_form_statusbar + .o_form_sheet {
+            margin-top: 0 !important;
         }
     }
 
@@ -157,7 +158,6 @@
 
         background: var(--nova-surface) !important;
         border: none !important;
-        border-bottom: 1px solid var(--nova-border) !important;
         border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0 !important;
         box-shadow: none !important;
         padding: 0 !important;

@@ -2054,6 +2054,21 @@ html.nova-dark {
         background-color: var(--nova-accent) !important;
     }
 
+    // BlockUI overlay dark mode
+    .o_blockUI,
+    .blockUI.blockOverlay {
+        background: color-mix(in srgb, var(--nova-bg) 70%, transparent) !important;
+    }
+
+    .o_loading_indicator::after {
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.15),
+            transparent
+        ) !important;
+    }
+
     // Discuss / messaging
     .o_mail_discuss_sidebar {
         background: var(--nova-surface) !important;
@@ -2758,6 +2773,14 @@ html.nova-dark {
         }
     }
 
+    .o_list_renderer .o_list_table tfoot,
+    .o_list_renderer tfoot,
+    .o_list_table tfoot {
+        background-color: var(--nova-bg-alt) !important;
+        border-top: 1px solid var(--nova-border) !important;
+        border-bottom: 1px solid var(--nova-border) !important;
+    }
+
     .o_list_renderer tfoot td,
     .o_list_table tfoot td {
         background-color: var(--nova-bg-alt) !important;
@@ -2782,6 +2805,7 @@ html.nova-dark {
 
         .o_list_table {
             background-color: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
         }
 
         .o_field_x2many_list_row_add a {
