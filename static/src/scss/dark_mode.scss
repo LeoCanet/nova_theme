@@ -664,51 +664,28 @@ html.nova-dark {
         }
     }
 
-    // ─── Dropdowns ───────────────────────────────────────────────────
+    // ─── Dropdowns (global dark override) ────────────────────────────
     .dropdown-menu,
     .o-dropdown--menu {
         background: var(--nova-surface) !important;
         background-color: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
+        box-shadow: var(--nova-shadow-lg) !important;
         color: var(--nova-text) !important;
 
-        .dropdown-item {
+        // All menu item types
+        .dropdown-item,
+        .o_menu_item,
+        .o_item_option {
             color: var(--nova-text) !important;
 
-            &:hover, &:focus {
+            &:hover, &:focus, &.focus {
                 background: var(--nova-accent-light) !important;
                 color: var(--nova-accent) !important;
             }
 
             &.active, &.selected {
                 background: var(--nova-accent-light) !important;
-                color: var(--nova-accent) !important;
-            }
-        }
-
-        // Search bar menu items (Filters, Group By, Favorites)
-        .o_menu_item {
-            color: var(--nova-text) !important;
-
-            &:hover, &.focus {
-                background: var(--nova-accent-light) !important;
-                color: var(--nova-accent) !important;
-            }
-
-            &.selected {
-                color: var(--nova-accent) !important;
-            }
-        }
-
-        .o_item_option {
-            color: var(--nova-text) !important;
-
-            &:hover, &.focus {
-                background: var(--nova-accent-light) !important;
-                color: var(--nova-accent) !important;
-            }
-
-            &.selected {
                 color: var(--nova-accent) !important;
             }
         }
@@ -721,36 +698,71 @@ html.nova-dark {
             color: var(--nova-text-tertiary) !important;
         }
 
-        // Custom filter inputs inside dropdown
-        input, select {
+        // Form inputs inside dropdowns (favorite save, add to board, custom filter…)
+        .o_input,
+        input[type="text"],
+        input:not([type]),
+        select {
             background-color: var(--nova-bg-alt) !important;
             border-color: var(--nova-border) !important;
             color: var(--nova-text) !important;
+
+            &::placeholder {
+                color: var(--nova-text-tertiary) !important;
+            }
+
+            &:focus {
+                border-color: var(--nova-accent) !important;
+                box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            }
         }
 
-        .btn {
+        // Checkboxes
+        .form-check,
+        .o_checkbox {
             color: var(--nova-text) !important;
-        }
-    }
 
-    // ─── Search bar filter/groupby/favorite menus (explicit) ─────────
-    .o_filter_menu,
-    .o_group_by_menu,
-    .o_favorite_menu,
-    .o_comparison_menu {
-        > .o-dropdown--menu,
-        > .dropdown-menu {
-            background: var(--nova-surface) !important;
-            background-color: var(--nova-surface) !important;
-            border-color: var(--nova-border) !important;
-            box-shadow: var(--nova-shadow-lg) !important;
+            label, .form-check-label {
+                color: var(--nova-text) !important;
+            }
+
+            .form-check-input {
+                background-color: var(--nova-bg-alt) !important;
+                border-color: var(--nova-border) !important;
+
+                &:checked {
+                    background-color: var(--nova-accent) !important;
+                    border-color: var(--nova-accent) !important;
+                }
+            }
         }
 
-        // Nested sub-dropdown (date period menus)
-        .o-dropdown > .o-dropdown--menu,
-        .o-dropdown > .dropdown-menu {
+        // Buttons inside dropdowns
+        .btn-primary,
+        .o_save_favorite {
+            background: var(--nova-accent) !important;
+            border-color: var(--nova-accent) !important;
+            color: white !important;
+
+            &:hover {
+                background: var(--nova-accent-hover) !important;
+                border-color: var(--nova-accent-hover) !important;
+            }
+        }
+
+        .btn:not(.btn-primary):not(.o_save_favorite) {
+            color: var(--nova-text) !important;
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        // Nested sub-dropdowns
+        .o-dropdown--menu,
+        .dropdown-menu {
             background: var(--nova-surface) !important;
-            background-color: var(--nova-surface) !important;
             border-color: var(--nova-border) !important;
             box-shadow: var(--nova-shadow-lg) !important;
         }
@@ -887,7 +899,7 @@ html.nova-dark {
                 }
             }
             &.active {
-                color: var(--nova-text) !important;
+                color: var(--nova-accent) !important;
             }
         }
 
@@ -1234,6 +1246,8 @@ html.nova-dark {
         background-color: var(--nova-bg) !important;
 
         .o_list_table {
+            --bs-table-active-bg: var(--nova-accent-light) !important;
+            --bs-table-active-color: var(--nova-text) !important;
             background: var(--nova-surface) !important;
             border-color: var(--nova-border) !important;
 
@@ -1260,6 +1274,14 @@ html.nova-dark {
 
                 &:hover td {
                     background-color: var(--nova-accent-light) !important;
+                }
+
+                // Selected / checked row
+                &.o_data_row_selected td,
+                &.table-active td {
+                    --bs-table-accent-bg: var(--nova-accent-light) !important;
+                    background-color: var(--nova-accent-light) !important;
+                    color: var(--nova-text) !important;
                 }
             }
 
@@ -1730,26 +1752,95 @@ html.nova-dark {
     // ═══════════════════════════════════════════════════════════════════
 
     .o_pivot {
-        background: var(--nova-surface) !important;
+        background: var(--nova-bg) !important;
 
         table {
+            background: var(--nova-surface) !important;
             color: var(--nova-text) !important;
+            border-color: var(--nova-border) !important;
 
-            th {
+            thead th {
                 background: var(--nova-bg-alt) !important;
                 color: var(--nova-text-secondary) !important;
                 border-color: var(--nova-border) !important;
             }
 
-            td {
-                border-color: var(--nova-border-light) !important;
+            .o_pivot_measure_row {
+                color: var(--nova-accent) !important;
+                background: var(--nova-accent-light) !important;
+                border-color: var(--nova-border) !important;
+
+                &:hover {
+                    background: var(--nova-accent-medium) !important;
+                }
+            }
+
+            .o_pivot_origin_row {
+                color: var(--nova-text) !important;
+                border-color: var(--nova-border) !important;
+
+                &:hover {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            .o_pivot_header_cell_closed,
+            .o_pivot_header_cell_opened {
+                color: var(--nova-text) !important;
+                border-color: var(--nova-border) !important;
+
+                &:hover {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            tbody {
+                th {
+                    background: var(--nova-bg-alt) !important;
+                    color: var(--nova-text) !important;
+                    border-color: var(--nova-border) !important;
+                }
+
+                td {
+                    color: var(--nova-text) !important;
+                    border-color: var(--nova-border-light) !important;
+                }
+
+                tr:hover td {
+                    background: var(--nova-accent-light) !important;
+                }
+
+                tr:hover th {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            &.o_enable_linking .o_pivot_cell_value:not(.o_empty) {
+                color: var(--nova-accent) !important;
+
+                &:hover {
+                    color: var(--nova-accent-hover) !important;
+                }
+            }
+
+            .o_pivot_cell_value.o_cell_hover {
+                background: var(--nova-accent-light) !important;
+            }
+
+            tfoot td {
+                background: var(--nova-bg-alt) !important;
+                color: var(--nova-text) !important;
+                border-color: var(--nova-border) !important;
             }
         }
     }
 
     // Graph view — canvas has white background by default
     .o_graph_renderer {
-        background: var(--nova-surface) !important;
+        background: var(--nova-bg) !important;
 
         canvas {
             background-color: transparent !important;
@@ -2730,7 +2821,7 @@ html.nova-dark {
 
     // The o_list_renderer container itself has background-color: white
     .o_list_renderer {
-        background-color: var(--nova-surface) !important;
+        background-color: var(--nova-bg) !important;
 
         --ListRenderer-thead-bg-color: var(--nova-bg-alt);
         --ListRenderer-thead-border-end-color: var(--nova-border);
@@ -2788,10 +2879,16 @@ html.nova-dark {
         color: var(--nova-text) !important;
     }
 
-    // Selected row in list
+    // Selected / checked row in list
     .o_list_renderer .o_selected_row td,
-    .o_list_renderer .o_selected_row th {
-        background-color: var(--nova-surface) !important;
+    .o_list_renderer .o_selected_row th,
+    .o_list_renderer .o_data_row_selected td,
+    .o_list_renderer .table-active td,
+    .o_list_view .o_data_row_selected td,
+    .o_list_view .table-active td {
+        --bs-table-accent-bg: var(--nova-accent-light) !important;
+        background-color: var(--nova-accent-light) !important;
+        color: var(--nova-text) !important;
     }
 
     // x2many field wrappers inside forms
@@ -3302,17 +3399,18 @@ html.nova-dark {
         }
 
         // ─── Graph container ──────────────────────────────────────────
-        // Chart.js renders on <canvas> — CSS cannot style its internals.
-        // We ensure the container has proper dark background so chart
-        // boundaries blend. Chart.js colors are set via JS config.
+        // Chart.js grid/font colors are set via nova_graph_patch.js.
+        // We only need to ensure the container has proper dark background.
         .o_graph_renderer,
         .o_view_controller {
             background-color: var(--nova-bg) !important;
         }
 
-        canvas {
-            // Invert the chart colors for dark mode readability
-            filter: invert(0.88) hue-rotate(180deg);
+        .o_graph_canvas_container {
+            background: var(--nova-surface) !important;
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius-lg) !important;
+            box-shadow: var(--nova-shadow-xs) !important;
         }
     }
 

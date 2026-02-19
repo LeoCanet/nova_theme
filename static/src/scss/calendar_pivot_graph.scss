@@ -6,6 +6,10 @@
 .o_calendar_view {
     background: var(--nova-bg);
 
+    .o_calendar_renderer {
+        padding: var(--nova-space-4);
+    }
+
     .o_calendar_widget {
         background: var(--nova-surface);
         border: 1px solid var(--nova-border);
@@ -128,6 +132,7 @@
         overflow: hidden;
         box-shadow: var(--nova-shadow-xs);
 
+        // ── Header cells (measure names, origin labels, expand/collapse) ──
         thead th {
             background: var(--nova-bg-alt);
             border-color: var(--nova-border);
@@ -139,6 +144,41 @@
             padding: var(--nova-space-3) var(--nova-space-4);
         }
 
+        .o_pivot_measure_row {
+            color: var(--nova-accent) !important;
+            font-weight: 600;
+            background: var(--nova-accent-light) !important;
+
+            &:hover {
+                background: var(--nova-accent-medium) !important;
+                color: var(--nova-accent-hover) !important;
+            }
+        }
+
+        .o_pivot_origin_row {
+            color: var(--nova-text) !important;
+            font-weight: 600;
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        .o_pivot_header_cell_closed,
+        .o_pivot_header_cell_opened {
+            color: var(--nova-text) !important;
+            font-weight: 500;
+            transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+            cursor: pointer;
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        // ── Body ──
         tbody {
             td {
                 border-color: var(--nova-border-light);
@@ -160,12 +200,43 @@
             tr:hover td {
                 background: var(--nova-accent-light);
             }
+
+            tr:hover th {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent);
+            }
         }
 
-        tfoot td {
-            background: var(--nova-bg-alt);
-            font-weight: 600;
-            border-top: 2px solid var(--nova-border);
+        // ── Clickable value cells (linked to list view) ──
+        &.o_enable_linking .o_pivot_cell_value:not(.o_empty) {
+            color: var(--nova-accent) !important;
+            cursor: pointer;
+            transition: color var(--nova-transition-fast);
+
+            &:hover {
+                color: var(--nova-accent-hover) !important;
+            }
+        }
+
+        // ── Hovered value cell ──
+        .o_pivot_cell_value.o_cell_hover {
+            background: var(--nova-accent-light) !important;
+        }
+
+        // ── Pivot group-by dropdown z-index (above sidebar z-index:1020) ──
+        .o-dropdown--menu,
+        .dropdown-menu {
+            z-index: 1030 !important;
+        }
+
+        // ── Footer totals ──
+        tfoot {
+            td {
+                background: var(--nova-bg-alt);
+                font-weight: 600;
+                color: var(--nova-text);
+                border-top: 2px solid var(--nova-border);
+            }
         }
     }
 }
@@ -173,15 +244,6 @@
 // ─── Graph View ────────────────────────────────────────────────────────────
 .o_graph_view {
     background: var(--nova-bg);
-    padding: var(--nova-space-4);
-
-    .o_graph_canvas_container {
-        background: var(--nova-surface);
-        border: 1px solid var(--nova-border);
-        border-radius: var(--nova-radius-lg);
-        padding: var(--nova-space-6);
-        box-shadow: var(--nova-shadow-xs);
-    }
 
     // Graph buttons
     .o_graph_buttons {
@@ -191,9 +253,35 @@
     }
 }
 
+.o_graph_renderer {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: var(--nova-space-4) !important;
+    background: var(--nova-bg) !important;
+}
+
+.o_graph_canvas_container {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    background: var(--nova-surface) !important;
+    border: 1px solid var(--nova-border) !important;
+    border-radius: var(--nova-radius-lg) !important;
+    padding: var(--nova-space-4) !important;
+    box-shadow: var(--nova-shadow-xs) !important;
+
+    canvas {
+        background-color: var(--nova-surface) !important;
+        border-radius: var(--nova-radius);
+    }
+}
+
 // ─── Activity View ─────────────────────────────────────────────────────────
 .o_activity_view {
     background: var(--nova-bg);
+
+    .o_content {
+        padding: var(--nova-space-4);
+    }
 
     .o_activity_view_table {
         border-radius: var(--nova-radius-lg);

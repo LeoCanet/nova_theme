@@ -300,7 +300,7 @@ a {
             font-weight: 500;
 
             &.active {
-                color: var(--nova-text);
+                color: var(--nova-accent);
                 font-weight: 600;
             }
 
@@ -390,66 +390,142 @@ a {
     }
 }
 
-// ─── Search Bar Menus (Filters / Group By / Favorites) ─────────────────────
-.o_filter_menu,
-.o_group_by_menu,
-.o_favorite_menu,
-.o_comparison_menu {
-    .o-dropdown--menu,
-    > .dropdown-menu {
-        background: var(--nova-surface);
-        border: 1px solid var(--nova-border);
-        border-radius: var(--nova-radius-lg);
-        box-shadow: var(--nova-shadow-lg);
-        padding: var(--nova-space-1);
+// ─── Global Dropdown Styling ──────────────────────────────────────────────
+// Unified Nova look for ALL dropdown menus across the backend.
+.o-dropdown--menu,
+.dropdown-menu {
+    background: var(--nova-surface) !important;
+    border: 1px solid var(--nova-border) !important;
+    border-radius: var(--nova-radius-lg) !important;
+    box-shadow: var(--nova-shadow-lg) !important;
+    padding: var(--nova-space-1) !important;
+    color: var(--nova-text);
 
-        .o_menu_item,
-        .o_item_option {
-            color: var(--nova-text);
-            border-radius: var(--nova-radius-sm);
-            padding: var(--nova-space-2) var(--nova-space-3);
-            transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+    // ── Menu items (all flavours) ──
+    .o_menu_item,
+    .o_item_option,
+    .dropdown-item {
+        color: var(--nova-text);
+        border-radius: var(--nova-radius-sm);
+        padding: var(--nova-space-2) var(--nova-space-3);
+        font-size: var(--nova-font-base);
+        transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
 
-            &:hover, &.focus {
-                background: var(--nova-accent-light);
-                color: var(--nova-accent);
-            }
-
-            &.selected {
-                color: var(--nova-accent);
-                font-weight: 500;
-            }
+        &:hover, &:focus, &.focus {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
         }
 
-        .dropdown-divider {
+        &.selected, &.active {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+            font-weight: 500;
+        }
+    }
+
+    // ── Dividers ──
+    .dropdown-divider {
+        border-color: var(--nova-border);
+        margin: var(--nova-space-1) 0;
+    }
+
+    // ── Headers ──
+    .dropdown-header {
+        color: var(--nova-text-tertiary);
+        font-size: var(--nova-font-xs);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: var(--nova-space-2) var(--nova-space-3);
+    }
+
+    // ── Form panels inside dropdowns (Save favorite, Add to board…) ──
+    .o_input,
+    input[type="text"] {
+        border: 1px solid var(--nova-border) !important;
+        border-radius: var(--nova-radius) !important;
+        background: var(--nova-surface) !important;
+        color: var(--nova-text) !important;
+        padding: var(--nova-space-2) var(--nova-space-3);
+        font-size: var(--nova-font-base);
+        width: 100%;
+
+        &:focus {
+            border-color: var(--nova-accent) !important;
+            box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            outline: none;
+        }
+    }
+
+    select {
+        border: 1px solid var(--nova-border) !important;
+        border-radius: var(--nova-radius) !important;
+        background: var(--nova-surface) !important;
+        color: var(--nova-text) !important;
+        padding: var(--nova-space-2) var(--nova-space-3);
+        font-size: var(--nova-font-base);
+
+        &:focus {
+            border-color: var(--nova-accent) !important;
+            box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            outline: none;
+        }
+    }
+
+    // Checkboxes (Utiliser par défaut, Partager…)
+    .form-check,
+    .o_checkbox {
+        color: var(--nova-text);
+        font-size: var(--nova-font-base);
+        padding-top: var(--nova-space-1);
+        padding-bottom: var(--nova-space-1);
+
+        .form-check-input {
             border-color: var(--nova-border);
-        }
+            background-color: var(--nova-surface);
 
-        // Custom filter / group-by inputs
-        input, select {
-            border: 1px solid var(--nova-border);
-            border-radius: var(--nova-radius);
-            background: var(--nova-surface);
-            color: var(--nova-text);
-            padding: var(--nova-space-2) var(--nova-space-3);
-            font-size: var(--nova-font-base);
+            &:checked {
+                background-color: var(--nova-accent);
+                border-color: var(--nova-accent);
+            }
 
             &:focus {
                 border-color: var(--nova-accent);
                 box-shadow: 0 0 0 3px var(--nova-accent-light);
-                outline: none;
             }
+        }
+
+        label, .form-check-label {
+            color: var(--nova-text);
         }
     }
 
-    // Nested sub-dropdown (date period submenu)
-    .o-dropdown > .o-dropdown--menu,
-    .o-dropdown > .dropdown-menu {
-        background: var(--nova-surface);
-        border: 1px solid var(--nova-border);
-        border-radius: var(--nova-radius-lg);
-        box-shadow: var(--nova-shadow-lg);
-        padding: var(--nova-space-1);
+    // Action buttons (Enregistrer, Add…)
+    .btn-primary,
+    .o_save_favorite {
+        background: var(--nova-accent) !important;
+        border-color: var(--nova-accent) !important;
+        color: white !important;
+        border-radius: var(--nova-radius) !important;
+        font-size: var(--nova-font-base);
+        font-weight: 500;
+        padding: var(--nova-space-2) var(--nova-space-4);
+        transition: background var(--nova-transition-fast);
+
+        &:hover {
+            background: var(--nova-accent-hover) !important;
+            border-color: var(--nova-accent-hover) !important;
+        }
+    }
+
+    // Nested sub-dropdown (date intervals, sub-menus)
+    .o-dropdown--menu,
+    .dropdown-menu {
+        background: var(--nova-surface) !important;
+        border: 1px solid var(--nova-border) !important;
+        border-radius: var(--nova-radius-lg) !important;
+        box-shadow: var(--nova-shadow-lg) !important;
+        padding: var(--nova-space-1) !important;
     }
 }
 

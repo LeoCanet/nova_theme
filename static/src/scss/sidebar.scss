@@ -2,6 +2,11 @@
 /// Theme Nova — Collapsible Sidebar Navigation (Favorites + Pinned Pages)
 ///============================================================================
 
+// Timing tokens — single source of truth for the collapse animation
+$sidebar-duration: 280ms;
+$sidebar-ease: cubic-bezier(0.4, 0, 0.2, 1);
+$sidebar-label-duration: 180ms;
+
 // ─── Sidebar Container ─────────────────────────────────────────────────────
 .nova-sidebar {
     position: fixed;
@@ -14,65 +19,81 @@
     z-index: 1020;
     display: flex;
     flex-direction: column;
-    transition: width var(--nova-transition-slow), transform var(--nova-transition-slow);
     overflow: hidden;
+    will-change: width;
+    transition: width $sidebar-duration $sidebar-ease,
+                transform var(--nova-transition-slow);
 
     // ─── Collapsed State ───────────────────────────────────────────────
-    // No justify-content: center — it's not animatable and causes a visual
-    // jump. Instead we transition padding-left to center the icon within
-    // the collapsed width (56px - 2×8px nav padding = 40px available,
-    // icon 20px → 10px padding-left centers it).
     &.nova-sidebar--collapsed {
         width: var(--nova-sidebar-collapsed-width);
 
+        // Labels: pure opacity fade — no layout changes.
+        // The sidebar overflow:hidden clips them as it shrinks.
         .nova-sidebar__label {
             opacity: 0;
-            width: 0;
-            margin-left: 0;
+            transition: opacity $sidebar-label-duration ease;
         }
 
+        // Section titles: fade + collapse height smoothly
         .nova-sidebar__section-title {
             opacity: 0;
-            height: 0;
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
             margin: 0;
-            padding: 0;
             overflow: hidden;
         }
 
+        // Items: center icon within collapsed width
+        // Collapsed = 56px, nav padding 8px*2 = 40px available
+        // Icon 20px → 10px each side to center
         .nova-sidebar__item {
-            padding: var(--nova-space-2) var(--nova-space-2) var(--nova-space-2) 10px;
+            padding-left: 10px;
+            padding-right: var(--nova-space-2);
         }
 
+        // Toggle icon: rotate
         .nova-sidebar__toggle-icon {
             transform: rotate(180deg);
         }
 
+        // Footer: keep same padding — 12px left naturally centers
+        // the 32px button inside the 56px collapsed width.
         .nova-sidebar__footer {
-            padding: var(--nova-space-2);
+            padding: var(--nova-space-2) var(--nova-space-3);
         }
 
-        .nova-sidebar__toggle {
-            margin: 0 auto;
-        }
-
+        // Hide elements that don't make sense collapsed
         .nova-sidebar__pin-remove {
             display: none !important;
         }
 
         .nova-sidebar__pin-add {
-            display: none;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            overflow: hidden;
         }
 
         .nova-sidebar__section-header {
-            padding-left: 10px;
+            padding-left: 0;
         }
 
         .nova-sidebar__section-divider {
-            margin: var(--nova-space-2) 10px;
+            margin: var(--nova-space-2) 6px;
         }
 
         .nova-sidebar__empty span {
-            display: none;
+            opacity: 0;
+        }
+    }
+
+    // ─── Expanded State (reverse transitions) ───────────────────────────
+    // Labels appear AFTER the sidebar has finished widening
+    &:not(.nova-sidebar--collapsed) {
+        .nova-sidebar__label {
+            transition: opacity $sidebar-label-duration ease $sidebar-duration * 0.4;
         }
     }
 
@@ -92,10 +113,13 @@
         color: var(--nova-text-tertiary);
         padding: var(--nova-space-3) var(--nova-space-3) var(--nova-space-1);
         margin: 0;
-        transition: opacity var(--nova-transition-slow),
-                    height var(--nova-transition-slow),
-                    padding var(--nova-transition-slow);
+        max-height: 40px;
         white-space: nowrap;
+        overflow: hidden;
+        transition: opacity $sidebar-label-duration ease,
+                    max-height $sidebar-duration $sidebar-ease,
+                    padding $sidebar-duration $sidebar-ease,
+                    margin $sidebar-duration $sidebar-ease;
     }
 
     // ─── Section header (title + add button) ─────────────────────────
@@ -104,7 +128,7 @@
         align-items: center;
         justify-content: space-between;
         padding-right: var(--nova-space-2);
-        transition: padding var(--nova-transition-slow);
+        transition: padding $sidebar-duration $sidebar-ease;
     }
 
     // ─── Section divider ─────────────────────────────────────────────
@@ -112,7 +136,7 @@
         height: 1px;
         background: var(--nova-border-light);
         margin: var(--nova-space-2) var(--nova-space-3);
-        transition: margin var(--nova-transition-slow);
+        transition: margin $sidebar-duration $sidebar-ease;
     }
 
     // ─── Pin add button (+) ──────────────────────────────────────────
@@ -128,8 +152,11 @@
         color: var(--nova-text-tertiary);
         cursor: pointer;
         font-size: 12px;
-        transition: all var(--nova-transition-fast);
         flex-shrink: 0;
+        overflow: hidden;
+        transition: all var(--nova-transition-fast),
+                    opacity $sidebar-label-duration ease,
+                    width $sidebar-duration $sidebar-ease;
 
         &:hover {
             background: var(--nova-accent-light);
@@ -193,12 +220,12 @@
         font-size: var(--nova-font-base);
         font-weight: 450;
         cursor: pointer;
-        transition: padding var(--nova-transition-slow),
-                    background var(--nova-transition-fast),
-                    color var(--nova-transition-fast);
         margin-bottom: 1px;
         text-decoration: none;
         white-space: nowrap;
+        transition: padding $sidebar-duration $sidebar-ease,
+                    background var(--nova-transition-fast),
+                    color var(--nova-transition-fast);
 
         .nova-sidebar__icon {
             width: 20px;
@@ -209,12 +236,13 @@
         }
 
         .nova-sidebar__label {
+            opacity: 1;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
             margin-left: var(--nova-space-3);
-            transition: opacity var(--nova-transition-slow),
-                        margin-left var(--nova-transition-slow),
-                        width var(--nova-transition-slow);
+            flex: 1;
+            min-width: 0;
         }
 
         &:hover {
@@ -271,6 +299,7 @@
             font-size: var(--nova-font-sm);
             line-height: 1.4;
             max-width: 140px;
+            transition: opacity $sidebar-label-duration ease;
         }
     }
 
@@ -280,7 +309,8 @@
         border-top: 1px solid var(--nova-border-light);
         display: flex;
         align-items: center;
-        transition: padding var(--nova-transition-slow);
+        transition: padding $sidebar-duration $sidebar-ease,
+                    justify-content $sidebar-duration $sidebar-ease;
     }
 
     .nova-sidebar__toggle {
@@ -303,7 +333,7 @@
     }
 
     .nova-sidebar__toggle-icon {
-        transition: transform var(--nova-transition-slow);
+        transition: transform $sidebar-duration $sidebar-ease;
         font-size: 14px;
     }
 }
@@ -323,7 +353,7 @@ body.nova-sidebar-open .nova-sidebar {
 
 // ─── Content offset when sidebar is visible ────────────────────────────────
 .o_action_manager {
-    transition: margin-left var(--nova-transition-slow);
+    transition: margin-left $sidebar-duration $sidebar-ease;
 }
 
 body.nova-sidebar-open .o_action_manager {
