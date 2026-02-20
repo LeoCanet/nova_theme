@@ -26,7 +26,7 @@
     // Accent (Indigo default — overridden via data-nova-accent)
     --nova-accent: #4F46E5;
     --nova-accent-hover: #4338CA;
-    --nova-accent-light: rgba(79, 70, 229, 0.08);
+    --nova-accent-light: rgba(79, 70, 229, 0.14);
     --nova-accent-medium: rgba(79, 70, 229, 0.15);
 
     // Semantic
@@ -99,31 +99,31 @@
 [data-nova-accent="blue"] {
     --nova-accent: #2563EB;
     --nova-accent-hover: #1D4ED8;
-    --nova-accent-light: rgba(37, 99, 235, 0.08);
+    --nova-accent-light: rgba(37, 99, 235, 0.14);
     --nova-accent-medium: rgba(37, 99, 235, 0.15);
 }
 [data-nova-accent="emerald"] {
     --nova-accent: #059669;
     --nova-accent-hover: #047857;
-    --nova-accent-light: rgba(5, 150, 105, 0.08);
+    --nova-accent-light: rgba(5, 150, 105, 0.14);
     --nova-accent-medium: rgba(5, 150, 105, 0.15);
 }
 [data-nova-accent="rose"] {
     --nova-accent: #E11D48;
     --nova-accent-hover: #BE123C;
-    --nova-accent-light: rgba(225, 29, 72, 0.08);
+    --nova-accent-light: rgba(225, 29, 72, 0.14);
     --nova-accent-medium: rgba(225, 29, 72, 0.15);
 }
 [data-nova-accent="amber"] {
     --nova-accent: #D97706;
     --nova-accent-hover: #B45309;
-    --nova-accent-light: rgba(217, 119, 6, 0.08);
+    --nova-accent-light: rgba(217, 119, 6, 0.14);
     --nova-accent-medium: rgba(217, 119, 6, 0.15);
 }
 [data-nova-accent="violet"] {
     --nova-accent: #7C3AED;
     --nova-accent-hover: #6D28D9;
-    --nova-accent-light: rgba(124, 58, 237, 0.08);
+    --nova-accent-light: rgba(124, 58, 237, 0.14);
     --nova-accent-medium: rgba(124, 58, 237, 0.15);
 }
 

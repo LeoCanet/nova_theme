@@ -1,165 +1,131 @@
 ///============================================================================
 /// Theme Nova — List View Redesign
 ///============================================================================
+///
+/// Odoo's JS measures: table.parentNode.getBoundingClientRect().width
+/// to compute column pixel widths.
+/// → NEVER add horizontal padding/margin on .o_list_renderer.
+///============================================================================
 
 .o_list_view {
     background: var(--nova-bg) !important;
-
-    // ─── Table ─────────────────────────────────────────────────────────
-    .o_list_table {
-        // Override Bootstrap table variables for selection/hover/striping
-        --bs-table-active-bg: var(--nova-accent-light);
-        --bs-table-active-color: var(--nova-text);
-        --bs-table-hover-bg: var(--nova-accent-light);
-        --bs-table-striped-bg: var(--nova-bg-alt);
-        --bs-table-accent-bg: transparent;
-
-        border-collapse: separate !important;
-        border-spacing: 0 !important;
-        background: var(--nova-surface);
-        border-radius: var(--nova-radius-lg);
-        overflow: hidden;
-        box-shadow: var(--nova-shadow-xs);
-        border: 1px solid var(--nova-border);
-        // Force the table to stay within its container
-        width: 100% !important;
-        table-layout: fixed;
-
-        // Kill Bootstrap's inset box-shadow overlay on all cells
-        > :not(caption) > * > * {
-            box-shadow: none !important;
-        }
-
-        // ─── Header ────────────────────────────────────────────────────
-        thead {
-            th {
-                background: var(--nova-bg-alt) !important;
-                border-bottom: 1px solid var(--nova-border) !important;
-                border-left: none !important;
-                color: var(--nova-text-secondary);
-                font-size: var(--nova-font-sm);
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                padding: var(--nova-space-3) var(--nova-space-4);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-
-                &:hover {
-                    background: var(--nova-accent-light) !important;
-                    color: var(--nova-accent);
-                }
-
-                &.o_column_sortable {
-                    cursor: pointer;
-
-                    &.o-sort-asc::after,
-                    &.o-sort-desc::after {
-                        color: var(--nova-accent);
-                    }
-                }
-
-                // Checkbox column
-                &.o_list_record_selector {
-                    width: 40px;
-                    padding-left: var(--nova-space-4);
-                }
-            }
-        }
-
-        // Override Odoo's native border-top removal
-        > :not(:first-child) {
-            border-top-width: 0 !important;
-        }
-
-        // ─── Body Rows ─────────────────────────────────────────────────
-        tbody {
-            tr {
-                transition: background var(--nova-transition-fast);
-                border-bottom: none !important;
-
-                td,
-                td.o_data_cell {
-                    padding: var(--nova-space-3) var(--nova-space-4);
-                    border-bottom: 1px solid var(--nova-border) !important;
-                    border-bottom-width: 1px !important;
-                    font-size: var(--nova-font-base);
-                    color: var(--nova-text);
-                    vertical-align: middle;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-
-                // Zebra striping
-                &:nth-child(even) {
-                    td {
-                        background-color: var(--nova-bg-alt) !important;
-                    }
-                }
-
-                &:hover td {
-                    background-color: var(--nova-accent-light) !important;
-                }
-
-                // Selected / checked row
-                &.o_data_row_selected td,
-                &.o_selected_row td,
-                &.table-active td {
-                    background-color: var(--nova-accent-light) !important;
-                    color: var(--nova-text) !important;
-                }
-
-                // Last row
-                &:last-child td {
-                    border-bottom: none !important;
-                }
-            }
-        }
-
-        // ─── Footer ───────────────────────────────────────────────────
-        tfoot {
-            td {
-                background: var(--nova-bg-alt);
-                border-top: 1px solid var(--nova-border) !important;
-                font-weight: 600;
-                font-size: var(--nova-font-base);
-                color: var(--nova-text);
-                padding: var(--nova-space-3) var(--nova-space-4);
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-        }
-    }
-
-    // ─── Group Header ──────────────────────────────────────────────────
-    .o_group_header {
-        td {
-            background: var(--nova-bg-alt) !important;
-            font-weight: 600;
-            color: var(--nova-text);
-            border-bottom: 1px solid var(--nova-border) !important;
-            transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
-        }
-
-        &:hover td {
-            background: var(--nova-accent-light) !important;
-            color: var(--nova-accent);
-        }
-    }
-
 }
 
-// ─── List renderer wrapper — ensure correct background + spacing ──────────
 .o_list_view .o_list_renderer,
 .o_list_renderer {
     background-color: var(--nova-bg) !important;
-    padding: var(--nova-space-4) !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
 }
 
-// ─── Optional columns dropdown (global — works in list views + one2many) ──
+.o_list_view .o_list_table {
+    --bs-table-active-bg: var(--nova-accent-light);
+    --bs-table-active-color: var(--nova-text);
+    --bs-table-hover-bg: var(--nova-accent-light);
+    --bs-table-striped-bg: var(--nova-bg-alt);
+    --bs-table-accent-bg: transparent;
+
+    background: var(--nova-surface);
+    border-collapse: separate !important;
+    border-spacing: 0;
+    box-shadow: var(--nova-shadow-xs);
+
+    > :not(caption) > * > * {
+        box-shadow: none !important;
+    }
+
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+
+        th {
+            background-color: var(--nova-bg-alt) !important;
+            border-bottom: 1px solid var(--nova-border) !important;
+            border-left: none !important;
+            color: var(--nova-text-secondary);
+            font-size: var(--nova-font-sm);
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: normal;
+
+            &:hover {
+                background-color: var(--nova-accent-light) !important;
+                color: var(--nova-accent);
+            }
+
+            &.o_column_sortable {
+                cursor: pointer;
+
+                &.o-sort-asc::after,
+                &.o-sort-desc::after {
+                    color: var(--nova-accent);
+                }
+            }
+        }
+    }
+
+    > :not(:first-child) {
+        border-top-width: 0 !important;
+    }
+
+    tbody tr {
+        transition: background var(--nova-transition-fast);
+        border-bottom: none !important;
+
+        td {
+            border-bottom: 1px solid var(--nova-border) !important;
+            border-bottom-width: 1px !important;
+            font-size: var(--nova-font-base);
+            color: var(--nova-text);
+            vertical-align: middle;
+        }
+
+        &:nth-child(even) td {
+            background-color: var(--nova-bg-alt) !important;
+        }
+
+        &:hover td {
+            background-color: var(--nova-accent-light) !important;
+        }
+
+        &.o_data_row_selected td,
+        &.o_selected_row td,
+        &.table-active td {
+            background-color: var(--nova-accent-light) !important;
+            color: var(--nova-text) !important;
+        }
+
+        &:last-child td {
+            border-bottom: none !important;
+        }
+    }
+
+    tfoot td {
+        background: var(--nova-bg-alt);
+        border-top: 1px solid var(--nova-border) !important;
+        font-weight: 600;
+        font-size: var(--nova-font-base);
+        color: var(--nova-text);
+    }
+}
+
+.o_list_view .o_group_header {
+    td {
+        background: var(--nova-bg-alt) !important;
+        font-weight: 600;
+        color: var(--nova-text);
+        border-bottom: 1px solid var(--nova-border) !important;
+        transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+    }
+
+    &:hover td {
+        background: var(--nova-accent-light) !important;
+        color: var(--nova-accent);
+    }
+}
+
 .o_optional_columns_dropdown {
     border: none !important;
 
@@ -179,7 +145,6 @@ i.o_optional_columns_dropdown_toggle {
     }
 }
 
-// ─── Checkbox styling ──────────────────────────────────────────────────────
 .o_list_view .custom-checkbox,
 .o_list_view .form-check {
     .form-check-input {

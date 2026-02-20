@@ -84,6 +84,8 @@ export class NovaSidebar extends Component {
         const hasContent =
             this.state.favoriteApps.length > 0 || this.state.pinnedPages.length > 0;
 
+        const wasSidebarOpen = document.body.classList.contains("nova-sidebar-open");
+
         if (currentApp && hasContent) {
             document.body.classList.add("nova-sidebar-open");
             document.body.classList.remove("nova-home-menu-visible");
@@ -96,6 +98,13 @@ export class NovaSidebar extends Component {
         }
 
         this._updateBodyClasses();
+
+        // Trigger resize so Odoo's list renderer recalculates column widths
+        // after the sidebar margin-left transition completes (~250ms).
+        const isSidebarOpen = document.body.classList.contains("nova-sidebar-open");
+        if (wasSidebarOpen !== isSidebarOpen) {
+            setTimeout(() => window.dispatchEvent(new Event("resize")), 300);
+        }
     }
 
     _updateBodyClasses() {
@@ -312,6 +321,8 @@ export class NovaSidebar extends Component {
     toggleCollapse() {
         this.state.collapsed = !this.state.collapsed;
         this._updateBodyClasses();
+        // Recalculate list column widths after collapse/expand transition
+        setTimeout(() => window.dispatchEvent(new Event("resize")), 300);
         this.orm.call(
             "res.users",
             "write",

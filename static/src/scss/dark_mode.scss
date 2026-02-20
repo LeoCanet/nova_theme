@@ -2352,14 +2352,6 @@ html.nova-dark {
             > p:first-of-type {
                 color: var(--nova-text) !important;
             }
-
-            // Smiley face SVG — invert for dark mode
-            .o_view_nocontent_smiling_face::before,
-            .o_view_nocontent_neutral_face::before,
-            .o_view_nocontent_empty_folder::before {
-                filter: invert(0.8) hue-rotate(180deg);
-                opacity: 0.6;
-            }
         }
     }
 

@@ -135,8 +135,8 @@
                 /* ═══ VIEW: LIST ═══ */
                 #nova-skeleton .sk-view-list { flex: 1; padding: 0; overflow: hidden; }
                 #nova-skeleton .sk-list {
-                    background: #FFFFFF; border: 1px solid #E2E8F0;
-                    border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); overflow: hidden;
+                    background: #FFFFFF; border: none;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
                 }
                 #nova-skeleton .sk-list .sk-thead,
                 #nova-skeleton .sk-list .sk-row {
@@ -149,14 +149,14 @@
                 }
                 #nova-skeleton .sk-list .sk-thead > div,
                 #nova-skeleton .sk-list .sk-row > div {
-                    padding: 12px 16px; display: flex; align-items: center;
+                    padding: 10px 16px; display: flex; align-items: center;
                 }
                 #nova-skeleton .sk-list .sk-thead > div:first-child,
                 #nova-skeleton .sk-list .sk-row > div:first-child {
                     justify-content: center;
                 }
                 #nova-skeleton .sk-list .sk-row {
-                    border-bottom: 1px solid #F1F5F9;
+                    border-bottom: 1px solid #E2E8F0;
                 }
                 #nova-skeleton .sk-list .sk-row:last-child { border-bottom: none; }
                 #nova-skeleton .sk-list .sk-row:nth-child(even) { background: #F1F5F9; }
@@ -343,13 +343,13 @@
                 }
                 .nova-dark #nova-skeleton .sk-table,
                 .nova-dark #nova-skeleton .sk-list {
-                    background: #232427; border-color: #2F3035;
+                    background: #232427; border: none;
                     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
                 }
                 .nova-dark #nova-skeleton .sk-thead {
                     background: #1F2023; border-bottom-color: #2F3035;
                 }
-                .nova-dark #nova-skeleton .sk-row { border-bottom-color: #292A2E; }
+                .nova-dark #nova-skeleton .sk-row { border-bottom-color: #2F3035; }
                 .nova-dark #nova-skeleton .sk-row:nth-child(even) { background: #1F2023; }
                 .nova-dark #nova-skeleton .sk-check { border-color: #4A4B50; }
                 /* Dark kanban */
@@ -490,25 +490,25 @@
 
                     <!-- ═══ LIST VIEW ═══ -->
                     <div class="sk-view-list"><div class="sk-list">
-                        <!-- Header: checkbox | Nom | Date | Montant | Responsable | Statut -->
+                        <!-- Header -->
                         <div class="sk-thead">
                             <div><div class="sk-check"/></div>
-                            <div><div class="sk" style="width:60%;height:12px;border-radius:3px;opacity:0.55;"/></div>
-                            <div><div class="sk" style="width:50%;height:12px;border-radius:3px;opacity:0.55;"/></div>
-                            <div><div class="sk" style="width:55%;height:12px;border-radius:3px;opacity:0.55;"/></div>
-                            <div><div class="sk" style="width:65%;height:12px;border-radius:3px;opacity:0.55;"/></div>
-                            <div><div class="sk" style="width:70%;height:12px;border-radius:3px;opacity:0.55;"/></div>
+                            <div><div class="sk" style="width:55%;height:13px;border-radius:3px;opacity:0.5;"/></div>
+                            <div><div class="sk" style="width:45%;height:13px;border-radius:3px;opacity:0.5;"/></div>
+                            <div><div class="sk" style="width:50%;height:13px;border-radius:3px;opacity:0.5;"/></div>
+                            <div><div class="sk" style="width:60%;height:13px;border-radius:3px;opacity:0.5;"/></div>
+                            <div><div class="sk" style="width:65%;height:13px;border-radius:3px;opacity:0.5;"/></div>
                         </div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:80%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:60px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:52px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:90%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:45%;height:14px;"/></div><div><div class="sk" style="width:75%;height:14px;"/></div><div><div class="sk" style="width:66px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:58px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:85%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:62px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:45%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:80%;height:14px;"/></div><div><div class="sk" style="width:54px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:75%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:70px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:65%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:56px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:85%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:45%;height:14px;"/></div><div><div class="sk" style="width:64px;height:22px;border-radius:9999px;"/></div></div>
-                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:70%;height:14px;"/></div><div><div class="sk" style="width:50%;height:14px;"/></div><div><div class="sk" style="width:55%;height:14px;"/></div><div><div class="sk" style="width:60%;height:14px;"/></div><div><div class="sk" style="width:58px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:80%;height:13px;"/></div><div><div class="sk" style="width:65%;height:13px;"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:70%;height:13px;"/></div><div><div class="sk" style="width:60px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:65%;height:13px;"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:70%;height:13px;"/></div><div><div class="sk" style="width:50%;height:13px;"/></div><div><div class="sk" style="width:52px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:90%;height:13px;"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:45%;height:13px;"/></div><div><div class="sk" style="width:75%;height:13px;"/></div><div><div class="sk" style="width:66px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:70%;height:13px;"/></div><div><div class="sk" style="width:50%;height:13px;"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:58px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:85%;height:13px;"/></div><div><div class="sk" style="width:70%;height:13px;"/></div><div><div class="sk" style="width:50%;height:13px;"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:62px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:45%;height:13px;"/></div><div><div class="sk" style="width:65%;height:13px;"/></div><div><div class="sk" style="width:80%;height:13px;"/></div><div><div class="sk" style="width:54px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:75%;height:13px;"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:65%;height:13px;"/></div><div><div class="sk" style="width:70px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:65%;height:13px;"/></div><div><div class="sk" style="width:50%;height:13px;"/></div><div><div class="sk" style="width:70%;height:13px;"/></div><div><div class="sk" style="width:56px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:85%;height:13px;"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:45%;height:13px;"/></div><div><div class="sk" style="width:64px;height:22px;border-radius:9999px;"/></div></div>
+                        <div class="sk-row"><div><div class="sk-check"/></div><div><div class="sk" style="width:70%;height:13px;"/></div><div><div class="sk" style="width:50%;height:13px;"/></div><div><div class="sk" style="width:55%;height:13px;"/></div><div><div class="sk" style="width:60%;height:13px;"/></div><div><div class="sk" style="width:58px;height:22px;border-radius:9999px;"/></div></div>
                     </div></div>
 
                     <!-- ═══ KANBAN VIEW — GROUPED (pipeline) ═══ -->
