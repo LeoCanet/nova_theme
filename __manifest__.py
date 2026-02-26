@@ -70,6 +70,7 @@
             "nova_theme/static/src/js/nova_settings.js",
             "nova_theme/static/src/js/nova_selection_field.js",
             "nova_theme/static/src/js/nova_graph_patch.js",
+            "nova_theme/static/src/js/nova_drag_scroll.js",
             "nova_theme/static/src/xml/app_launcher.xml",
             "nova_theme/static/src/xml/nova_selection_field.xml",
             "nova_theme/static/src/xml/navbar.xml",

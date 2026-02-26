@@ -9,10 +9,8 @@
 
     // ─── Kanban Group (Column) ─────────────────────────────────────────
     .o_kanban_group {
-        background: var(--nova-bg-alt);
         border-radius: var(--nova-radius-lg);
         padding: var(--nova-space-3);
-        border: 1px solid var(--nova-border-light);
 
         // Column header
         .o_kanban_header {
@@ -71,6 +69,8 @@
     // We must target both the wrapper and the inner div.
     .o_kanban_record {
         border-radius: var(--nova-radius-md);
+        overflow: hidden;
+        border: 1px solid var(--nova-border);
         box-shadow: var(--nova-shadow-xs);
         margin-bottom: var(--nova-space-2);
         cursor: pointer;
@@ -78,17 +78,13 @@
 
         > div {
             background: var(--nova-surface);
-            border-color: var(--nova-border);
-            border-radius: var(--nova-radius-md);
+            border: none !important;
         }
 
         &:hover {
             box-shadow: var(--nova-shadow-sm);
             transform: translateY(-1px);
-
-            > div {
-                border-color: var(--nova-accent);
-            }
+            border-color: var(--nova-accent);
         }
 
         &:active {
@@ -108,6 +104,37 @@
             font-size: var(--nova-font-sm);
             color: var(--nova-text-secondary);
             margin-top: var(--nova-space-1);
+        }
+
+        // Images inside cards — uniform dimensions
+        .o_kanban_image,
+        .o_kanban_image_fill_left {
+            width: var(--KanbanRecord__image--fill-width, 95px) !important;
+            min-width: var(--KanbanRecord__image--fill-width, 95px);
+            flex: 0 0 var(--KanbanRecord__image--fill-width, 95px) !important;
+            background-size: cover !important;
+            background-position: center !important;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            // Company logo badge — small circular avatar overlay
+            .o_kanban_image_inner_pic {
+                width: 24px !important;
+                height: 24px !important;
+                max-width: 24px !important;
+                max-height: 24px !important;
+                border-radius: var(--nova-radius-full) !important;
+                box-shadow: var(--nova-shadow-xs) !important;
+                background: var(--nova-bg-alt) !important;
+                object-fit: cover;
+                right: 4px !important;
+                bottom: 4px !important;
+            }
         }
 
         // Tags
@@ -132,6 +159,22 @@
                 display: flex;
                 align-items: center;
                 gap: var(--nova-space-2);
+            }
+
+            // Icon buttons (activity, follow, etc.)
+            .btn, a, button, .fa {
+                color: var(--nova-text-tertiary);
+                transition: color var(--nova-transition-fast), background var(--nova-transition-fast);
+            }
+
+            .btn:hover, a:hover, button:hover {
+                color: var(--nova-accent) !important;
+                background: var(--nova-accent-light) !important;
+                border-radius: var(--nova-radius-sm);
+            }
+
+            .fa:hover {
+                color: var(--nova-accent) !important;
             }
 
             img.oe_kanban_avatar {
@@ -179,7 +222,7 @@
         overflow: hidden;
     }
 
-    // ─── Ungrouped Kanban (grid mode) ──────────────────────────────────
+    // ─── Ungrouped Kanban ──────────────────────────────────────────────
     &.o_kanban_ungrouped {
         .o_kanban_record {
             border-radius: var(--nova-radius-md);

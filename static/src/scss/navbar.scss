@@ -217,6 +217,79 @@
                     white-space: nowrap;
                 }
             }
+
+            // Company dropdown items — override native bg-white, btn-light, alert-primary
+            .dropdown-menu {
+                // Override native bg-white on DropdownItem
+                .bg-white {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                }
+
+                .dropdown-item {
+                    background: transparent !important;
+                    padding: 0 !important;
+                    border-radius: var(--nova-radius-sm);
+                    overflow: hidden;
+                    transition: background var(--nova-transition-fast);
+
+                    > div {
+                        width: 100%;
+                    }
+
+                    // Remove border between checkbox and company name
+                    .toggle_company {
+                        border: none !important;
+
+                        .btn {
+                            background: transparent !important;
+                            color: var(--nova-text-secondary) !important;
+                            border-radius: 0 !important;
+
+                            .fa-check-square {
+                                color: var(--nova-accent) !important;
+                            }
+
+                            .fa-square-o {
+                                color: var(--nova-text-tertiary) !important;
+                            }
+                        }
+                    }
+
+                    // Company name area
+                    .log_into {
+                        background: transparent !important;
+                        color: var(--nova-text) !important;
+                        border-radius: 0 !important;
+                        border: none !important;
+                        margin: 0 !important;
+
+                        .company_label {
+                            color: var(--nova-text) !important;
+                        }
+
+                        // Active company (current)
+                        &.alert-primary {
+                            background: transparent !important;
+
+                            .company_label {
+                                color: var(--nova-accent) !important;
+                                font-weight: 600;
+                            }
+                        }
+                    }
+
+                    // Hover — full row highlight
+                    &:hover {
+                        background: var(--nova-accent-light) !important;
+
+                        .log_into .company_label,
+                        .toggle_company .btn {
+                            color: var(--nova-accent) !important;
+                        }
+                    }
+                }
+            }
         }
 
         // User menu

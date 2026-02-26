@@ -252,9 +252,29 @@ small.text-muted {
 }
 
 // ─── Focus states ──────────────────────────────────────────────────────────
+// Remove browser/Bootstrap focus outlines — Nova uses its own hover/active states
+*:focus,
 *:focus-visible {
-    outline: 2px solid var(--nova-accent);
-    outline-offset: 2px;
+    outline: none !important;
+}
+
+.btn:focus,
+.btn:focus-visible,
+.btn:active:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+// ─── Drag-to-scroll cursor hint ────────────────────────────────────────────
+.o_kanban_grouped,
+.o_list_view .table-responsive,
+.nav-tabs,
+.o_notebook_headers {
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
 }
 
 // ─── Links ─────────────────────────────────────────────────────────────────
@@ -316,6 +336,25 @@ a {
                 color: var(--nova-text-tertiary);
                 font-size: 1.1em;
             }
+        }
+    }
+
+    // View switcher buttons (list, kanban, etc.)
+    .o_cp_switch_buttons .btn {
+        color: var(--nova-text-secondary);
+        background: var(--nova-surface) !important;
+        border: 1px solid var(--nova-border) !important;
+        transition: color var(--nova-transition-fast), background var(--nova-transition-fast);
+
+        &.active {
+            color: var(--nova-accent) !important;
+            background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
+        }
+
+        &:hover:not(.active) {
+            color: var(--nova-text);
+            background: var(--nova-bg-alt) !important;
         }
     }
 }

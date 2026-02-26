@@ -199,6 +199,33 @@
     }
 }
 
+// ─── Odoo debug tooltips ──────────────────────────────────────────────────
+.o-tooltip {
+    background-color: var(--nova-surface);
+    color: var(--nova-text);
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    box-shadow: var(--nova-shadow-lg);
+
+    .o-tooltip--string {
+        background-color: var(--nova-bg-alt);
+        color: var(--nova-text);
+        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+    }
+
+    .o-tooltip--help {
+        color: var(--nova-text-secondary);
+    }
+
+    .o-tooltip--technical {
+        color: var(--nova-text-secondary);
+
+        .o-tooltip--technical--title {
+            color: var(--nova-text);
+        }
+    }
+}
+
 // ─── Autocomplete dropdown ─────────────────────────────────────────────────
 .o-autocomplete--dropdown-menu,
 .ui-autocomplete {
@@ -211,27 +238,32 @@
     .o-autocomplete--dropdown-item,
     .ui-menu-item {
         border-radius: var(--nova-radius-sm);
-        padding: var(--nova-space-2) var(--nova-space-3);
+        padding: 0;
         font-size: var(--nova-font-md);
         color: var(--nova-text);
         transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
         cursor: pointer;
 
-        &:hover, &:focus, &.ui-state-active {
+        &:hover, &:focus {
             background: var(--nova-accent-light) !important;
             color: var(--nova-accent) !important;
         }
 
-        // Strip hover from nested <a> — only the <li> hover matters
+        // Nested <a> / dropdown-item — ui-state-active is set here by Odoo
         a, .dropdown-item {
             background: none !important;
             color: inherit !important;
-            padding: 0 !important;
-            border-radius: 0 !important;
+            padding: var(--nova-space-2) var(--nova-space-3) !important;
+            border-radius: var(--nova-radius-sm) !important;
 
             &:hover, &:focus, &:active {
                 background: none !important;
                 color: inherit !important;
+            }
+
+            &.ui-state-active {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
             }
         }
     }

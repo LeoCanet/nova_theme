@@ -673,6 +673,12 @@ html.nova-dark {
         box-shadow: var(--nova-shadow-lg) !important;
         color: var(--nova-text) !important;
 
+        // Override native bg-white on DropdownItem
+        .bg-white {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+
         // All menu item types
         .dropdown-item,
         .o_menu_item,
@@ -686,6 +692,29 @@ html.nova-dark {
 
             &.active, &.selected {
                 background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+
+        // Company switcher dark mode overrides
+        .toggle_company {
+            border: none !important;
+
+            .btn, .btn-light {
+                background: transparent !important;
+                color: var(--nova-text-secondary) !important;
+            }
+        }
+
+        .log_into {
+            &.btn-light {
+                background: transparent !important;
+                color: var(--nova-text) !important;
+            }
+
+            &.alert-primary {
+                background: transparent !important;
+                border: none !important;
                 color: var(--nova-accent) !important;
             }
         }
@@ -799,6 +828,31 @@ html.nova-dark {
     .tooltip .tooltip-inner {
         background: var(--nova-surface-raised) !important;
         color: var(--nova-text) !important;
+    }
+
+    // Odoo debug tooltips (.o-tooltip)
+    .o-tooltip {
+        background-color: var(--nova-surface) !important;
+        color: var(--nova-text) !important;
+        border: 1px solid var(--nova-border) !important;
+        border-radius: var(--nova-radius-lg) !important;
+
+        .o-tooltip--string {
+            background-color: var(--nova-bg-alt) !important;
+            color: var(--nova-text) !important;
+        }
+
+        .o-tooltip--help {
+            color: var(--nova-text-secondary) !important;
+        }
+
+        .o-tooltip--technical {
+            color: var(--nova-text-secondary) !important;
+
+            .o-tooltip--technical--title {
+                color: var(--nova-text) !important;
+            }
+        }
     }
 
     .popover {
@@ -1330,7 +1384,6 @@ html.nova-dark {
         background-color: var(--nova-bg) !important;
 
         .o_kanban_group {
-            background: var(--nova-bg-alt) !important;
             border-color: var(--nova-border-light) !important;
 
             // Folded column background
@@ -2103,7 +2156,6 @@ html.nova-dark {
         background-color: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
 
-        // Hover only on the <li> container
         .o-autocomplete--dropdown-item {
             color: var(--nova-text) !important;
 
@@ -2112,15 +2164,19 @@ html.nova-dark {
                 color: var(--nova-accent) !important;
             }
 
-            // Strip the nested <a> — no double hover
+            // Nested <a> — ui-state-active is applied here by Odoo
             a, .dropdown-item {
                 background: none !important;
                 color: inherit !important;
-                padding: 0 !important;
 
                 &:hover, &:focus, &:active {
                     background: none !important;
                     color: inherit !important;
+                }
+
+                &.ui-state-active {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
                 }
             }
         }
@@ -2487,14 +2543,18 @@ html.nova-dark {
     // CP switch view buttons
     .o_cp_switch_buttons .btn {
         color: var(--nova-text-secondary) !important;
-        background: transparent !important;
+        background: var(--nova-surface) !important;
+        border-color: var(--nova-border) !important;
 
         &.active {
             color: var(--nova-accent) !important;
+            background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
         }
 
-        &:hover {
+        &:hover:not(.active) {
             color: var(--nova-text) !important;
+            background: var(--nova-bg-alt) !important;
         }
     }
 

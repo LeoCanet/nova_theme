@@ -9,6 +9,17 @@ import { NavBar } from "@web/webclient/navbar/navbar";
 export class NovaAppLauncher extends Component {
     setup() {
         this.menuService = useService("menu");
+
+        // Le POS a son propre service menu incompatible — on se désactive.
+        // On tente getApps() car le POS expose la méthode mais crash sur .root
+        try {
+            this.menuService.getApps();
+        } catch {
+            this._disabled = true;
+            this.state = useState({ isOpen: false, searchQuery: "", _menuVersion: 0, favoriteAppIds: [] });
+            return;
+        }
+
         this.hotkeyService = useService("hotkey");
         this.storage = useService("novaStorage");
         this.searchInput = useRef("novaSearchInput");
