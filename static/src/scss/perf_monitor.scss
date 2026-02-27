@@ -1,0 +1,440 @@
+///============================================================================
+/// Theme Nova — Perf Monitor Panel
+/// Uses --nova-* tokens exclusively → dark mode works automatically
+///============================================================================
+
+// ── Wrapper (sits inside systray <div>, must not break flex layout) ──────────
+
+.o_menu_systray > div:has(.nova-perf-wrapper) {
+    overflow: visible !important;
+}
+
+.nova-perf-wrapper {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    position: static; // let fixed children escape
+}
+
+// ── Systray toggle button (inherits look from navbar.scss systray rules) ────
+
+// Extend the navbar systray selector to include our nested button
+.o_menu_systray .nova-perf-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px !important;
+    max-height: 34px !important;
+    border-radius: var(--nova-radius);
+    color: var(--nova-text-secondary) !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: all var(--nova-transition-fast);
+    font-size: var(--nova-font-lg);
+    padding: 0 var(--nova-space-1) !important;
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--nova-accent-light) !important;
+        color: var(--nova-accent) !important;
+    }
+
+    .fa, .oi {
+        color: inherit !important;
+    }
+
+    // Recording pulse indicator
+    &.nova-perf-recording::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        right: 0;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--nova-danger);
+        animation: nova-perf-pulse 1.5s ease-in-out infinite;
+    }
+}
+
+@keyframes nova-perf-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+// ── Panel overlay ───────────────────────────────────────────────────────────
+
+.nova-perf-panel {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    width: 320px;
+    max-height: calc(100vh - 80px);
+    background: var(--nova-surface);
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    box-shadow: var(--nova-shadow-lg);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: var(--nova-font-family, "Inter", sans-serif);
+}
+
+// ── Scrollable body (between header & footer) ──────────────────────────────
+
+.nova-perf-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0; // flex overflow trick
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--nova-border);
+        border-radius: 2px;
+    }
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+
+.nova-perf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--nova-border);
+    flex-shrink: 0;
+}
+
+.nova-perf-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nova-text);
+    letter-spacing: -0.01em;
+}
+
+.nova-perf-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-text-tertiary);
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+        color: var(--nova-text);
+        background: var(--nova-accent-light);
+    }
+}
+
+// ── Metrics grid (3x2) ─────────────────────────────────────────────────────
+
+.nova-perf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--nova-border);
+    border-bottom: 1px solid var(--nova-border);
+}
+
+.nova-perf-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    background: var(--nova-surface);
+    gap: 4px;
+}
+
+.nova-perf-metric-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--nova-text-tertiary);
+}
+
+.nova-perf-metric-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--nova-text);
+    font-variant-numeric: tabular-nums;
+}
+
+// ── Color indicators ────────────────────────────────────────────────────────
+
+.nova-perf-good {
+    color: var(--nova-success) !important;
+}
+
+.nova-perf-ok {
+    color: var(--nova-warning) !important;
+}
+
+.nova-perf-bad {
+    color: var(--nova-danger) !important;
+}
+
+// ── Sections ────────────────────────────────────────────────────────────────
+
+.nova-perf-section {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--nova-border);
+}
+
+.nova-perf-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--nova-text-tertiary);
+    margin-bottom: 8px;
+}
+
+.nova-perf-history-count {
+    font-weight: 400;
+    color: var(--nova-text-tertiary);
+}
+
+.nova-perf-clear-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-text-tertiary);
+    cursor: pointer;
+    margin-left: 4px;
+    padding: 0;
+    vertical-align: middle;
+    transition: color 0.15s ease, background 0.15s ease;
+
+    .fa { font-size: 11px; }
+
+    &:hover {
+        color: var(--nova-danger);
+        background: var(--nova-danger-light);
+    }
+}
+
+// ── Last navigation ─────────────────────────────────────────────────────────
+
+.nova-perf-nav-result {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.nova-perf-nav-ms {
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.nova-perf-nav-detail {
+    font-size: 12px;
+    color: var(--nova-text-secondary);
+}
+
+// ── Clickable detail + chevron ──────────────────────────────────────────────
+
+.nova-perf-clickable {
+    cursor: pointer;
+    border-radius: var(--nova-radius-sm);
+    padding: 1px 4px;
+    margin: -1px -4px;
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+}
+
+.nova-perf-chevron {
+    font-size: 9px;
+    margin-left: 3px;
+    opacity: 0.5;
+}
+
+// ── Request detail list (expanded) ──────────────────────────────────────────
+
+.nova-perf-req-list {
+    margin-top: 8px;
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius);
+    background: var(--nova-surface);
+    overflow: hidden;
+    // No max-height here — parent .nova-perf-body handles scrolling
+}
+
+.nova-perf-req-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--nova-border-light);
+    color: var(--nova-text);
+
+    &:last-child { border-bottom: none; }
+
+    &:hover {
+        background: var(--nova-accent-light);
+    }
+}
+
+.nova-perf-req-method {
+    font-weight: 700;
+    color: var(--nova-accent);
+    min-width: 32px;
+    font-size: 10px;
+}
+
+.nova-perf-req-url {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--nova-text);
+}
+
+.nova-perf-req-status {
+    color: var(--nova-text-secondary);
+    min-width: 24px;
+    text-align: right;
+}
+
+.nova-perf-req-duration {
+    font-weight: 700;
+    min-width: 50px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.nova-perf-req-hint {
+    padding: 5px 10px;
+    font-size: 10px;
+    color: var(--nova-text-tertiary);
+    font-style: italic;
+    border-bottom: 1px solid var(--nova-border-light);
+}
+
+.nova-perf-nav-empty {
+    font-size: 12px;
+    color: var(--nova-text-tertiary);
+    font-style: italic;
+}
+
+// ── History list ────────────────────────────────────────────────────────────
+
+.nova-perf-history {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    // No max-height — parent .nova-perf-body handles scrolling
+}
+
+.nova-perf-history-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "liga" 0, "calt" 0;
+    font-variant-ligatures: no-common-ligatures no-contextual;
+}
+
+.nova-perf-history-time {
+    color: var(--nova-text-tertiary);
+    min-width: 60px;
+}
+
+.nova-perf-history-ms {
+    color: var(--nova-text);
+    font-weight: 600;
+    min-width: 52px;
+}
+
+.nova-perf-history-detail {
+    color: var(--nova-text-tertiary);
+    font-size: 10px;
+}
+
+// ── Footer / recording controls ─────────────────────────────────────────────
+
+.nova-perf-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--nova-border);
+}
+
+.nova-perf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--nova-border);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-surface);
+    color: var(--nova-text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+        border-color: var(--nova-accent);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .fa {
+        font-size: 10px;
+    }
+}
+
+.nova-perf-btn-record {
+    .fa { color: var(--nova-danger); }
+}
+
+.nova-perf-btn-stop {
+    background: var(--nova-danger-light);
+    color: var(--nova-danger);
+    border-color: var(--nova-danger);
+
+    &:hover:not(:disabled) {
+        background: var(--nova-danger);
+        color: var(--nova-text-inverse);
+    }
+}
+
+.nova-perf-btn-export {
+    margin-left: auto;
+}

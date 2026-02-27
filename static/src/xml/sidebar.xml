@@ -11,6 +11,7 @@
                     <div class="nova-sidebar__section-title">Favoris</div>
                     <t t-foreach="state.favoriteApps" t-as="app" t-key="app.id">
                         <a class="nova-sidebar__item"
+                           t-att-data-menu-id="app.id"
                            t-att-class="{'active': isFavoriteActive(app)}"
                            t-on-click.prevent="() => this.onFavoriteClick(app)"
                            href="#"

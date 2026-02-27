@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="nova_theme.PerfMonitor" owl="1">
+        <div class="nova-perf-wrapper">
+            <!-- Systray button -->
+            <button class="nova-perf-toggle" t-on-click="togglePanel"
+                    t-att-class="{ 'nova-perf-recording': state.recording }"
+                    title="Nova Perf Monitor">
+                <i class="fa fa-tachometer"/>
+            </button>
+
+            <!-- Panel overlay -->
+            <div t-if="state.open" class="nova-perf-panel">
+            <div class="nova-perf-header">
+                <span class="nova-perf-title">Perf Monitor</span>
+                <button class="nova-perf-close" t-on-click="togglePanel">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+
+            <!-- Scrollable body (between fixed header & footer) -->
+            <div class="nova-perf-body">
+
+            <!-- Real-time metrics grid 2x2 -->
+            <div class="nova-perf-grid">
+                <div class="nova-perf-metric" title="Images par seconde. Mesure la fluidite de l'interface. Ideal : 60, correct : 30+, mauvais : &lt;30">
+                    <span class="nova-perf-metric-label">FPS</span>
+                    <span class="nova-perf-metric-value" t-att-class="fpsColor">
+                        <t t-esc="state.fps"/>
+                    </span>
+                </div>
+                <div class="nova-perf-metric" title="Nombre total d'elements HTML dans la page. Plus c'est bas, plus le navigateur est reactif. Ideal : &lt;3000">
+                    <span class="nova-perf-metric-label">DOM</span>
+                    <span class="nova-perf-metric-value">
+                        <t t-esc="state.domNodes"/>
+                    </span>
+                </div>
+                <div class="nova-perf-metric" title="Memoire JavaScript utilisee (Chrome uniquement). Une croissance continue peut indiquer une fuite memoire">
+                    <span class="nova-perf-metric-label">Heap</span>
+                    <span class="nova-perf-metric-value">
+                        <t t-esc="heapDisplay"/>
+                    </span>
+                </div>
+                <div class="nova-perf-metric" title="Cumulative Layout Shift. Mesure les sauts visuels inattendus (elements qui bougent apres chargement). Bon : &lt;0.1, moyen : &lt;0.25">
+                    <span class="nova-perf-metric-label">CLS</span>
+                    <span class="nova-perf-metric-value" t-att-class="clsColor">
+                        <t t-esc="state.cls"/>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Last navigation -->
+            <div class="nova-perf-section">
+                <div class="nova-perf-section-title" title="Temps entre le lancement d'une action (clic menu) et l'affichage complet de la vue. Ideal : &lt;500ms">Derniere navigation</div>
+                <div t-if="state.lastNavDisplay">
+                    <div class="nova-perf-nav-result">
+                        <span class="nova-perf-nav-ms" t-att-class="navColor">
+                            <t t-esc="state.lastNavDisplay"/>
+                        </span>
+                        <span class="nova-perf-nav-detail nova-perf-clickable"
+                              t-on-click="() => this.toggleRequestDetail('last')"
+                              title="Cliquer pour voir le detail des requetes">
+                            <t t-esc="state.lastNavDetail"/>
+                            <i t-attf-class="fa fa-chevron-#{state.expandedEntry === 'last' ? 'up' : 'down'} nova-perf-chevron"/>
+                        </span>
+                    </div>
+                    <!-- Expanded request details for last nav -->
+                    <div t-if="state.expandedEntry === 'last'" class="nova-perf-req-list">
+                        <div class="nova-perf-req-hint">Requetes paralleles — les durees se chevauchent</div>
+                        <div t-foreach="getRequestDetails('last')" t-as="req" t-key="req_index"
+                             class="nova-perf-req-row">
+                            <span class="nova-perf-req-method" t-esc="req.method"/>
+                            <span class="nova-perf-req-url" t-att-title="req.url" t-esc="req.url"/>
+                            <span class="nova-perf-req-status" t-esc="req.status"/>
+                            <span t-att-class="'nova-perf-req-duration ' + reqLatencyColor(req.duration)"
+                                  t-esc="req.durationDisplay"/>
+                        </div>
+                        <div t-if="!getRequestDetails('last').length" class="nova-perf-nav-empty">
+                            Aucune requete capturee
+                        </div>
+                    </div>
+                </div>
+                <div t-else="" class="nova-perf-nav-empty">
+                    Naviguez entre les menus...
+                </div>
+            </div>
+
+            <!-- History -->
+            <div class="nova-perf-section">
+                <div class="nova-perf-section-title">
+                    Historique
+                    <span class="nova-perf-history-count">(<t t-esc="state.history.length"/>)</span>
+                    <button t-if="state.history.length" class="nova-perf-clear-history" t-on-click="clearHistory" title="Vider l'historique">
+                        <i class="fa fa-trash-o"/>
+                    </button>
+                </div>
+                <div class="nova-perf-history">
+                    <t t-foreach="state.history" t-as="entry" t-key="entry.id">
+                        <div class="nova-perf-history-entry">
+                            <span class="nova-perf-history-time"><t t-esc="entry.timestamp"/></span>
+                            <span class="nova-perf-history-ms"><t t-esc="entry.msDisplay"/></span>
+                            <span class="nova-perf-history-detail nova-perf-clickable"
+                                  t-on-click="() => this.toggleRequestDetail(entry.id)"
+                                  title="Voir le detail des requetes">
+                                <t t-esc="entry.detailDisplay"/>
+                                <i t-attf-class="fa fa-chevron-#{state.expandedEntry === entry.id ? 'up' : 'down'} nova-perf-chevron"/>
+                            </span>
+                        </div>
+                        <!-- Expanded details for this history entry -->
+                        <div t-if="state.expandedEntry === entry.id" class="nova-perf-req-list">
+                            <div class="nova-perf-req-hint">Requetes paralleles — les durees se chevauchent</div>
+                            <div t-foreach="entry.requestDetails || []" t-as="req" t-key="req_index"
+                                 class="nova-perf-req-row">
+                                <span class="nova-perf-req-method" t-esc="req.method"/>
+                                <span class="nova-perf-req-url" t-att-title="req.url" t-esc="req.url"/>
+                                <span class="nova-perf-req-status" t-esc="req.status"/>
+                                <span t-att-class="'nova-perf-req-duration ' + reqLatencyColor(req.duration)"
+                                      t-esc="req.durationDisplay"/>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="!state.history.length" class="nova-perf-nav-empty">
+                        Aucune navigation enregistree
+                    </div>
+                </div>
+            </div>
+
+            </div><!-- /nova-perf-body -->
+
+            <!-- Footer: recording controls (always visible) -->
+            <div class="nova-perf-footer">
+                <button t-if="!state.recording" class="nova-perf-btn nova-perf-btn-record"
+                        t-on-click="startRecording">
+                    <i class="fa fa-circle"/> Enregistrer
+                </button>
+                <button t-if="state.recording" class="nova-perf-btn nova-perf-btn-stop"
+                        t-on-click="stopRecording">
+                    <i class="fa fa-stop"/> Stop
+                </button>
+                <button class="nova-perf-btn nova-perf-btn-export"
+                        t-att-disabled="!state.recordingEntries.length"
+                        t-on-click="exportJSON">
+                    <i class="fa fa-download"/> Export JSON
+                </button>
+            </div>
+        </div>
+        </div>
+    </t>
+
+</templates>

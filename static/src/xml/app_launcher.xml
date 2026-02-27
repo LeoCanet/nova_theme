@@ -27,6 +27,7 @@
                 <div class="nova-launcher-grid">
                     <t t-foreach="filteredApps" t-as="app" t-key="app.id">
                         <a class="nova-app-tile"
+                           t-att-data-menu-id="app.id"
                            t-on-click.prevent="() => this.openApp(app)"
                            href="#"
                            t-att-title="app.name">
