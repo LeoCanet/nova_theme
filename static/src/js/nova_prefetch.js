@@ -9,13 +9,15 @@ const MENU_SELECTOR =
     ".nova-app-tile[data-menu-id], " +
     ".nova-sidebar__item[data-menu-id]";
 
+/** Max number of menus to prefetch per session (avoids flooding on idle hover) */
+const MAX_PREFETCH = 10;
+
 /**
  * NovaPrefetch — Invisible component that pre-loads view definitions on menu
  * hover so that subsequent click-navigation is faster.
  *
- * v2 fixes: abort all in-flight prefetch RPCs the instant a navigation starts
- * (click on menu item OR ACTION_MANAGER:UPDATE) to avoid saturating the
- * single-threaded Odoo worker with prefetch traffic during actual navigation.
+ * Uses mouseover (bubbles reliably) instead of mouseenter (non-bubbling,
+ * unreliable for event delegation via capture).
  */
 class NovaPrefetch extends Component {
     setup() {
@@ -26,28 +28,27 @@ class NovaPrefetch extends Component {
         /** @type {Set<number>} menu IDs already prefetched this session */
         this._prefetched = new Set();
         this._hoverTimer = null;
+        /** Currently hovered menu element (dedup for mouseover) */
+        this._hoverEl = null;
         /** True while a navigation is in progress — blocks new prefetches */
         this._navigating = false;
-        /** Active AbortController for the current prefetch RPC chain */
-        this._abortController = null;
+        /** True while a prefetch RPC chain is in-flight (1 at a time max) */
+        this._inFlight = false;
 
-        this._onMouseEnter = this._onMouseEnter.bind(this);
-        this._onMouseLeave = this._onMouseLeave.bind(this);
+        this._onPointerOver = this._onPointerOver.bind(this);
         this._onClick = this._onClick.bind(this);
         this._onClearCaches = this._onClearCaches.bind(this);
         this._onActionUpdate = this._onActionUpdate.bind(this);
 
         onMounted(() => {
-            document.body.addEventListener("mouseenter", this._onMouseEnter, true);
-            document.body.addEventListener("mouseleave", this._onMouseLeave, true);
+            document.body.addEventListener("mouseover", this._onPointerOver);
             document.body.addEventListener("click", this._onClick, true);
             this.env.bus.addEventListener("CLEAR-CACHES", this._onClearCaches);
             this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this._onActionUpdate);
         });
 
         onWillUnmount(() => {
-            document.body.removeEventListener("mouseenter", this._onMouseEnter, true);
-            document.body.removeEventListener("mouseleave", this._onMouseLeave, true);
+            document.body.removeEventListener("mouseover", this._onPointerOver);
             document.body.removeEventListener("click", this._onClick, true);
             this.env.bus.removeEventListener("CLEAR-CACHES", this._onClearCaches);
             this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this._onActionUpdate);
@@ -57,20 +58,28 @@ class NovaPrefetch extends Component {
 
     // ── Event handlers ─────────────────────────────────────────────────
 
-    _onMouseEnter(ev) {
-        if (this._navigating) return;
-
+    /**
+     * mouseover bubbles reliably — works for event delegation.
+     * We track _hoverEl to avoid restarting the timer on child-to-child
+     * movements within the same menu element.
+     */
+    _onPointerOver(ev) {
         const el = ev.target.closest(MENU_SELECTOR);
-        if (!el) return;
+
+        // Same element as before — nothing to do
+        if (el === this._hoverEl) return;
+
+        // Changed element — always clear previous timer
+        clearTimeout(this._hoverTimer);
+        this._hoverEl = el;
+
+        // Left menu area or navigating — done
+        if (!el || this._navigating) return;
 
         const menuId = parseInt(el.dataset.section || el.dataset.menuId, 10);
-        if (!menuId || this._prefetched.has(menuId)) return;
+        if (!menuId || this._prefetched.has(menuId) || this._inFlight) return;
 
         this._hoverTimer = setTimeout(() => this._prefetch(menuId), 80);
-    }
-
-    _onMouseLeave() {
-        clearTimeout(this._hoverTimer);
     }
 
     /**
@@ -84,9 +93,7 @@ class NovaPrefetch extends Component {
         }
     }
 
-    /**
-     * Navigation complete — re-enable prefetching.
-     */
+    /** Navigation complete — re-enable prefetching. */
     _onActionUpdate() {
         this._navigating = false;
     }
@@ -97,40 +104,28 @@ class NovaPrefetch extends Component {
 
     // ── Prefetch logic ─────────────────────────────────────────────────
 
-    /** Cancel hover timer + abort any in-flight prefetch RPCs */
+    /** Cancel hover timer */
     _cancelPrefetch() {
         clearTimeout(this._hoverTimer);
-        if (this._abortController) {
-            this._abortController.abort();
-            this._abortController = null;
-        }
+        this._hoverEl = null;
     }
 
     async _prefetch(menuId) {
-        if (this._navigating) return;
+        if (this._navigating || this._inFlight) return;
+        if (this._prefetched.size >= MAX_PREFETCH) return;
 
         const menu = this.menuService.getMenu(menuId);
         if (!menu?.actionID) return;
         this._prefetched.add(menuId);
+        this._inFlight = true;
 
-        // Create a new AbortController for this prefetch chain
-        this._cancelPrefetch();
-        const ac = new AbortController();
-        this._abortController = ac;
-
-        // Step 1: load action descriptor (~30ms RPC)
-        let action;
         try {
-            action = await this.rpc("/web/action/load", { action_id: menu.actionID });
-        } catch {
-            return;
-        }
-        // Bail if aborted between RPCs (user clicked)
-        if (ac.signal.aborted) return;
-        if (!action || action.type !== "ir.actions.act_window") return;
+            // Step 1: load action descriptor (~30ms RPC)
+            const action = await this.rpc("/web/action/load", { action_id: menu.actionID });
+            if (this._navigating) return;
+            if (!action || action.type !== "ir.actions.act_window") return;
 
-        // Step 2: fill the native view cache (the big win: 48-112ms saved)
-        try {
+            // Step 2: fill the native view cache (the big win: 48-112ms saved)
             await this.viewService.loadViews(
                 {
                     context: action.context || {},
@@ -145,11 +140,8 @@ class NovaPrefetch extends Component {
             );
         } catch {
             // silently ignore prefetch failures
-        }
-
-        // Clean up if this is still the active controller
-        if (this._abortController === ac) {
-            this._abortController = null;
+        } finally {
+            this._inFlight = false;
         }
     }
 }
