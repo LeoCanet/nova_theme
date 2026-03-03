@@ -1,0 +1,273 @@
+///============================================================================
+/// Theme Nova — Mobile Menu (replaces Odoo native burger menu)
+///============================================================================
+
+$mobile-menu-duration: 300ms;
+$mobile-menu-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+// ─── Toggle Button (visible only < 768px via d-md-none) ─────────────────────
+.nova-mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--nova-radius);
+    color: var(--nova-text-secondary);
+    cursor: pointer;
+    transition: all var(--nova-transition-fast);
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+
+    .fa {
+        font-size: 18px;
+    }
+}
+
+// ─── Overlay (portal container) ─────────────────────────────────────────────
+.nova-mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1060;
+}
+
+// ─── Backdrop ───────────────────────────────────────────────────────────────
+.nova-mobile-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    animation: novaMobileBackdropIn 200ms ease forwards;
+}
+
+@keyframes novaMobileBackdropIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+// ─── Panel (slides in from right) ───────────────────────────────────────────
+.nova-mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 320px;
+    background: var(--nova-surface);
+    border-left: 1px solid var(--nova-border);
+    box-shadow: var(--nova-shadow-xl);
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    animation: novaMobileSlideIn $mobile-menu-duration $mobile-menu-ease forwards;
+}
+
+@keyframes novaMobileSlideIn {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+}
+
+// ─── Header ─────────────────────────────────────────────────────────────────
+.nova-mobile-menu__header {
+    height: var(--nova-navbar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--nova-space-4);
+    border-bottom: 1px solid var(--nova-border);
+    background: var(--nova-surface);
+    flex-shrink: 0;
+    gap: var(--nova-space-3);
+}
+
+.nova-mobile-menu__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.nova-mobile-menu__user-name {
+    font-size: var(--nova-font-base);
+    font-weight: 500;
+    color: var(--nova-text-primary);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nova-mobile-menu__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--nova-radius);
+    background: transparent;
+    color: var(--nova-text-tertiary);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all var(--nova-transition-fast);
+
+    .oi {
+        font-size: 16px;
+    }
+
+    &:hover {
+        background: var(--nova-danger-light, rgba(239, 68, 68, 0.1));
+        color: var(--nova-danger);
+    }
+}
+
+// ─── Navigation ─────────────────────────────────────────────────────────────
+.nova-mobile-menu__nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--nova-space-3) var(--nova-space-3);
+}
+
+// App title at the top of the nav
+.nova-mobile-menu__app-title {
+    font-size: var(--nova-font-sm);
+    font-weight: 600;
+    color: var(--nova-accent);
+    padding: var(--nova-space-2) var(--nova-space-3);
+    margin-bottom: var(--nova-space-1);
+}
+
+// Section titles (same as sidebar)
+.nova-mobile-menu__section-title {
+    font-size: var(--nova-font-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--nova-text-tertiary);
+    padding: var(--nova-space-3) var(--nova-space-3) var(--nova-space-1);
+    margin: 0;
+}
+
+// Menu items (same visual as sidebar items)
+.nova-mobile-menu__item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--nova-text-secondary);
+    font-size: var(--nova-font-base);
+    font-weight: 450;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 1px;
+    transition: background var(--nova-transition-fast),
+                color var(--nova-transition-fast);
+    animation: novaFadeInUp 250ms ease both;
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+
+    &:active {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+}
+
+// Stagger items animation
+@for $i from 1 through 30 {
+    .nova-mobile-menu__item:nth-child(#{$i}) {
+        animation-delay: #{$i * 30}ms;
+    }
+}
+
+// ─── User Menu Section ──────────────────────────────────────────────────────
+.nova-mobile-menu__user-section {
+    padding: var(--nova-space-3);
+    border-top: 1px solid var(--nova-border);
+}
+
+.nova-mobile-menu__user-item {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--nova-text-secondary);
+    font-size: var(--nova-font-base);
+    font-weight: 450;
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--nova-transition-fast),
+                color var(--nova-transition-fast);
+
+    .fa {
+        width: 20px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+
+    &--danger:hover {
+        background: var(--nova-danger-light, rgba(239, 68, 68, 0.1));
+        color: var(--nova-danger);
+    }
+}
+
+// ─── Footer ─────────────────────────────────────────────────────────────────
+.nova-mobile-menu__footer {
+    padding: var(--nova-space-3) var(--nova-space-4);
+    border-top: 1px solid var(--nova-border);
+    flex-shrink: 0;
+}
+
+.nova-mobile-menu__user-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--nova-text-secondary);
+    font-size: var(--nova-font-base);
+    font-weight: 450;
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--nova-transition-fast),
+                color var(--nova-transition-fast);
+
+    .fa {
+        width: 20px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    &:hover {
+        background: var(--nova-accent-light);
+        color: var(--nova-accent);
+    }
+}

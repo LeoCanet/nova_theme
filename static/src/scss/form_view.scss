@@ -832,6 +832,15 @@
         }
     }
 
+    // ─── Kanban cards inside forms (e.g. Contacts & Addresses) ───────
+    .o_field_one2many, .o_field_many2many {
+        .o_kanban_renderer .o_kanban_record > div {
+            background-color: var(--nova-bg-alt) !important;
+            border: 1px solid var(--nova-border);
+            border-radius: var(--nova-radius-lg);
+        }
+    }
+
     // ─── Widget fields ─────────────────────────────────────────────────
     // Inline boolean fields: align checkbox + adjacent label vertically
     .o_field_boolean .o-checkbox.form-check {

@@ -88,7 +88,18 @@
 
 // ─── Small Tablet / Large Phone (max-width: 768px) ─────────────────────────
 @media (max-width: 768px) {
-    // App Launcher: smaller tiles
+    // Hide Odoo native burger menu (replaced by Nova Mobile Menu)
+    .o_mobile_menu_toggle { display: none !important; }
+    .o_burger_menu { display: none !important; }
+    .o_burger_menu_backdrop { display: none !important; }
+
+    // App Launcher: 3 columns on mobile
+    .nova-launcher-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--nova-space-5);
+        padding: 0 var(--nova-space-4);
+    }
+
     .nova-app-tile__icon {
         width: 56px;
         height: 56px;
@@ -100,7 +111,7 @@
 
     .nova-app-tile__label {
         font-size: var(--nova-font-xs);
-        max-width: 72px;
+        max-width: 80px;
     }
 
     // Hide sidebar completely on small screens

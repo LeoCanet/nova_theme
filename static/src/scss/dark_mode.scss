@@ -174,12 +174,19 @@ html.nova-dark {
         }
     }
 
-    .nova-apps-button {
-        color: var(--nova-text-secondary) !important;
+    .nova-apps-button__dot {
+        background: var(--nova-text-secondary) !important;
 
-        &:hover {
-            color: var(--nova-text) !important;
+        // Keep accent on bottom-right 3 dots
+        &:nth-child(6),
+        &:nth-child(8),
+        &:nth-child(9) {
+            background: var(--nova-accent) !important;
         }
+    }
+
+    .nova-apps-button:hover .nova-apps-button__dot {
+        background: var(--nova-accent) !important;
     }
 
     // Systray badges in dark mode
@@ -1379,9 +1386,12 @@ html.nova-dark {
     // KANBAN VIEW
     // ═══════════════════════════════════════════════════════════════════
 
+    .o_kanban_view {
+        background-color: var(--nova-bg) !important;
+    }
+
     .o_kanban_view,
     .o_kanban_renderer {
-        background-color: var(--nova-bg) !important;
 
         .o_kanban_group {
             border-color: var(--nova-border-light) !important;
@@ -1571,10 +1581,7 @@ html.nova-dark {
             }
         }
 
-        // Ungrouped kanban — inner div also needs override
-        &.o_kanban_ungrouped .o_kanban_record > div {
-            background-color: var(--nova-surface) !important;
-        }
+        // Ghost cards
 
         // Ghost cards
         .o_kanban_record.o_kanban_ghost > div {

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Nova Mobile Menu — replaces Odoo native burger menu -->
+    <t t-name="nova_theme.MobileMenu" owl="1">
+
+        <!-- Toggle button (visible only on mobile via d-md-none) -->
+        <div class="nova-mobile-toggle d-md-none" t-on-click="_openMenu">
+            <i class="fa fa-bars"/>
+        </div>
+
+        <!-- Overlay portal -->
+        <t t-if="state.isOpen">
+            <div class="nova-mobile-overlay">
+                <div class="nova-mobile-backdrop" t-on-click="_closeMenu"/>
+                <aside class="nova-mobile-menu"
+                       t-on-touchstart="_onTouchStart"
+                       t-on-touchmove="_onTouchMove"
+                       t-on-touchend="_onTouchEnd">
+
+                    <!-- Header: avatar + user name + close -->
+                    <header class="nova-mobile-menu__header">
+                        <img class="nova-mobile-menu__avatar"
+                             t-att-src="userAvatarUrl"
+                             alt="Avatar"/>
+                        <span class="nova-mobile-menu__user-name" t-esc="userName"/>
+                        <button class="nova-mobile-menu__close" t-on-click="_closeMenu">
+                            <i class="oi oi-close"/>
+                        </button>
+                    </header>
+
+                    <!-- Navigation: current app submenus -->
+                    <nav class="nova-mobile-menu__nav">
+                        <t t-if="currentApp">
+                            <div class="nova-mobile-menu__app-title" t-esc="currentApp.name"/>
+                        </t>
+
+                        <t t-foreach="currentAppSections" t-as="section" t-key="section.id">
+                            <!-- Section with children = group -->
+                            <t t-if="section.childrenTree and section.childrenTree.length">
+                                <div class="nova-mobile-menu__section-title" t-esc="section.name"/>
+                                <t t-foreach="section.childrenTree" t-as="child" t-key="child.id">
+                                    <t t-call="nova_theme.MobileMenuItem">
+                                        <t t-set="menuItem" t-value="child"/>
+                                    </t>
+                                </t>
+                            </t>
+                            <!-- Leaf item -->
+                            <t t-else="">
+                                <button class="nova-mobile-menu__item"
+                                        t-on-click="() => this._onMenuClicked(section)">
+                                    <t t-esc="section.name"/>
+                                </button>
+                            </t>
+                        </t>
+                    </nav>
+
+                    <!-- User menu section (togglable) -->
+                    <t t-if="state.isUserMenuOpen">
+                        <div class="nova-mobile-menu__user-section">
+                            <button class="nova-mobile-menu__user-item"
+                                    t-on-click="_onPreferences">
+                                <i class="fa fa-cog"/>
+                                <span>Preferences</span>
+                            </button>
+                            <a class="nova-mobile-menu__user-item"
+                               href="/web/session/logout">
+                                <i class="fa fa-sign-out"/>
+                                <span>Deconnexion</span>
+                            </a>
+                        </div>
+                    </t>
+
+                    <!-- Footer: user menu toggle -->
+                    <footer class="nova-mobile-menu__footer">
+                        <button class="nova-mobile-menu__user-toggle"
+                                t-on-click="_toggleUserMenu">
+                            <i class="fa fa-user-circle-o"/>
+                            <span>Mon compte</span>
+                            <i t-attf-class="fa fa-chevron-#{state.isUserMenuOpen ? 'down' : 'up'}"
+                               style="margin-left: auto; font-size: 12px;"/>
+                        </button>
+                    </footer>
+
+                </aside>
+            </div>
+        </t>
+
+    </t>
+
+    <!-- Recursive menu item sub-template -->
+    <t t-name="nova_theme.MobileMenuItem" owl="1">
+        <t t-if="menuItem.childrenTree and menuItem.childrenTree.length">
+            <div class="nova-mobile-menu__section-title" t-esc="menuItem.name"/>
+            <t t-foreach="menuItem.childrenTree" t-as="subChild" t-key="subChild.id">
+                <t t-call="nova_theme.MobileMenuItem">
+                    <t t-set="menuItem" t-value="subChild"/>
+                </t>
+            </t>
+        </t>
+        <t t-else="">
+            <button class="nova-mobile-menu__item"
+                    t-on-click="() => this._onMenuClicked(menuItem)">
+                <t t-esc="menuItem.name"/>
+            </button>
+        </t>
+    </t>
+
+</templates>

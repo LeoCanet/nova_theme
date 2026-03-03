@@ -25,6 +25,7 @@ export class NovaAppLauncher extends Component {
         this.searchInput = useRef("novaSearchInput");
         this.state = useState({
             isOpen: false,
+            isClosing: false,
             searchQuery: "",
             _menuVersion: 0,
             favoriteAppIds: this.storage.getFavoriteAppIds(),
@@ -54,20 +55,29 @@ export class NovaAppLauncher extends Component {
     }
 
     _onToggle() {
-        this.state.isOpen = !this.state.isOpen;
-        this.state.searchQuery = "";
         if (this.state.isOpen) {
-            setTimeout(() => {
-                if (this.searchInput && this.searchInput.el) {
-                    this.searchInput.el.focus();
-                }
-            }, 50);
+            this.close();
+            return;
         }
+        this.state.isOpen = true;
+        this.state.searchQuery = "";
+        document.documentElement.classList.add("nova-launcher-open");
+        setTimeout(() => {
+            if (this.searchInput && this.searchInput.el) {
+                this.searchInput.el.focus();
+            }
+        }, 50);
     }
 
     close() {
-        this.state.isOpen = false;
-        this.state.searchQuery = "";
+        if (!this.state.isOpen || this.state.isClosing) return;
+        this.state.isClosing = true;
+        document.documentElement.classList.remove("nova-launcher-open");
+        setTimeout(() => {
+            this.state.isOpen = false;
+            this.state.isClosing = false;
+            this.state.searchQuery = "";
+        }, 250);
     }
 
     onOverlayClick(ev) {

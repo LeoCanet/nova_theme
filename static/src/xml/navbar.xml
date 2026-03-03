@@ -5,7 +5,11 @@
     <t t-name="nova_theme.NavBar" t-inherit="web.NavBar" t-inherit-mode="extension">
         <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="replace">
             <button class="nova-apps-button" t-on-click.stop="onNovaAppsClick" title="Applications">
-                <i class="oi oi-apps"/>
+                <span class="nova-apps-button__grid">
+                    <span class="nova-apps-button__dot"/><span class="nova-apps-button__dot"/><span class="nova-apps-button__dot"/>
+                    <span class="nova-apps-button__dot"/><span class="nova-apps-button__dot"/><span class="nova-apps-button__dot"/>
+                    <span class="nova-apps-button__dot"/><span class="nova-apps-button__dot"/><span class="nova-apps-button__dot"/>
+                </span>
             </button>
         </xpath>
     </t>

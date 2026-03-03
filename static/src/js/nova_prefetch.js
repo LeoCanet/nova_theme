@@ -9,15 +9,16 @@ const MENU_SELECTOR =
     ".nova-app-tile[data-menu-id], " +
     ".nova-sidebar__item[data-menu-id]";
 
-/** Max number of menus to prefetch per session (avoids flooding on idle hover) */
-const MAX_PREFETCH = 10;
-
 /**
  * NovaPrefetch — Invisible component that pre-loads view definitions on menu
  * hover so that subsequent click-navigation is faster.
  *
  * Uses mouseover (bubbles reliably) instead of mouseenter (non-bubbling,
  * unreliable for event delegation via capture).
+ *
+ * Aborts all in-flight prefetch RPCs the instant a navigation starts
+ * (click on menu item) to avoid saturating the single-threaded Odoo worker
+ * with prefetch traffic during actual navigation.
  */
 class NovaPrefetch extends Component {
     setup() {
@@ -27,13 +28,15 @@ class NovaPrefetch extends Component {
 
         /** @type {Set<number>} menu IDs already prefetched this session */
         this._prefetched = new Set();
+        /** @type {Map<number, Object>} action descriptors cache (actionID → descriptor) */
+        this._actionCache = new Map();
         this._hoverTimer = null;
         /** Currently hovered menu element (dedup for mouseover) */
         this._hoverEl = null;
         /** True while a navigation is in progress — blocks new prefetches */
         this._navigating = false;
-        /** True while a prefetch RPC chain is in-flight (1 at a time max) */
-        this._inFlight = false;
+        /** Active AbortController for the current prefetch RPC chain */
+        this._abortController = null;
 
         this._onPointerOver = this._onPointerOver.bind(this);
         this._onClick = this._onClick.bind(this);
@@ -77,7 +80,7 @@ class NovaPrefetch extends Component {
         if (!el || this._navigating) return;
 
         const menuId = parseInt(el.dataset.section || el.dataset.menuId, 10);
-        if (!menuId || this._prefetched.has(menuId) || this._inFlight) return;
+        if (!menuId || this._prefetched.has(menuId) || this._abortController) return;
 
         this._hoverTimer = setTimeout(() => this._prefetch(menuId), 80);
     }
@@ -100,29 +103,41 @@ class NovaPrefetch extends Component {
 
     _onClearCaches() {
         this._prefetched.clear();
+        this._actionCache.clear();
     }
 
     // ── Prefetch logic ─────────────────────────────────────────────────
 
-    /** Cancel hover timer */
+    /** Cancel hover timer + abort any in-flight prefetch RPCs */
     _cancelPrefetch() {
         clearTimeout(this._hoverTimer);
         this._hoverEl = null;
+        if (this._abortController) {
+            this._abortController.abort();
+            this._abortController = null;
+        }
     }
 
     async _prefetch(menuId) {
-        if (this._navigating || this._inFlight) return;
-        if (this._prefetched.size >= MAX_PREFETCH) return;
+        if (this._navigating || this._abortController) return;
 
         const menu = this.menuService.getMenu(menuId);
         if (!menu?.actionID) return;
         this._prefetched.add(menuId);
-        this._inFlight = true;
+
+        // Create a new AbortController for this prefetch chain
+        const ac = new AbortController();
+        this._abortController = ac;
 
         try {
-            // Step 1: load action descriptor (~30ms RPC)
-            const action = await this.rpc("/web/action/load", { action_id: menu.actionID });
-            if (this._navigating) return;
+            // Step 1: load action descriptor (cached or ~30ms RPC)
+            let action = this._actionCache.get(menu.actionID);
+            if (!action) {
+                action = await this.rpc("/web/action/load", { action_id: menu.actionID });
+                if (action) this._actionCache.set(menu.actionID, action);
+            }
+            // Bail if aborted between RPCs (user clicked)
+            if (ac.signal.aborted) return;
             if (!action || action.type !== "ir.actions.act_window") return;
 
             // Step 2: fill the native view cache (the big win: 48-112ms saved)
@@ -139,9 +154,12 @@ class NovaPrefetch extends Component {
                 }
             );
         } catch {
-            // silently ignore prefetch failures
+            // silently ignore prefetch failures (including aborts)
         } finally {
-            this._inFlight = false;
+            // Clean up if this is still the active controller
+            if (this._abortController === ac) {
+                this._abortController = null;
+            }
         }
     }
 }

@@ -3,13 +3,8 @@
 
     <!-- Standalone Nova App Launcher (rendered via main_components registry) -->
     <t t-name="nova_theme.AppLauncher" owl="1">
-        <div t-if="state.isOpen" class="nova-app-launcher-overlay" t-on-click="onOverlayClick">
+        <div t-if="state.isOpen" t-attf-class="nova-app-launcher-overlay #{state.isClosing ? 'nova-app-launcher-overlay--closing' : ''}" t-on-click="onOverlayClick">
             <div class="nova-app-launcher" t-on-click.stop="">
-                <!-- Close button -->
-                <button class="nova-launcher-close" t-on-click="close" title="Fermer">
-                    <i class="fa fa-times"/>
-                </button>
-
                 <!-- Search bar -->
                 <div class="nova-launcher-search">
                     <i class="nova-launcher-search__icon fa fa-search"/>
