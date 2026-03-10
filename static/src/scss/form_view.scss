@@ -68,7 +68,8 @@
                 --bs-btn-disabled-border-color: transparent;
 
                 // Unified transition — button + pseudo-elements use identical timing
-                transition: background-color .15s ease-in-out, color .15s ease-in-out, border-color .15s ease-in-out !important;
+                // No !important — allows .nova-switching to disable transitions on mode switch
+                transition: background-color .15s ease-in-out, color .15s ease-in-out, border-color .15s ease-in-out;
 
                 font-size: var(--nova-font-sm) !important;
                 font-weight: 600;
@@ -99,11 +100,11 @@
                 // Sync transition with Bootstrap .btn (150ms) so chevrons animate together
                 &:not(:first-child)::after {
                     border-left-color: var(--nova-bg) !important;
-                    transition: border-left-color .15s ease-in-out !important;
+                    transition: border-left-color .15s ease-in-out;
                 }
                 &:not(:first-child)::before {
                     border-left-color: var(--nova-border) !important;
-                    transition: border-left-color .15s ease-in-out !important;
+                    transition: border-left-color .15s ease-in-out;
                 }
 
                 // ── Hover ──

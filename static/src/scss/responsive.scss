@@ -5,46 +5,38 @@
 // ─── Tablet (768px - 1024px) ───────────────────────────────────────────────
 @media (max-width: 1024px) {
     // Sidebar auto-collapse on tablet
+    // Strategy: ZERO layout changes. Only width animates + overflow:hidden clips.
+    // Labels/titles fade for polish. Icons never move.
     .nova-sidebar {
         width: var(--nova-sidebar-collapsed-width);
 
-        .nova-sidebar__label {
+        // Fade text out quickly — clipping handles the rest
+        .nova-sidebar__item .nova-sidebar__label {
             opacity: 0;
-            width: 0;
+            transition: opacity 100ms ease;
         }
 
-        .nova-sidebar__section-title {
+        .nova-sidebar__section-title,
+        .nova-sidebar__section-header {
             opacity: 0;
-            height: 0;
-            margin: 0;
-            padding: 0;
+            transition: opacity 100ms ease;
         }
 
-        .nova-sidebar__item {
-            justify-content: center;
-            padding: var(--nova-space-2);
-        }
-
-        // Expand on hover (tablet)
+        // Expand on hover
         &:hover {
             width: var(--nova-sidebar-width);
             box-shadow: var(--nova-shadow-lg);
             z-index: 1035;
 
-            .nova-sidebar__label {
+            .nova-sidebar__item .nova-sidebar__label {
                 opacity: 1;
-                width: auto;
+                transition: opacity 180ms ease 140ms;
             }
 
-            .nova-sidebar__section-title {
+            .nova-sidebar__section-title,
+            .nova-sidebar__section-header {
                 opacity: 1;
-                height: auto;
-                padding: var(--nova-space-3) var(--nova-space-3) var(--nova-space-1);
-            }
-
-            .nova-sidebar__item {
-                justify-content: flex-start;
-                padding: var(--nova-space-2) var(--nova-space-3);
+                transition: opacity 180ms ease 140ms;
             }
         }
     }
@@ -132,7 +124,7 @@
 
     // Navbar compact
     .o_main_navbar {
-        padding: 0 var(--nova-space-2) !important;
+        padding: 0 var(--nova-space-2) 0 0 !important;
 
         .o_menu_brand {
             font-size: var(--nova-font-base);

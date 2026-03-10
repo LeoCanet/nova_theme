@@ -145,6 +145,103 @@ i.o_optional_columns_dropdown_toggle {
     }
 }
 
+// ─── Inline editable row — seamless fields (top-level list view) ─────────
+.o_list_view .o_list_table tbody .o_data_row.o_selected_row {
+
+    // Lift the selected row so autocomplete dropdowns display above other rows
+    position: relative;
+    z-index: 3;
+
+    td {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+        vertical-align: middle;
+    }
+
+    .o_field_widget {
+
+        // All inputs, selects, textareas — flat inline style
+        input.o_input,
+        textarea.o_input,
+        select.o_input {
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            padding: var(--nova-space-1) var(--nova-space-2) !important;
+            min-height: 32px;
+            outline: none !important;
+
+            &:focus {
+                border-bottom: 2px solid var(--nova-accent) !important;
+                box-shadow: none !important;
+            }
+        }
+
+        // Wrapper containers (many2one, date, etc.)
+        div.o_input,
+        .o_input_dropdown,
+        .o_field_many2one_selection {
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+
+            &:focus-within {
+                border-bottom: 2px solid var(--nova-accent) !important;
+                box-shadow: none !important;
+            }
+
+            input, select, textarea,
+            div.o_input, .o_input,
+            .o_input_dropdown,
+            .o_field_many2one_selection {
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+        }
+
+        // Many2many tags — flat inline
+        &.o_field_many2many_tags {
+            > .o_input,
+            > div.o_input {
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                padding: 2px 0 !important;
+                min-height: 32px;
+
+                &:focus-within {
+                    border-bottom: 2px solid var(--nova-accent) !important;
+                    box-shadow: none !important;
+                }
+            }
+
+            .badge {
+                border-radius: var(--nova-radius-sm) !important;
+                font-size: var(--nova-font-sm) !important;
+                padding: 2px 6px !important;
+            }
+        }
+
+        // Dropdown caret
+        .o_dropdown_button {
+            border: none !important;
+            background: transparent !important;
+        }
+
+        // External link button
+        .o_external_button {
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+    }
+}
+
 .o_list_view .custom-checkbox,
 .o_list_view .form-check {
     .form-check-input {

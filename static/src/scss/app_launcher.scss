@@ -56,7 +56,10 @@
     justify-content: center;
     background: none;
     border: none;
-    padding: 0 var(--nova-space-3, 12px);
+    // Match sidebar collapsed width so the grid aligns with sidebar icons
+    width: var(--nova-sidebar-collapsed-width);
+    padding: 0 0 0 4px;
+    flex-shrink: 0;
     cursor: pointer;
     height: 100%;
     position: relative;
