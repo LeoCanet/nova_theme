@@ -397,9 +397,16 @@
             <div id="nova-skeleton" t-att-data-has-sidebar="'true' if nova_has_sidebar else 'false'">
                 <script>
                     (function() {
-                        var h = window.location.hash || '';
                         var el = document.getElementById('nova-skeleton');
                         if (!el) return;
+                        // Skeleton is only for the backend webclient (/web#...)
+                        // On portal/frontend pages, remove it immediately
+                        var path = window.location.pathname;
+                        if (path !== '/web' &amp;&amp; path !== '/web/' &amp;&amp; path.indexOf('/web?') !== 0) {
+                            el.remove();
+                            return;
+                        }
+                        var h = window.location.hash || '';
                         var vt = (h.match(/view_type=(\w+)/i) || [])[1];
                         var model = (h.match(/model=([^&amp;]+)/i) || [])[1] || '';
                         // Settings pages are form views but look nothing like forms

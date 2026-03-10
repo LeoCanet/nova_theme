@@ -89,9 +89,12 @@
                 background: transparent;
             }
 
-            &.active,
             &:focus,
             &.show {
+                color: var(--nova-accent);
+            }
+
+            &.active {
                 color: var(--nova-accent);
                 font-weight: 600;
 
