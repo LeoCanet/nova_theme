@@ -162,6 +162,44 @@
         .o_searchview {
             max-width: 100%;
         }
+
+        // Compact buttons on mobile
+        .o_cp_buttons .btn {
+            padding: var(--nova-space-1) var(--nova-space-3);
+            font-size: var(--nova-font-xs);
+        }
+
+        .o_cp_action_menus .btn {
+            padding: var(--nova-space-1) var(--nova-space-2);
+            font-size: var(--nova-font-xs);
+        }
+
+        // Compact pager
+        .o_pager {
+            .o_pager_previous,
+            .o_pager_next {
+                width: 26px;
+                height: 26px;
+            }
+
+            .o_pager_value {
+                font-size: var(--nova-font-xs);
+            }
+        }
+
+        // Compact view switchers
+        .o_cp_switch_buttons .btn {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    // Status bar responsive
+    .o_form_statusbar .o_statusbar_buttons {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
     }
 
     // Modals full-screen on mobile

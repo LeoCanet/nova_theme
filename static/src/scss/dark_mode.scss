@@ -2509,9 +2509,61 @@ html.nova-dark {
     // Nova custom select — trigger inherits dark surface via CSS vars
     // Dropdown already uses --nova-surface / --nova-border which switch in dark mode
 
-    // Status bar buttons text
+    // ─── Control Panel Action Menus ──────────────────────────────────
+    .o_cp_action_menus .btn {
+        border-color: var(--nova-border) !important;
+        color: var(--nova-text-secondary) !important;
+
+        &:hover, &:focus {
+            background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
+
+    // ─── Save/Discard Status Indicator ────────────────────────────────
+    .o_form_status_indicator .btn {
+        background: transparent !important;
+        color: var(--nova-text-secondary) !important;
+
+        &:hover {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
+
+    // ─── Pager ────────────────────────────────────────────────────────
+    .o_pager button {
+        color: var(--nova-text-secondary) !important;
+
+        &:hover:not(:disabled) {
+            background: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
+
+    // Status bar buttons
     .o_form_statusbar .btn:not(.o_arrow_button) {
         color: var(--nova-text) !important;
+        border-color: var(--nova-border) !important;
+
+        &:hover, &:focus {
+            background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
+            color: var(--nova-accent) !important;
+        }
+
+        &.btn-primary {
+            background: var(--nova-accent) !important;
+            border-color: var(--nova-accent) !important;
+            color: white !important;
+
+            &:hover, &:focus {
+                background: var(--nova-accent-hover) !important;
+                border-color: var(--nova-accent-hover) !important;
+                color: white !important;
+            }
+        }
     }
 
     // Record title — dark text on dark bg fix

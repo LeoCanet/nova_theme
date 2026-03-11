@@ -312,9 +312,20 @@ a {
         gap: var(--nova-space-3);
     }
 
+    // Align breadcrumb row vertically with action buttons
+    .o_cp_top {
+        align-items: center;
+    }
+
+    // Spacing between action menus, pager, and primary buttons
+    .o_cp_bottom_right {
+        gap: var(--nova-space-4) !important;
+    }
+
     .breadcrumb {
         margin-bottom: 0;
         font-size: var(--nova-font-lg);
+        align-items: center;
 
         .breadcrumb-item {
             font-weight: 500;
@@ -326,8 +337,13 @@ a {
 
             a {
                 color: var(--nova-text-secondary);
+                padding: var(--nova-space-1) var(--nova-space-2);
+                border-radius: var(--nova-radius-sm);
+                transition: all var(--nova-transition-fast);
+
                 &:hover {
                     color: var(--nova-accent);
+                    background: var(--nova-accent-light);
                 }
             }
 
@@ -426,6 +442,26 @@ a {
                 color: var(--nova-danger);
             }
         }
+    }
+}
+
+// ─── Filter / Group By / Favorites Buttons ───────────────────────────────
+.o_cp_bottom_left .btn,
+.o_search_options .btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--nova-text-secondary);
+    border-radius: var(--nova-radius);
+    transition: all var(--nova-transition-fast);
+
+    &:hover, &:focus {
+        background: var(--nova-accent-light) !important;
+        color: var(--nova-accent);
+    }
+
+    &:active, &.show {
+        background: var(--nova-accent-medium) !important;
+        color: var(--nova-accent);
     }
 }
 
