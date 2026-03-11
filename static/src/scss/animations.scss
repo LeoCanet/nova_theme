@@ -183,19 +183,8 @@
     transition-timing-function: ease;
 }
 
-// ─── Focus ring animation ──────────────────────────────────────────────────
-@keyframes novaFocusRing {
-    from {
-        box-shadow: 0 0 0 0px var(--nova-accent-light);
-    }
-    to {
-        box-shadow: 0 0 0 3px var(--nova-accent-light);
-    }
-}
-
-input:focus, textarea:focus, select:focus {
-    animation: novaFocusRing 0.15s ease forwards;
-}
+// ─── Focus ring ─────────────────────────────────────────────────────────────
+// Focus indication is handled by border-color change only (no glow/box-shadow).
 
 // ─── Page transition (between actions) ─────────────────────────────────────
 .o_action_manager {

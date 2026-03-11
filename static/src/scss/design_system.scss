@@ -369,7 +369,7 @@ a {
 
     &:focus-within {
         border-color: var(--nova-accent);
-        box-shadow: 0 0 0 3px var(--nova-accent-light);
+        box-shadow: none;
     }
 
     .o_searchview_input {
@@ -491,7 +491,7 @@ a {
 
         &:focus {
             border-color: var(--nova-accent) !important;
-            box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            box-shadow: none !important;
             outline: none;
         }
     }
@@ -506,7 +506,7 @@ a {
 
         &:focus {
             border-color: var(--nova-accent) !important;
-            box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            box-shadow: none !important;
             outline: none;
         }
     }
@@ -530,13 +530,20 @@ a {
 
             &:focus {
                 border-color: var(--nova-accent);
-                box-shadow: 0 0 0 3px var(--nova-accent-light);
+                box-shadow: none;
             }
         }
 
         label, .form-check-label {
             color: var(--nova-text);
         }
+    }
+
+    // Kill Bootstrap focus glow globally — borders handle focus indication
+    .form-check-input:focus,
+    .form-control:focus,
+    .form-select:focus {
+        box-shadow: none !important;
     }
 
     // Action buttons (Enregistrer, Add…)
@@ -653,7 +660,7 @@ a {
 
         &:focus {
             border-color: var(--nova-accent);
-            box-shadow: 0 0 0 3px var(--nova-accent-light);
+            box-shadow: none;
             outline: none;
         }
     }

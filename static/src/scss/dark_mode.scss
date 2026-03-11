@@ -614,7 +614,7 @@ html.nova-dark {
         }
 
         &:focus {
-            box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            box-shadow: none !important;
         }
     }
 
@@ -638,7 +638,7 @@ html.nova-dark {
     .form-control, .form-select,
     .o_input, input.o_input, textarea.o_input,
     select.o_input,
-    .o_field_widget input,
+    .o_field_widget input:not([type="radio"]):not([type="checkbox"]),
     .o_field_widget textarea,
     .o_field_widget select {
         background-color: var(--nova-bg-alt) !important;
@@ -648,7 +648,7 @@ html.nova-dark {
         &:focus {
             background-color: var(--nova-surface) !important;
             border-color: var(--nova-accent) !important;
-            box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+            box-shadow: none !important;
         }
 
         &:read-only, &[readonly], &:disabled {
@@ -669,6 +669,21 @@ html.nova-dark {
             background-color: var(--nova-accent) !important;
             border-color: var(--nova-accent) !important;
         }
+
+        &:focus {
+            box-shadow: none !important;
+        }
+    }
+
+    // Kill all focus glow on form controls — borders are enough
+    .form-control:focus,
+    .form-select:focus,
+    .o_searchview:focus-within,
+    .o_input:focus,
+    .o_field_widget input:focus,
+    .o_field_widget textarea:focus,
+    .o_field_widget select:focus {
+        box-shadow: none !important;
     }
 
     // ─── Dropdowns (global dark override) ────────────────────────────
@@ -749,7 +764,7 @@ html.nova-dark {
 
             &:focus {
                 border-color: var(--nova-accent) !important;
-                box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+                box-shadow: none !important;
             }
         }
 
@@ -973,6 +988,10 @@ html.nova-dark {
     .o_searchview {
         background: var(--nova-bg-alt) !important;
         border-color: var(--nova-border) !important;
+
+        &:focus-within {
+            border-color: var(--nova-accent) !important;
+        }
 
         .o_searchview_input {
             background-color: transparent !important;

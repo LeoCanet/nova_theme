@@ -577,7 +577,7 @@
 
         &:focus {
             border-color: var(--nova-accent);
-            box-shadow: 0 0 0 3px var(--nova-accent-light);
+            box-shadow: none;
             outline: none;
         }
     }

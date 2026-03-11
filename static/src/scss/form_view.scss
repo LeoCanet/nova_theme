@@ -316,7 +316,7 @@
     // ─── Title / Header ────────────────────────────────────────────────
     .oe_title {
         .o_field_widget {
-            input, textarea {
+            input:not([type="radio"]):not([type="checkbox"]), textarea {
                 font-size: var(--nova-font-3xl);
                 font-weight: 700;
                 color: var(--nova-text);
@@ -378,7 +378,7 @@
 
             &:focus {
                 border-color: var(--nova-accent);
-                box-shadow: 0 0 0 3px var(--nova-accent-light);
+                box-shadow: none;
                 outline: none;
             }
 
@@ -413,7 +413,7 @@
 
             &:focus-within {
                 border-color: var(--nova-accent);
-                box-shadow: 0 0 0 3px var(--nova-accent-light);
+                box-shadow: none;
             }
 
             // Strip all borders from anything nested — including other wrappers
@@ -511,7 +511,7 @@
 
             &:focus-within {
                 border-color: var(--nova-accent) !important;
-                box-shadow: 0 0 0 3px var(--nova-accent-light) !important;
+                box-shadow: none !important;
             }
 
             // Strip ALL nested borders — no double borders
@@ -843,6 +843,46 @@
     }
 
     // ─── Widget fields ─────────────────────────────────────────────────
+    // Radio buttons (company_type Individu/Société, etc.)
+    .o_field_radio {
+        .o_radio_item {
+            display: inline-flex;
+            align-items: center;
+            padding-left: 0;
+            margin-right: 12px;
+
+            .o_radio_input {
+                width: 16px;
+                height: 16px;
+                min-width: 16px;
+                min-height: 16px;
+                margin: 0 6px 0 0;
+                float: none;
+                border: 1.5px solid var(--nova-text-tertiary);
+                cursor: pointer;
+                transition: border-color var(--nova-transition-fast), background-color var(--nova-transition-fast);
+
+                &:checked {
+                    background-color: var(--nova-accent);
+                    border-color: var(--nova-accent);
+                }
+
+                &:focus {
+                    border-color: var(--nova-accent);
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+
+            .form-check-label {
+                cursor: pointer;
+                margin: 0;
+                color: var(--nova-text);
+                font-size: var(--nova-font-base);
+            }
+        }
+    }
+
     // Inline boolean fields: align checkbox + adjacent label vertically
     .o_field_boolean .o-checkbox.form-check {
         display: inline-flex;
