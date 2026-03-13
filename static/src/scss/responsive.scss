@@ -79,6 +79,21 @@
 }
 
 // ─── Small Tablet / Large Phone (max-width: 768px) ─────────────────────────
+// ─── Hide scrollbar on all views to prevent header/content misalignment ──────
+// The control panel is sticky while .o_view_controller / .o_content scroll.
+// The scrollbar shifts content but not the header, causing misalignment.
+// Must use !important to override the global * { scrollbar-width: thin } in design_system.
+.o_view_controller,
+.o_content {
+    scrollbar-width: none !important;
+    scrollbar-color: transparent transparent !important;
+    &, &:hover {
+        scrollbar-width: none !important;
+        scrollbar-color: transparent transparent !important;
+    }
+    &::-webkit-scrollbar { width: 0 !important; display: none !important; }
+}
+
 @media (max-width: 768px) {
     // Hide Odoo native burger menu (replaced by Nova Mobile Menu)
     .o_mobile_menu_toggle { display: none !important; }
@@ -108,18 +123,21 @@
 
     // Hide sidebar completely on small screens
     .nova-sidebar {
-        transform: translateX(-100%);
-
-        &.nova-sidebar--mobile-open {
-            transform: translateX(0);
-            width: var(--nova-sidebar-width);
-            box-shadow: var(--nova-shadow-xl);
-            z-index: 1050;
-        }
+        display: none !important;
     }
 
-    body.nova-sidebar-open .o_action_manager {
-        margin-left: 0;
+    // Only show sidebar when explicitly opened via mobile menu
+    .nova-sidebar.nova-sidebar--mobile-open {
+        display: flex !important;
+        transform: translateX(0);
+        pointer-events: auto;
+        width: var(--nova-sidebar-width);
+        box-shadow: var(--nova-shadow-xl);
+        z-index: 1050;
+    }
+
+    .o_action_manager {
+        margin-left: 0 !important;
     }
 
     // Navbar compact
@@ -159,8 +177,78 @@
     .o_control_panel {
         padding: var(--nova-space-2) var(--nova-space-3) !important;
 
+        // Top row: breadcrumb + search — stack vertically on mobile
+        .o_cp_top {
+            flex-wrap: wrap;
+            gap: var(--nova-space-2);
+            align-items: center;
+        }
+
+        // Search container: full width on its own line below breadcrumb
+        .o_cp_top_right {
+            flex: 1 1 100%;
+            min-width: 0;
+        }
+
+        .o_cp_searchview {
+            width: 100%;
+        }
+
+        // Search bar: full width on mobile
         .o_searchview {
-            max-width: 100%;
+            max-width: 100% !important;
+            width: 100%;
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius) !important;
+            padding: var(--nova-space-1) var(--nova-space-2);
+            background: var(--nova-surface);
+            border-bottom: 1px solid var(--nova-border) !important;
+        }
+
+        // ─── Search toggle (loupe / back arrow) ─────────────────────
+        .o_enable_searchview {
+            width: 36px;
+            height: 36px;
+            font-size: 16px !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--nova-radius);
+            color: var(--nova-text-secondary);
+            padding: 0 !important;
+
+            &:hover {
+                background: var(--nova-accent-light);
+                color: var(--nova-accent);
+            }
+        }
+
+        // ─── Filter toggle (fa-filter) — cohérent avec le thème ─────
+        .o_toggle_searchview_full {
+            width: 36px;
+            height: 36px;
+            font-size: 14px !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--nova-radius);
+            color: var(--nova-text-secondary);
+            background: transparent !important;
+            border: 1px solid var(--nova-border) !important;
+            padding: 0 !important;
+            flex-shrink: 0;
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent);
+                border-color: var(--nova-accent) !important;
+            }
+        }
+
+        // Bottom row: wrap elements nicely
+        .o_cp_bottom {
+            flex-wrap: wrap;
+            gap: var(--nova-space-2);
         }
 
         // Compact buttons on mobile
@@ -194,6 +282,75 @@
         }
     }
 
+    // Search facets (filter pills) — bigger and more readable on mobile
+    .o_searchview_facet {
+        background: var(--nova-accent-light) !important;
+        border: 1px solid var(--nova-accent) !important;
+        border-radius: var(--nova-radius-full) !important;
+        overflow: hidden;
+
+        .o_searchview_facet_label {
+            background: var(--nova-accent) !important;
+            color: white !important;
+            padding: 5px 10px !important;
+            font-size: var(--nova-font-sm) !important;
+            font-weight: 600;
+            border-radius: 0 !important;
+        }
+
+        .o_facet_values {
+            padding: 5px 8px !important;
+            font-size: var(--nova-font-sm) !important;
+            color: var(--nova-text) !important;
+        }
+
+        .o_facet_remove {
+            width: 26px !important;
+            font-size: 14px !important;
+            opacity: 1 !important;
+            color: var(--nova-text-secondary) !important;
+            position: relative !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                color: var(--nova-danger) !important;
+            }
+        }
+    }
+
+    // Chatter topbar: wrap buttons on mobile
+    .nova-chatter-topbar {
+        .nova-chatter-topbar__primary {
+            flex-wrap: wrap;
+            gap: var(--nova-space-1);
+        }
+
+        .nova-tb-btn {
+            white-space: nowrap;
+            font-size: var(--nova-font-xs);
+            padding: 4px 8px;
+        }
+
+        // Hide separator on wrap
+        .nova-tb-sep {
+            display: none;
+        }
+    }
+
+    // List view: horizontal scroll on mobile
+    .o_list_view {
+        .o_list_renderer {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .o_list_table {
+            min-width: 600px;
+        }
+    }
+
     // Status bar responsive
     .o_form_statusbar .o_statusbar_buttons {
         overflow-x: auto;
@@ -210,5 +367,213 @@
         .modal-content {
             border-radius: var(--nova-radius-lg);
         }
+    }
+}
+
+// ─── Mobile Search / Filter Dialog ───────────────────────────────────────────
+// Full-screen panel opened by the filter toggle on mobile.
+// Overrides Odoo's native .o_mobile_search styles for Nova cohesion.
+.o_web_client .o_mobile_search {
+    background: var(--nova-bg) !important;
+
+    // ─── Header bar ──────────────────────────────────────────────────────
+    .o_mobile_search_header {
+        background: var(--nova-surface) !important;
+        border-bottom: 1px solid var(--nova-border);
+        padding: 0 var(--nova-space-3);
+        min-height: 52px;
+        align-items: center;
+
+        .o_mobile_search_button {
+            color: var(--nova-text) !important;
+            font-size: var(--nova-font-sm);
+            font-weight: 600;
+            border-radius: var(--nova-radius);
+            padding: var(--nova-space-1) var(--nova-space-3);
+            transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+
+            &:hover {
+                background: var(--nova-accent-light);
+                color: var(--nova-accent) !important;
+            }
+
+            &:active {
+                background: var(--nova-accent-light) !important;
+            }
+
+            // Back arrow icon
+            .fa-arrow-left {
+                font-size: 14px;
+            }
+
+            // "FILTER" label
+            strong {
+                font-weight: 600;
+                letter-spacing: 0.02em;
+            }
+        }
+    }
+
+    // ─── Search input area ───────────────────────────────────────────────
+    .o_mobile_search_content {
+        .o_searchview_input_container {
+            padding: var(--nova-space-4) var(--nova-space-4) 0 !important;
+
+            .o_searchview_input {
+                border: none !important;
+                border-bottom: 1px solid var(--nova-border) !important;
+                padding: var(--nova-space-2) 0;
+                font-size: var(--nova-font-base);
+                color: var(--nova-text);
+                background: transparent !important;
+                outline: none;
+
+                &:focus {
+                    border-bottom-color: var(--nova-accent) !important;
+                }
+
+                &::placeholder {
+                    color: var(--nova-text-tertiary);
+                }
+            }
+
+            // Search facets (active filters shown as pills)
+            .o_searchview_facet {
+                background: var(--nova-accent-light);
+                border: 1px solid var(--nova-accent);
+                border-radius: var(--nova-radius-full) !important;
+                overflow: hidden;
+                margin: var(--nova-space-1) var(--nova-space-1) var(--nova-space-2) 0;
+
+                .o_searchview_facet_label {
+                    background: var(--nova-accent);
+                    color: white;
+                    padding: 6px 10px;
+                    font-size: var(--nova-font-sm);
+                    font-weight: 600;
+                }
+
+                .o_facet_values {
+                    padding: 6px 10px;
+                    font-size: var(--nova-font-sm);
+                    color: var(--nova-text);
+                }
+
+                .o_facet_remove {
+                    width: 28px !important;
+                    font-size: 14px !important;
+                    opacity: 1 !important;
+                    color: var(--nova-text-secondary);
+                    &:hover { color: var(--nova-danger); }
+                }
+            }
+        }
+
+        // ─── Filter / Group By / Favorites buttons ──────────────────────
+        .o_mobile_search_filter {
+            padding: var(--nova-space-3) var(--nova-space-4) 20% !important;
+
+            .dropdown {
+                margin-top: var(--nova-space-3) !important;
+                border-radius: var(--nova-radius-md) !important;
+                border: 1px solid var(--nova-border) !important;
+                box-shadow: none !important;
+                overflow: hidden;
+                background: var(--nova-surface);
+
+                &.show {
+                    border-color: var(--nova-accent) !important;
+                    box-shadow: 0 0 0 2px var(--nova-accent-light) !important;
+                }
+            }
+
+            .dropdown-toggle {
+                background: var(--nova-surface) !important;
+                color: var(--nova-text) !important;
+                border: none !important;
+                font-weight: 600;
+                font-size: var(--nova-font-base);
+                padding: var(--nova-space-3) var(--nova-space-4) !important;
+                text-align: left;
+
+                &::after {
+                    color: var(--nova-text-tertiary);
+                    float: right;
+                    margin-top: 0.3em;
+                }
+
+                &:hover, &:focus {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            .dropdown-menu {
+                background: var(--nova-surface) !important;
+                border: none !important;
+                border-top: 1px solid var(--nova-border) !important;
+                border-radius: 0 !important;
+                padding: var(--nova-space-2) 0 !important;
+                box-shadow: none !important;
+            }
+
+            .dropdown-item, .o_menu_item {
+                color: var(--nova-text) !important;
+                font-size: var(--nova-font-sm);
+                padding: var(--nova-space-2) var(--nova-space-4) !important;
+                transition: background var(--nova-transition-fast);
+
+                &:hover, &:focus {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+
+                &.selected, &.active {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                    font-weight: 600;
+
+                    &::before {
+                        color: var(--nova-accent);
+                    }
+                }
+            }
+        }
+    }
+
+    // ─── "SEE RESULT" footer button ──────────────────────────────────────
+    .o_mobile_search_footer {
+        background: var(--nova-accent) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 0 !important;
+        font-weight: 600;
+        font-size: var(--nova-font-base);
+        letter-spacing: 0.03em;
+        padding: var(--nova-space-3) var(--nova-space-4) !important;
+        min-height: 52px;
+        transition: background var(--nova-transition-fast);
+
+        &:hover {
+            background: var(--nova-accent-hover) !important;
+        }
+
+        &:active {
+            background: var(--nova-accent-hover) !important;
+            transform: scale(0.99);
+        }
+    }
+}
+
+// Hide the Dialog wrapper chrome (header/footer) when showing mobile search
+// The mobile search panel has its own header/footer
+.o_dialog .modal.o_modal_full {
+    .modal-header:has(+ .modal-body > .o_mobile_search),
+    .modal-footer:has(~ .modal-body > .o_mobile_search) {
+        display: none !important;
+    }
+
+    .modal-body:has(> .o_mobile_search) {
+        padding: 0 !important;
     }
 }

@@ -15,6 +15,11 @@
 .o_list_renderer {
     background-color: var(--nova-bg) !important;
     padding: 0 !important;
+}
+
+// Overflow rules only for top-level list views — NOT x2many inside forms.
+// x2many renderers use native .table-responsive (overflow-x: auto) to scroll.
+.o_list_view > .o_list_renderer {
     overflow-x: hidden !important;
     overflow-y: auto !important;
 }

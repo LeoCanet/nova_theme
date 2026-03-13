@@ -185,7 +185,7 @@
 
     // ─── Smart Buttons (unified container + vertical separators) ───────────
     // Flush with sheet edges — negative margins match sheet padding per breakpoint
-    // Desktop sheet padding: var(--nova-space-8)=32px / var(--nova-space-6)=24px
+    // Must sync with sheet padding: 16px (<992px) / 32px (>=992px)
     .nova-button-box,
     .o-form-buttonbox {
         --_sheet-h-pad: var(--nova-space-8);  // synced with sheet horizontal padding
@@ -349,22 +349,26 @@
 
     // ─── Title / Header ────────────────────────────────────────────────
     .oe_title {
-        .o_field_widget {
-            input:not([type="radio"]):not([type="checkbox"]), textarea {
-                font-size: var(--nova-font-3xl);
-                font-weight: 700;
-                color: var(--nova-text);
-                border: none;
-                padding: var(--nova-space-1) 0;
-                background: transparent;
+        color: var(--nova-text);
 
-                &:focus {
-                    box-shadow: none;
-                    border-bottom: 2px solid var(--nova-accent);
-                }
+        h1, h2, h3 {
+            .o_field_widget {
+                input:not([type="radio"]):not([type="checkbox"]), textarea, span {
+                    font-size: 2.25rem !important;
+                    font-weight: 700;
+                    color: var(--nova-text) !important;
+                    border: none;
+                    padding: var(--nova-space-1) 0;
+                    background: transparent;
 
-                &::placeholder {
-                    color: var(--nova-text-tertiary);
+                    &:focus {
+                        box-shadow: none;
+                        border-bottom: 2px solid var(--nova-accent);
+                    }
+
+                    &::placeholder {
+                        color: var(--nova-text-tertiary);
+                    }
                 }
             }
         }
@@ -396,6 +400,35 @@
         }
     }
 
+    // ─── Required field asterisk ─────────────────────────────────────
+    // CSS-only approach using :has() — no JS needed.
+    // Pattern 1: .o_wrap_label cell followed by cell containing required field
+    .o_wrap_label:has(+ .o_cell .o_required_modifier) > .o_form_label,
+    // Pattern 2: .o_td_label followed by td containing required field
+    .o_td_label:has(+ td .o_required_modifier) > label {
+        &::after {
+            content: " *";
+            color: var(--nova-danger);
+            font-weight: 700;
+        }
+    }
+
+    // Pattern 3: label span that contains/precedes a required field (e.g. address type selector)
+    // These labels may wrap block-level widgets — use absolute positioning.
+    span.o_form_label:has(> .o_required_modifier),
+    span.o_form_label:has(+ .o_required_modifier) {
+        position: relative;
+
+        &::after {
+            content: " *";
+            color: var(--nova-danger);
+            font-weight: 700;
+            position: absolute;
+            top: 0;
+            margin-left: 2px;
+        }
+    }
+
     // ─── Input Fields ──────────────────────────────────────────────────
     // Only style actual form elements — not wrapper divs that also carry .o_input
     .o_field_widget {
@@ -407,7 +440,7 @@
             padding: var(--nova-space-2) var(--nova-space-3);
             font-size: var(--nova-font-base);
             color: var(--nova-text);
-            background: var(--nova-surface);
+            background: var(--nova-bg);
             transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
 
             &:focus {
@@ -442,7 +475,7 @@
             border: 1px solid var(--nova-border);
             border-radius: var(--nova-radius);
             overflow: hidden;
-            background: var(--nova-surface);
+            background: var(--nova-bg);
             transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
 
             &:focus-within {
@@ -539,7 +572,7 @@
             flex-wrap: wrap !important;
             align-items: center;
             gap: 4px;
-            background: var(--nova-surface);
+            background: var(--nova-bg);
             overflow: visible !important;
             transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
 
@@ -624,15 +657,14 @@
         margin-top: var(--nova-space-6);
 
         .o_notebook_headers {
-            background: var(--nova-bg-alt);
-            border-radius: var(--nova-radius);
-            padding: 3px;
-            margin-bottom: var(--nova-space-1);
+            background: transparent;
+            padding: 0;
+            margin-bottom: 0;
         }
 
         .nav-tabs {
-            border-bottom: none !important;
-            gap: 2px;
+            border-bottom: 1px solid var(--nova-border) !important;
+            gap: 0;
             padding: 0;
             overflow-x: auto;
             overflow-y: hidden;
@@ -646,38 +678,52 @@
             }
 
             .nav-item {
-                margin-bottom: 0;
+                margin-bottom: -1px; // overlap the border-bottom
                 flex-shrink: 0;
             }
 
             .nav-link {
                 position: relative;
                 border: none !important;
-                border-radius: var(--nova-radius-sm);
+                border-radius: 0;
                 padding: var(--nova-space-2) var(--nova-space-4);
                 font-size: var(--nova-font-base);
                 font-weight: 500;
                 color: var(--nova-text-secondary);
-                background: transparent;
-                transition: color var(--nova-transition-fast),
-                            background var(--nova-transition-fast),
-                            box-shadow var(--nova-transition-fast);
+                background: transparent !important;
+                box-shadow: none !important;
+                transition: color var(--nova-transition-fast);
                 white-space: nowrap;
 
-                // Remove underline from previous style
+                // Accent underline indicator
                 &::after {
-                    display: none !important;
+                    content: "" !important;
+                    display: block !important;
+                    position: absolute;
+                    bottom: 0;
+                    left: var(--nova-space-4);
+                    right: var(--nova-space-4);
+                    height: 2px;
+                    background: transparent;
+                    border-radius: 1px;
+                    transition: background var(--nova-transition-fast);
                 }
 
                 &:hover:not(.active) {
                     color: var(--nova-text);
-                    background: var(--nova-accent-light);
+
+                    &::after {
+                        background: var(--nova-border);
+                    }
                 }
 
                 &.active {
-                    color: var(--nova-text) !important;
-                    background: var(--nova-surface) !important;
-                    box-shadow: var(--nova-shadow-xs);
+                    color: var(--nova-accent) !important;
+                    background: transparent !important;
+
+                    &::after {
+                        background: var(--nova-accent) !important;
+                    }
                 }
             }
         }
@@ -699,12 +745,8 @@
 
     // ─── One2many / Many2many List inside forms ────────────────────────
     .o_field_one2many, .o_field_many2many {
-        .o_list_view,
-        .o_list_renderer {
-            .o_list_table {
-                border-radius: var(--nova-radius);
-            }
-        }
+        // border-radius omitted — native Odoo uses border-collapse: collapse
+        // on x2many tables, which ignores border-radius per CSS spec.
 
         // Force font-size on ALL list cells (readonly + edit)
         // Must target both .o_list_view and .o_list_renderer
@@ -718,6 +760,11 @@
             // Row hover
             tbody tr.o_data_row:not(.o_selected_row):hover td {
                 background: var(--nova-accent-light) !important;
+            }
+
+            // Stock forecast icon — red when row indicates stock issue
+            tbody tr.o_data_row.text-danger .o_widget_qty_at_date_widget .fa-area-chart {
+                color: var(--nova-danger) !important;
             }
             tbody td,
             tbody .o_data_row td,

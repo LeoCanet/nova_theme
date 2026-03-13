@@ -361,6 +361,10 @@ a {
         background: var(--nova-surface) !important;
         border: 1px solid var(--nova-border) !important;
         transition: color var(--nova-transition-fast), background var(--nova-transition-fast);
+        // Center icons inside button
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
 
         &.active {
             color: var(--nova-accent) !important;
@@ -384,7 +388,8 @@ a {
     max-width: 400px;
 
     &:focus-within {
-        border-color: var(--nova-accent);
+        border-color: var(--nova-accent) !important;
+        border-bottom-color: var(--nova-accent) !important;
         box-shadow: none;
     }
 
@@ -682,7 +687,7 @@ a {
         justify-content: space-between;
         cursor: pointer;
         padding: var(--nova-space-2) var(--nova-space-3);
-        background: var(--nova-surface);
+        background: var(--nova-bg);
         border: 1px solid var(--nova-border);
         border-radius: var(--nova-radius);
         font-size: var(--nova-font-base);
@@ -727,7 +732,8 @@ a {
         position: absolute;
         top: 100%;
         left: 0;
-        right: 0;
+        min-width: 100%;
+        width: max-content;
         margin-top: 4px;
         background: var(--nova-surface);
         border: 1px solid var(--nova-border);

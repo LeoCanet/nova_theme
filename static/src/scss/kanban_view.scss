@@ -69,8 +69,8 @@
     // We must target both the wrapper and the inner div.
     .o_kanban_record {
         border-radius: var(--nova-radius-md);
-        // overflow: visible so dropdown menus escape the card
-        overflow: visible;
+        // Clip content so images respect border-radius
+        overflow: hidden;
         border: 1px solid var(--nova-border);
         box-shadow: var(--nova-shadow-xs);
         margin-bottom: var(--nova-space-2);
@@ -80,9 +80,13 @@
         > div {
             background: var(--nova-surface);
             border: none !important;
-            // Clip content to honour parent border-radius
             border-radius: inherit;
             overflow: hidden;
+        }
+
+        // Inner clickable wrapper — inherit parent border-radius for proper image clipping
+        .oe_kanban_global_click {
+            border-radius: inherit !important;
         }
 
         &:hover {
@@ -229,6 +233,21 @@
     &.o_kanban_ungrouped {
         .o_kanban_record {
             border-radius: var(--nova-radius-md);
+        }
+    }
+
+    // ─── Mobile: stacked cards spacing ──────────────────────────────────
+    @media (max-width: 768px) {
+        padding: 0 !important;
+        gap: 0;
+
+        .o_kanban_renderer {
+            padding: var(--nova-space-3) !important;
+            gap: var(--nova-space-3) !important;
+        }
+
+        .o_kanban_record {
+            margin-bottom: 0 !important;
         }
     }
 }

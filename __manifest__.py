@@ -76,6 +76,8 @@
             "nova_theme/static/src/js/nova_perf_monitor.js",
             "nova_theme/static/src/js/nova_prefetch.js",
             "nova_theme/static/src/js/nova_mobile_menu.js",
+            "nova_theme/static/src/js/nova_mobile_view.js",
+            "nova_theme/static/src/js/nova_db_name.js",
             "nova_theme/static/src/xml/app_launcher.xml",
             "nova_theme/static/src/xml/nova_selection_field.xml",
             "nova_theme/static/src/xml/navbar.xml",

@@ -661,6 +661,32 @@ html.nova-dark {
         }
     }
 
+    // oe_title fields — transparent bg, must beat .o_field_widget input:not() specificity (0,4,2)
+    .o_form_view .oe_title {
+        color: var(--nova-text) !important;
+
+        h1, h2, h3 {
+            .o_field_widget input:not([type="radio"]):not([type="checkbox"]),
+            .o_field_widget textarea,
+            .o_field_widget span {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+        }
+
+        .o_field_many2one_selection,
+        .o_input_dropdown {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+
+        .o_field_many2one_selection input:not([type="radio"]):not([type="checkbox"]),
+        .o_input_dropdown input:not([type="radio"]):not([type="checkbox"]) {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+    }
+
     .form-check-input {
         background-color: var(--nova-bg-alt) !important;
         border-color: var(--nova-border) !important;
@@ -900,23 +926,21 @@ html.nova-dark {
         }
     }
 
-    // ─── Nav tabs (pill style) ──────────────────────────────────────
+    // ─── Nav tabs (underline accent style) ──────────────────────────
     .nav-tabs {
-        border-bottom: none !important;
+        border-bottom: 1px solid var(--nova-border) !important;
 
         .nav-link {
             color: var(--nova-text-secondary) !important;
             background: transparent !important;
-            border: none !important;
 
             &:hover:not(.active) {
                 color: var(--nova-text) !important;
-                background: var(--nova-accent-light) !important;
             }
 
             &.active {
-                color: var(--nova-text) !important;
-                background: var(--nova-surface) !important;
+                color: var(--nova-accent) !important;
+                background: transparent !important;
             }
         }
     }
@@ -1142,25 +1166,23 @@ html.nova-dark {
 
         .o_notebook {
             .o_notebook_headers {
-                background: var(--nova-bg-alt) !important;
+                background: transparent !important;
             }
 
             .nav-tabs {
-                border-bottom: none !important;
+                border-bottom: 1px solid var(--nova-border) !important;
                 background: transparent !important;
 
                 .nav-link {
                     color: var(--nova-text-secondary) !important;
-                    border: none !important;
 
                     &:hover:not(.active) {
                         color: var(--nova-text) !important;
-                        background: var(--nova-accent-light) !important;
                     }
 
                     &.active {
-                        color: var(--nova-text) !important;
-                        background: var(--nova-surface) !important;
+                        color: var(--nova-accent) !important;
+                        background: transparent !important;
                     }
                 }
             }
@@ -2911,17 +2933,15 @@ html.nova-dark {
         // Override Odoo's compiled-in white backgrounds
         .nav-tabs {
             background: transparent !important;
-            border-bottom-color: var(--nova-border) !important;
+            border-bottom: 1px solid var(--nova-border) !important;
         }
 
         .nav-link {
             color: var(--nova-text-secondary) !important;
-            border: none !important;
             background: transparent !important;
 
-            &:hover {
+            &:hover:not(.active) {
                 color: var(--nova-text) !important;
-                background: var(--nova-accent-light) !important;
             }
 
             &.active {
@@ -2942,7 +2962,7 @@ html.nova-dark {
 
         // Notebook CSS custom properties
         --notebook-link-border-color-active: transparent;
-        --notebook-link-border-color-active-accent: transparent;
+        --notebook-link-border-color-active-accent: var(--nova-accent);
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -3441,6 +3461,15 @@ html.nova-dark {
             background-color: var(--nova-surface) !important;
             border-color: var(--nova-border) !important;
 
+            // Fix white borders between sections (Bootstrap table-bordered)
+            thead, tbody {
+                border-color: var(--nova-border) !important;
+            }
+
+            tr {
+                border-color: var(--nova-border) !important;
+            }
+
             thead {
                 tr {
                     background-color: var(--nova-bg-alt) !important;
@@ -3549,7 +3578,24 @@ html.nova-dark {
 // ═══════════════════════════════════════════════════════════════════════════
 // STOCK FORECAST PAGE — HEIGHT FIX (both modes)
 // ═══════════════════════════════════════════════════════════════════════════
-// Prevent the page from growing indefinitely (height bug)
+// Prevent the embedded graph from growing infinitely
 .o_stock_forecasted_page {
     overflow: auto;
+
+    .o_view_controller.o_graph_view {
+        max-height: 450px;
+        overflow: hidden;
+    }
+
+    .o_graph_renderer {
+        max-height: 450px;
+    }
+
+    .o_graph_canvas_container {
+        max-height: 400px;
+
+        canvas {
+            max-height: 100% !important;
+        }
+    }
 }
