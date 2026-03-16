@@ -1664,7 +1664,7 @@ html.nova-dark {
 
         .o_calendar_widget {
             background: var(--nova-surface) !important;
-            border-color: var(--nova-border) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         // Sidebar calendar (mini datepicker + participants + filters)
@@ -1791,7 +1791,7 @@ html.nova-dark {
             // FullCalendar CSS custom properties
             --fc-page-bg-color: var(--nova-surface);
             --fc-neutral-bg-color: var(--nova-bg-alt);
-            --fc-border-color: var(--nova-border);
+            --fc-border-color: rgba(255, 255, 255, 0.1);
             --fc-today-bg-color: var(--nova-accent-light);
             --fc-now-indicator-color: var(--nova-danger);
             --fc-event-bg-color: var(--nova-accent);
@@ -1800,12 +1800,12 @@ html.nova-dark {
 
             background: var(--nova-surface) !important;
 
-            // Nuclear option: force ALL td/th/table backgrounds inside FC
+            // Force dark backgrounds (except fc-bg/fc-slats which must stay transparent)
             table {
                 background: var(--nova-surface) !important;
             }
-            td, th {
-                border-color: var(--nova-border) !important;
+            td {
+                border-color: rgba(255, 255, 255, 0.1) !important;
                 background-color: var(--nova-surface) !important;
             }
 
@@ -1815,10 +1815,129 @@ html.nova-dark {
                 background: var(--nova-surface) !important;
             }
 
-            .fc-col-header-cell {
-                background: var(--nova-bg-alt) !important;
-                border-color: var(--nova-border) !important;
+            // Day/week headers — same bg as grid, no borders, no contrast
+            th {
+                background-color: var(--nova-surface) !important;
+                border: none !important;
+            }
+
+            .fc-col-header-cell,
+            .fc-day-header,
+            .fc-widget-header {
+                background: transparent !important;
+                border: none !important;
                 a { color: var(--nova-text-secondary) !important; }
+
+                &.fc-today, &.fc-day-today {
+                    background: var(--nova-accent-light) !important;
+                    a { color: var(--nova-accent) !important; }
+                }
+            }
+
+            .fc-day-header.fc-today {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+                a { color: var(--nova-accent) !important; }
+            }
+
+            // "Journée entière" row — same bg as grid
+            .fc-row .fc-widget-content {
+                background: var(--nova-surface) !important;
+            }
+
+            // All internal layers transparent — background comes from .fc-view
+            .fc-bg, .fc-bg table, .fc-bg td,
+            .fc-slats, .fc-slats td,
+            .fc-content-skeleton, .fc-content-skeleton td {
+                background-color: transparent !important;
+            }
+
+            // Today column highlight
+            .fc-bg td.fc-today {
+                background-color: var(--nova-accent-light) !important;
+            }
+
+            // Vertical day separators — drawn on slats content td via background gradient
+            // since fc-bg borders don't render through z-index layers in real browsers
+            // Vertical day separators via gradient (lines at end of each 1/7 column)
+            .fc-slats td:not(.fc-axis) {
+                background-image: repeating-linear-gradient(
+                    to right,
+                    transparent 0px,
+                    transparent calc(100% / 7 - 1px),
+                    rgba(255, 255, 255, 0.1) calc(100% / 7 - 1px),
+                    rgba(255, 255, 255, 0.1) calc(100% / 7)
+                ) !important;
+                border-left: none !important;
+                border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+
+            // Fix white background in all-day section
+            .fc-day-grid {
+                background-color: var(--nova-surface) !important;
+            }
+
+            .fc-row .fc-bg td {
+                background-color: transparent !important;
+            }
+
+            // Kill ALL remaining white borders (from native FC defaults)
+            .fc-row,
+            .fc-row table,
+            .fc-row td,
+            .fc-row th,
+            .fc-divider,
+            .fc-widget-header,
+            .fc-widget-content {
+                border-color: rgba(255, 255, 255, 0.1) !important;
+            }
+
+            // Axis column (hours) — only right border (separator with grid)
+            .fc-axis {
+                border: none !important;
+                border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+
+            // Kill the line at 0:00 (fc-divider between all-day and time grid)
+            .fc-divider {
+                border: none !important;
+                background: transparent !important;
+            }
+
+            // Replace light-mode inset box-shadow with a dark-friendly border-top
+            .fc-widget-content {
+                box-shadow: none !important;
+            }
+
+            // Separation between "Journée entière" and 0:00 time grid
+            .fc-time-grid {
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+
+            // "Journée entière" — subtle shadow like light mode
+            .fc-day-grid {
+                box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 8px -4px !important;
+            }
+
+            .fc-event {
+                box-shadow: none !important;
+            }
+
+            // Remove double borders on calendar edges
+            .fc-time-grid,
+            .fc-scroller {
+                border: none !important;
+            }
+
+            // Kill fc-bg td borders (they create double/white lines at 0:00 and today)
+            // Our gradient handles vertical lines, fc td borders are not needed
+            .fc-time-grid .fc-bg td {
+                border: none !important;
+            }
+
+            // Today column — only accent bg, no double border
+            .fc-time-grid .fc-bg td.fc-today {
+                border: none !important;
             }
 
             // Day cells (month view)

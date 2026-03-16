@@ -663,11 +663,13 @@
                 }
             }
 
-            // Kill nested scrollbar — let the time grid expand naturally
+            // Time grid: keep internal scroll so FullCalendar can auto-scroll to current time
+            // but constrain height to fit mobile viewport
             .fc-scroller,
             .fc-time-grid-container {
-                overflow: visible !important;
-                height: auto !important;
+                max-height: 55vh !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
             }
         }
 
@@ -684,5 +686,112 @@
             height: auto !important;
             padding: var(--nova-space-2) !important;
         }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Calendar Quick Create — Override fullscreen to compact centered card
+// Uses same style as other Nova mobile modals
+// ═══════════════════════════════════════════════════════════════════════════
+.o_dialog .modal.o_modal_full:has(.o-calendar-quick-create),
+.o_dialog .modal:has(.o-calendar-quick-create) {
+    // Prevent fullscreen — use centered card like other Nova modals
+    .modal-dialog {
+        margin: var(--nova-space-2) !important;
+        max-width: calc(100% - var(--nova-space-4)) !important;
+        min-height: auto !important;
+        height: auto !important;
+        min-width: 350px !important;
+
+        @media (min-width: 576px) {
+            max-width: 450px !important;
+            min-width: 420px !important;
+            margin: auto !important;
+        }
+    }
+
+    .modal-content {
+        border-radius: var(--nova-radius-lg) !important;
+        border: 1px solid var(--nova-border) !important;
+        box-shadow: var(--nova-shadow-xl) !important;
+        height: auto !important;
+        min-height: auto !important;
+    }
+
+    .modal-header {
+        background: var(--nova-surface) !important;
+        border-bottom: 1px solid var(--nova-border) !important;
+        padding: var(--nova-space-4) var(--nova-space-5) !important;
+
+        .btn.fa-arrow-left {
+            color: var(--nova-text-secondary) !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .modal-title {
+            font-size: var(--nova-font-xl) !important;
+            font-weight: 600;
+            color: var(--nova-text) !important;
+        }
+    }
+
+    .modal-body {
+        padding: var(--nova-space-5) !important;
+        flex: 0 1 auto !important;
+
+        .o-calendar-quick-create--input {
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius) !important;
+            padding: var(--nova-space-3) !important;
+            background: var(--nova-bg) !important;
+            color: var(--nova-text) !important;
+            width: 100%;
+
+            &:focus {
+                border-color: var(--nova-accent) !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+
+    .modal-footer {
+        background: var(--nova-bg-alt) !important;
+        border-top: 1px solid var(--nova-border) !important;
+        padding: var(--nova-space-3) var(--nova-space-5) !important;
+        justify-content: flex-end !important;
+        gap: var(--nova-space-2) !important;
+        flex-wrap: nowrap !important;
+
+        .btn {
+            border-radius: var(--nova-radius) !important;
+            text-transform: uppercase;
+            font-size: var(--nova-font-sm) !important;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .o-calendar-quick-create--create-btn {
+            background: var(--nova-accent) !important;
+            border-color: var(--nova-accent) !important;
+            color: white !important;
+        }
+
+        .o-calendar-quick-create--edit-btn,
+        .o-calendar-quick-create--cancel-btn {
+            background: transparent !important;
+            border: 1px solid var(--nova-border) !important;
+            color: var(--nova-text-secondary) !important;
+        }
+    }
+}
+
+// Also style the desktop popover version of calendar quick create
+.o_popover:has(.o-calendar-quick-create) {
+    min-width: 350px !important;
+
+    .popover-footer, .modal-footer {
+        flex-wrap: nowrap !important;
     }
 }

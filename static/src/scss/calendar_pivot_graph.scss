@@ -66,6 +66,34 @@
                 letter-spacing: 0.04em;
                 color: var(--nova-text-secondary);
             }
+
+            // Today header — subtle accent instead of bright blue
+            &.fc-today, &.fc-day-today {
+                background: var(--nova-accent-light) !important;
+
+                a {
+                    color: var(--nova-accent) !important;
+                }
+            }
+        }
+
+        // Day header row (used in day/week views) — override native blue bg
+        .fc-day-header {
+            &.fc-today {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+
+                a {
+                    color: var(--nova-accent) !important;
+                }
+            }
+        }
+
+        // Mobile day view — the single day header bar
+        .fc-row .fc-widget-header {
+            &.fc-today, .fc-today {
+                background: var(--nova-accent-light) !important;
+            }
         }
 
         // Day cells
@@ -115,7 +143,10 @@
         }
 
         .o_calendar_filter {
+            // Align checkboxes with participant names
             .o_calendar_filter_item {
+                display: flex !important;
+                align-items: center !important;
                 border-radius: var(--nova-radius);
                 padding: var(--nova-space-1) var(--nova-space-2);
                 font-size: var(--nova-font-base);
@@ -124,6 +155,27 @@
                     background: var(--nova-accent-light);
                 }
             }
+        }
+
+        // Sync buttons (Google/Outlook) — add border in light mode
+        .btn.btn-muted {
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius) !important;
+            padding: var(--nova-space-2) var(--nova-space-4) !important;
+        }
+    }
+
+    // Mobile toggle arrow — bigger target
+    .o_other_calendar_panel {
+        .fa-caret-left,
+        .fa-caret-down {
+            font-size: 18px !important;
+            width: 28px !important;
+            height: 28px !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
     }
 }
