@@ -147,16 +147,16 @@
         .o_statusbar_buttons {
             gap: var(--nova-space-2);
 
-            .btn-primary {
-                background: var(--nova-accent) !important;
-                border: 1px solid var(--nova-accent) !important;
-                color: white !important;
-                border-radius: var(--nova-radius);
+            // Common style for all action buttons
+            .btn {
+                border-radius: var(--nova-radius) !important;
+                text-transform: uppercase;
+                font-size: var(--nova-font-sm) !important;
+                font-weight: 600;
+                letter-spacing: 0.06em;
                 transition: all var(--nova-transition-fast);
 
                 &:hover, &:focus {
-                    background: var(--nova-accent-hover) !important;
-                    border-color: var(--nova-accent-hover) !important;
                     transform: translateY(-1px);
                     box-shadow: var(--nova-shadow-sm);
                 }
@@ -166,18 +166,49 @@
                 }
             }
 
+            .btn-primary {
+                background: var(--nova-accent) !important;
+                border: 1px solid var(--nova-accent) !important;
+                color: white !important;
+
+                &:hover, &:focus {
+                    background: var(--nova-accent-hover) !important;
+                    border-color: var(--nova-accent-hover) !important;
+                }
+            }
+
             .btn-secondary,
             .btn-light {
                 background: transparent !important;
                 border: 1px solid var(--nova-border) !important;
                 color: var(--nova-text-secondary) !important;
-                border-radius: var(--nova-radius);
-                transition: all var(--nova-transition-fast);
 
                 &:hover, &:focus {
                     background: var(--nova-accent-light) !important;
                     border-color: var(--nova-accent) !important;
                     color: var(--nova-accent) !important;
+                }
+            }
+
+            .btn-warning {
+                background: var(--nova-warning) !important;
+                border: 1px solid var(--nova-warning) !important;
+                color: white !important;
+
+                &:hover, &:focus {
+                    background: color-mix(in srgb, var(--nova-warning) 85%, black) !important;
+                    border-color: color-mix(in srgb, var(--nova-warning) 85%, black) !important;
+                }
+            }
+
+            .btn-danger {
+                background: var(--nova-danger) !important;
+                border: 1px solid var(--nova-danger) !important;
+                color: white !important;
+
+                &:hover, &:focus {
+                    background: color-mix(in srgb, var(--nova-danger) 85%, black) !important;
+                    border-color: color-mix(in srgb, var(--nova-danger) 85%, black) !important;
                 }
             }
         }

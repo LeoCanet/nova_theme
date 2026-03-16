@@ -106,6 +106,14 @@
         border-left: 1px solid var(--nova-border);
         padding: var(--nova-space-4);
 
+        // Mini calendar — hide "Prev"/"Next" text, keep arrows
+        .o_calendar_mini {
+            .ui-datepicker-prev .ui-icon,
+            .ui-datepicker-next .ui-icon {
+                font-size: 0 !important;
+            }
+        }
+
         .o_calendar_filter {
             .o_calendar_filter_item {
                 border-radius: var(--nova-radius);
@@ -117,6 +125,28 @@
                 }
             }
         }
+    }
+}
+
+// Participant hover tooltip — rendered at body level, constrain avatar size
+.o-calendar-filter--tooltip {
+    max-width: 180px !important;
+
+    .card-body {
+        padding: var(--nova-space-2) !important;
+        display: flex;
+        justify-content: center;
+
+        img {
+            max-width: 100% !important;
+            max-height: 120px !important;
+            object-fit: cover;
+            border-radius: var(--nova-radius);
+        }
+    }
+
+    .card-header {
+        font-size: var(--nova-font-sm);
     }
 }
 

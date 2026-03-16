@@ -577,3 +577,112 @@
         padding: 0 !important;
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Calendar View — Responsive
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Tablet: sidebar under calendar, not beside it
+@media (max-width: 1024px) {
+    .o_calendar_view {
+        .o_calendar_renderer {
+            padding: var(--nova-space-2) !important;
+        }
+
+        .o_calendar_sidebar_container {
+            overflow: visible !important;
+            max-height: none !important;
+            height: auto !important;
+        }
+
+        .o_calendar_sidebar {
+            border-left: none !important;
+            border-top: 1px solid var(--nova-border);
+            padding: var(--nova-space-2) !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+    }
+}
+
+// Mobile: compact calendar
+@media (max-width: 767px) {
+    .o_calendar_view {
+        .o_calendar_renderer {
+            padding: var(--nova-space-1) !important;
+        }
+
+        // Compact FullCalendar
+        .fc {
+            // Day header cells — shorter text
+            .fc-col-header-cell {
+                padding: 2px 0 !important;
+
+                a {
+                    font-size: 9px !important;
+                    letter-spacing: 0 !important;
+                    text-transform: none !important;
+                }
+            }
+
+            // Week number axis column (first col with "Semaine X")
+            .fc-axis {
+                font-size: 0 !important; // hide "Semaine XX" text
+                width: 30px !important;
+                min-width: 30px !important;
+            }
+
+            // Time labels
+            .fc-time-grid .fc-axis,
+            .fc-widget-content .fc-axis {
+                font-size: 10px !important;
+                width: 30px !important;
+                min-width: 30px !important;
+            }
+
+            // Reduce slot height
+            .fc-timegrid-slot,
+            .fc-time-grid .fc-slats td {
+                height: 32px !important;
+            }
+
+            // Compact events
+            .fc-event {
+                font-size: 10px !important;
+                padding: 0 2px !important;
+            }
+
+            // Toolbar compact
+            .fc-toolbar {
+                padding: var(--nova-space-1) var(--nova-space-2) !important;
+                flex-wrap: wrap;
+                gap: var(--nova-space-1);
+
+                .fc-toolbar-title {
+                    font-size: var(--nova-font-lg) !important;
+                }
+            }
+
+            // Kill nested scrollbar — let the time grid expand naturally
+            .fc-scroller,
+            .fc-time-grid-container {
+                overflow: visible !important;
+                height: auto !important;
+            }
+        }
+
+        // Sidebar: no nested scroll, expand naturally under calendar
+        .o_calendar_sidebar_container {
+            overflow: visible !important;
+            max-height: none !important;
+            height: auto !important;
+        }
+
+        .o_calendar_sidebar {
+            overflow: visible !important;
+            max-height: none !important;
+            height: auto !important;
+            padding: var(--nova-space-2) !important;
+        }
+    }
+}

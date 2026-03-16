@@ -1695,15 +1695,77 @@ html.nova-dark {
             .o_calendar_mini {
                 background: var(--nova-surface) !important;
 
-                th { color: var(--nova-text-secondary) !important; }
-                td {
+                // jQuery UI datepicker — force dark background
+                .ui-datepicker {
+                    background: var(--nova-surface) !important;
+                    border: none !important;
                     color: var(--nova-text) !important;
-                    &.fc-day-other { color: var(--nova-text-tertiary) !important; }
                 }
-                .fc-day-today {
-                    background: var(--nova-accent) !important;
-                    border-radius: var(--nova-radius-full);
-                    color: white !important;
+
+                .ui-datepicker-header {
+                    background: transparent !important;
+                    border: none !important;
+                    color: var(--nova-text) !important;
+                }
+
+                .ui-datepicker-title {
+                    color: var(--nova-text) !important;
+
+                    .ui-datepicker-month,
+                    .ui-datepicker-year {
+                        color: var(--nova-text) !important;
+                    }
+                }
+
+                // Prev/Next buttons — hide text, show only icon
+                .ui-datepicker-prev,
+                .ui-datepicker-next {
+                    color: var(--nova-text-secondary) !important;
+                    cursor: pointer;
+
+                    .ui-icon {
+                        font-size: 0 !important; // hide "Prev"/"Next" text
+                    }
+
+                    &:hover {
+                        color: var(--nova-accent) !important;
+                    }
+                }
+
+                // Calendar table
+                .ui-datepicker-calendar {
+                    th {
+                        color: var(--nova-text-secondary) !important;
+                        background: transparent !important;
+                    }
+
+                    td {
+                        background: transparent !important;
+
+                        a, span {
+                            color: var(--nova-text) !important;
+                            background: transparent !important;
+                        }
+
+                        &.ui-datepicker-other-month a,
+                        &.ui-datepicker-other-month span {
+                            color: var(--nova-text-tertiary) !important;
+                        }
+                    }
+
+                    // Today highlight
+                    .ui-state-highlight {
+                        background: var(--nova-accent) !important;
+                        color: white !important;
+                        border-radius: var(--nova-radius-full);
+                    }
+
+                    // Selected/active day
+                    .ui-state-active {
+                        background: var(--nova-accent) !important;
+                        color: white !important;
+                        border-radius: var(--nova-radius-full);
+                    }
                 }
             }
 
@@ -1720,6 +1782,9 @@ html.nova-dark {
                 border-color: var(--nova-border) !important;
             }
         }
+
+        // (participant tooltip is outside sidebar — see root-level rule below)
+
 
         // ─── FullCalendar — aggressive dark mode ──────────────────────────
         .fc {
@@ -2564,8 +2629,8 @@ html.nova-dark {
         }
     }
 
-    // Status bar buttons
-    .o_form_statusbar .btn:not(.o_arrow_button) {
+    // Status bar buttons — only override secondary/light, let form_view.scss handle primary/warning/danger
+    .o_form_statusbar .o_statusbar_buttons .btn:not(.btn-primary):not(.btn-warning):not(.btn-danger):not(.o_arrow_button) {
         color: var(--nova-text) !important;
         border-color: var(--nova-border) !important;
 
@@ -2573,18 +2638,6 @@ html.nova-dark {
             background: var(--nova-accent-light) !important;
             border-color: var(--nova-accent) !important;
             color: var(--nova-accent) !important;
-        }
-
-        &.btn-primary {
-            background: var(--nova-accent) !important;
-            border-color: var(--nova-accent) !important;
-            color: white !important;
-
-            &:hover, &:focus {
-                background: var(--nova-accent-hover) !important;
-                border-color: var(--nova-accent-hover) !important;
-                color: white !important;
-            }
         }
     }
 
@@ -3597,5 +3650,25 @@ html.nova-dark {
         canvas {
             max-height: 100% !important;
         }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Calendar participant tooltip — dark mode (rendered at body level, outside sidebar)
+// ═══════════════════════════════════════════════════════════════════════════
+html.nova-dark .o-calendar-filter--tooltip {
+    .card {
+        background: var(--nova-surface) !important;
+        border-color: var(--nova-border) !important;
+    }
+
+    .card-header {
+        background: var(--nova-bg-alt) !important;
+        color: var(--nova-text) !important;
+        border-color: var(--nova-border) !important;
+    }
+
+    .card-body {
+        background: var(--nova-surface) !important;
     }
 }

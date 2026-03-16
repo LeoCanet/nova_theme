@@ -24,6 +24,17 @@
     overflow-y: auto !important;
 }
 
+// Truncate text cells on one line in top-level list views
+.o_list_view .o_list_table {
+    table-layout: fixed;
+
+    tbody td.o_data_cell {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+}
+
 .o_list_view .o_list_table {
     --bs-table-active-bg: var(--nova-accent-light);
     --bs-table-active-color: var(--nova-text);

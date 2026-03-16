@@ -252,7 +252,8 @@ html.nova-launcher-open {
 .nova-app-tile__star {
     position: absolute;
     top: 4px;
-    right: 4px;
+    // Center-relative: always on icon's top-right corner regardless of tile width
+    right: calc(50% - 38px);
     display: flex;
     align-items: center;
     justify-content: center;
