@@ -277,3 +277,106 @@ i.o_optional_columns_dropdown_toggle {
         }
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEARCH PANEL (category filters sidebar — used in list, kanban views)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.o_search_panel {
+    background: var(--nova-surface) !important;
+    border-right: 1px solid var(--nova-border) !important;
+    padding-left: 1rem !important;
+    padding-right: 0.75rem !important;
+
+    // Section header ("CATÉGORIES")
+    .o_search_panel_section_header {
+        font-size: 0.6875rem !important;
+        letter-spacing: 0.06em;
+        color: var(--nova-text-tertiary) !important;
+        padding-bottom: 0.5rem !important;
+
+        b {
+            font-weight: 700 !important;
+            color: var(--nova-text-secondary) !important;
+        }
+    }
+
+    .o_search_panel_section_icon {
+        color: var(--nova-accent) !important;
+        font-size: 0.8rem !important;
+    }
+
+    // Remove list-group-item borders
+    .list-group-item {
+        border-color: var(--nova-border) !important;
+    }
+
+    // Category items
+    .o_search_panel_category_value {
+        padding: 0 !important;
+        margin: 1px 0 !important;
+
+        > header {
+            padding: 0.375rem 0.625rem !important;
+            border-radius: var(--nova-radius-sm) !important;
+            transition: background 150ms ease, color 150ms ease !important;
+            background: transparent !important;
+            color: var(--nova-text) !important;
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+            }
+
+            // Active item
+            &.active {
+                background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+
+                .o_search_panel_label_title {
+                    color: var(--nova-accent) !important;
+                    font-weight: 600 !important;
+                }
+            }
+        }
+    }
+
+    // Filter items (checkboxes)
+    .o_search_panel_filter_value {
+        padding: 0 !important;
+        margin: 1px 0 !important;
+
+        > header {
+            padding: 0.375rem 0.625rem !important;
+            border-radius: var(--nova-radius-sm) !important;
+            transition: background 150ms ease !important;
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+            }
+        }
+    }
+
+    // Label text
+    .o_search_panel_label_title {
+        font-size: 0.875rem !important;
+        color: var(--nova-text) !important;
+    }
+
+    // Counter badge
+    .o_search_panel_counter {
+        font-size: 0.75rem !important;
+        color: var(--nova-text-tertiary) !important;
+        background: var(--nova-bg-alt) !important;
+        border-radius: 9999px !important;
+        padding: 0.125rem 0.5rem !important;
+        min-width: 1.5rem;
+        text-align: center;
+        font-weight: 600 !important;
+    }
+
+    // Fold toggle
+    .o_toggle_fold {
+        color: var(--nova-text-tertiary) !important;
+        width: 1.25rem !important;
+    }
+}

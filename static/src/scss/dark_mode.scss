@@ -3529,18 +3529,227 @@ html.nova-dark {
         }
     }
 
-    // Discuss app
+    // ─── Chatter inline styles (custom HTML messages) ──────────────────
+    // These messages have hardcoded background/color in their HTML body.
+    .o_Message_prettyBody {
+        // Yellow/warning inline backgrounds
+        [style*="background-color:#fff3cd"],
+        [style*="background-color: #fff3cd"] {
+            background-color: rgba(240, 178, 50, 0.15) !important;
+            border-color: rgba(240, 178, 50, 0.3) !important;
+            color: var(--nova-text) !important;
+        }
+
+        // Blue/info inline backgrounds
+        [style*="background-color:#e8f4f8"],
+        [style*="background-color: #e8f4f8"] {
+            background-color: rgba(0, 168, 252, 0.12) !important;
+            border-color: rgba(0, 168, 252, 0.25) !important;
+            color: var(--nova-text) !important;
+        }
+
+        // Hardcoded info text color
+        [style*="color:#31708f"],
+        [style*="color: #31708f"] {
+            color: var(--nova-info) !important;
+        }
+
+        // Generic fallback: any div with inline background should have readable text
+        div[style*="background-color"] {
+            color: var(--nova-text) !important;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // DISCUSS APP (full-page messaging)
+    // ═══════════════════════════════════════════════════════════════════
+
     .o_Discuss {
         background-color: var(--nova-bg) !important;
 
-        .o_Discuss_sidebar {
-            background-color: var(--nova-surface) !important;
+        .o_Discuss_content,
+        .o_Discuss_thread {
+            background-color: var(--nova-bg) !important;
+        }
+
+        h4 {
+            color: var(--nova-text) !important;
+        }
+    }
+
+    // ─── Discuss Sidebar ─────────────────────────────────────────────
+    .o_DiscussSidebar {
+        background-color: var(--nova-surface) !important;
+        border-right: 1px solid var(--nova-border) !important;
+
+        .o_DiscussSidebar_separator {
             border-color: var(--nova-border) !important;
         }
 
-        .o_Discuss_content {
-            background-color: var(--nova-bg) !important;
+        .o_DiscussSidebar_quickSearch {
+            background-color: var(--nova-surface-raised) !important;
+            color: var(--nova-text) !important;
+            border-color: var(--nova-border) !important;
         }
+    }
+
+    // ─── Sidebar mailbox items (Inbox, Starred, History) ─────────────
+    .o_DiscussSidebar_categoryMailbox .btn {
+        color: var(--nova-text) !important;
+
+        &.bg-100 {
+            background-color: transparent !important;
+        }
+
+        &.o-active,
+        &.bg-200 {
+            background-color: var(--nova-accent-light) !important;
+        }
+
+        &:hover:not(.o-active) {
+            background-color: var(--nova-surface-raised) !important;
+        }
+    }
+
+    // ─── Sidebar category headers (CANAUX, MESSAGES DIRECTS) ─────────
+    .o_DiscussSidebarCategory_title {
+        color: var(--nova-text-secondary) !important;
+    }
+
+    .o_DiscussSidebarCategory_command,
+    .o_DiscussSidebarCategory_headerItem.btn {
+        border: none !important;
+    }
+
+    // ─── Sidebar channel / DM items ──────────────────────────────────
+    .o_DiscussSidebarCategoryItem {
+        color: var(--nova-text) !important;
+
+        &.bg-100 {
+            background-color: transparent !important;
+        }
+
+        &.o-active,
+        &.bg-200 {
+            background-color: var(--nova-accent-light) !important;
+        }
+
+        &:hover:not(.o-active) {
+            background-color: var(--nova-surface-raised) !important;
+        }
+
+        .o_DiscussSidebarCategoryItem_threadIcon.bg-100 {
+            background-color: var(--nova-surface) !important;
+        }
+    }
+
+    .o_DiscussSidebarCategoryItem_counter,
+    .o_DiscussSidebarCategory_counter {
+        background-color: var(--nova-accent) !important;
+    }
+
+    // ─── Thread view topbar ──────────────────────────────────────────
+    .o_ThreadViewTopbar {
+        background-color: var(--nova-surface) !important;
+        border-bottom: 1px solid var(--nova-border) !important;
+
+        &.bg-100 {
+            background-color: var(--nova-surface) !important;
+        }
+
+        .border-light {
+            border-color: transparent !important;
+        }
+
+        .o_ThreadViewTopbar_threadName {
+            color: var(--nova-text) !important;
+            border-color: transparent !important;
+        }
+
+        .o_ThreadViewTopbar_button {
+            border: none !important;
+
+            &:not(.o-isActive):hover {
+                background-color: var(--nova-surface-raised) !important;
+            }
+
+            &.o-isActive {
+                background-color: var(--nova-surface-raised) !important;
+            }
+
+            .fa {
+                color: var(--nova-text-secondary) !important;
+            }
+
+            &:hover .fa {
+                color: var(--nova-text) !important;
+            }
+        }
+
+        .o_ThreadViewTopbar_actions .fa {
+            color: var(--nova-text-secondary) !important;
+        }
+
+        .o_ThreadViewTopbar_threadIcon {
+            color: var(--nova-text-secondary) !important;
+        }
+
+        .o_ThreadViewTopbar_threadDescription {
+            color: var(--nova-text-secondary) !important;
+            border-color: transparent !important;
+        }
+
+        .o_ThreadViewTopbar_threadAddDescriptionEmptyLabel {
+            color: var(--nova-text-tertiary) !important;
+        }
+
+        .btn-secondary {
+            background-color: var(--nova-surface-raised) !important;
+            border-color: var(--nova-border) !important;
+            color: var(--nova-text) !important;
+        }
+    }
+
+    // ─── Composer (message input area) ───────────────────────────────
+    .o_Discuss .o_Composer {
+        background-color: var(--nova-bg) !important;
+    }
+
+    .o_Composer_toolButtons.bg-view {
+        background-color: var(--nova-surface) !important;
+        border-color: var(--nova-border) !important;
+    }
+
+    .o_Composer_toolButton.btn-light {
+        background-color: var(--nova-surface-raised) !important;
+    }
+
+    .o_ComposerTextInput .o_ComposerTextInput_textarea {
+        background-color: var(--nova-surface) !important;
+        color: var(--nova-text) !important;
+        border-color: var(--nova-border) !important;
+
+        &:focus {
+            border-color: var(--nova-border-focus) !important;
+            box-shadow: 0 0 0 0.15rem var(--nova-accent-light) !important;
+        }
+    }
+
+    // ─── Channel member list ─────────────────────────────────────────
+    .o_ChannelMember {
+        &:hover {
+            background-color: var(--nova-surface-raised) !important;
+        }
+
+        .o_ChannelMember_name {
+            color: var(--nova-text) !important;
+        }
+    }
+
+    // ─── Channel invitation form ─────────────────────────────────────
+    .o_ChannelInvitationForm {
+        background-color: var(--nova-surface) !important;
+        color: var(--nova-text) !important;
     }
 
     // ═══════════════════════════════════════════════════════════════════

@@ -587,6 +587,22 @@
         gap: var(--nova-space-2);
     }
 
+    // Discuss compact mode — align send button with text input
+    // Remove padding that creates a height mismatch, then stretch the button
+    .o_Composer_actionButtons.o-composer-is-compact {
+        padding-top: 0 !important;
+        align-items: stretch !important;
+    }
+
+    // <button> elements ignore flex stretch, use fill-available instead
+    button.o_Composer_buttonSend.o-composer-is-compact {
+        height: -webkit-fill-available !important;
+        height: stretch !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
     // Attachment area
     .o_Composer_attachments {
         padding: var(--nova-space-2) 0;

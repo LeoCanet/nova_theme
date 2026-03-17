@@ -69,8 +69,6 @@
     // We must target both the wrapper and the inner div.
     .o_kanban_record {
         border-radius: var(--nova-radius-md);
-        // Clip content so images respect border-radius
-        overflow: hidden;
         border: 1px solid var(--nova-border);
         box-shadow: var(--nova-shadow-xs);
         margin-bottom: var(--nova-space-2);
@@ -249,6 +247,36 @@
         .o_kanban_record {
             margin-bottom: 0 !important;
         }
+    }
+}
+
+// ─── Dashboard kanban: make entire card clickable ──────────────────────────
+// The title link stretches over the whole card; buttons/links stay above it.
+.o_kanban_dashboard .o_kanban_record {
+    position: relative;
+
+    // Title link becomes a stretched-link covering the whole card
+    .o_kanban_card_header_title .o_primary > a {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+        }
+    }
+
+    // Interactive elements stay above the stretched link
+    .o_kanban_card_header .o_kanban_manage_button_section,
+    .o_kanban_card_content a,
+    .o_kanban_card_content button,
+    .o_kanban_card_content .btn,
+    .o_kanban_card_content widget,
+    .o_kanban_card_manage_pane {
+        position: relative;
+        z-index: 2;
     }
 }
 

@@ -1,0 +1,453 @@
+///============================================================================
+/// Theme Nova — Portal Styling
+/// Standalone frontend override for the customer portal
+///============================================================================
+
+// ─── Tokens (standalone, no dependency on design_system.scss) ────────────────
+:root {
+    --nova-portal-bg: #F8FAFC;
+    --nova-portal-surface: #FFFFFF;
+    --nova-portal-text: #1E293B;
+    --nova-portal-text-secondary: #64748B;
+    --nova-portal-text-tertiary: #94A3B8;
+    --nova-portal-border: #E2E8F0;
+    --nova-portal-accent: #4F46E5;
+    --nova-portal-accent-hover: #4338CA;
+    --nova-portal-accent-light: rgba(79, 70, 229, 0.08);
+    --nova-portal-radius: 8px;
+    --nova-portal-radius-lg: 12px;
+    --nova-portal-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --nova-portal-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+// ─── Body / Background ───────────────────────────────────────────────────────
+.o_portal,
+#wrapwrap.o_portal {
+    font-family: var(--nova-portal-font) !important;
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--nova-portal-bg) !important;
+    color: var(--nova-portal-text);
+}
+
+// ─── Navbar ──────────────────────────────────────────────────────────────────
+.o_portal header .navbar,
+.o_portal_navbar {
+    background: var(--nova-portal-surface) !important;
+    border-bottom: 1px solid var(--nova-portal-border) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    padding: 0.5rem 1.5rem;
+
+    .navbar-brand img {
+        max-height: 36px;
+    }
+
+    .nav-link,
+    .dropdown-toggle {
+        color: var(--nova-portal-text) !important;
+        font-weight: 500;
+        font-size: 0.9375rem;
+
+        &:hover {
+            color: var(--nova-portal-accent) !important;
+        }
+    }
+
+    .dropdown-menu {
+        border: 1px solid var(--nova-portal-border);
+        border-radius: var(--nova-portal-radius);
+        box-shadow: var(--nova-portal-shadow);
+        padding: 0.25rem;
+
+        .dropdown-item {
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9375rem;
+
+            &:hover {
+                background: var(--nova-portal-accent-light);
+                color: var(--nova-portal-accent);
+            }
+        }
+    }
+}
+
+// ─── Page headings ───────────────────────────────────────────────────────────
+.o_portal h1, .o_portal h2, .o_portal h3,
+.o_portal h4, .o_portal h5 {
+    color: var(--nova-portal-text) !important;
+    font-weight: 600 !important;
+}
+
+// ─── Breadcrumb ──────────────────────────────────────────────────────────────
+// Breadcrumb wrapper — Odoo uses .row.bg-white.border.rounded + .o_portal_submenu
+.o_portal .row.align-items-center.bg-white.border.rounded {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.o_portal_submenu.breadcrumb {
+    border: none !important;
+    padding: 0.25rem 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.o_portal .breadcrumb {
+    background: transparent;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 0.875rem;
+
+    a {
+        color: var(--nova-portal-accent) !important;
+    }
+
+    .breadcrumb-item {
+        color: var(--nova-portal-text-tertiary);
+
+        &.active {
+            color: var(--nova-portal-text);
+            font-weight: 500;
+        }
+    }
+}
+
+// ─── Preview banner ──────────────────────────────────────────────────────────
+.o_portal .alert-info {
+    background: #EEF2FF !important;
+    border: 1px solid #C7D2FE !important;
+    color: var(--nova-portal-accent) !important;
+}
+
+// ─── Links ───────────────────────────────────────────────────────────────────
+.o_portal a:not(.btn):not(.nav-link):not(.navbar-brand):not(.dropdown-item) {
+    color: var(--nova-portal-accent);
+
+    &:hover {
+        color: var(--nova-portal-accent-hover);
+    }
+}
+
+// ─── Document list (home page — Devis, Commandes, Factures) ──────────────────
+.o_portal .list-group {
+    overflow: hidden;
+    box-shadow: var(--nova-portal-shadow);
+
+    .list-group-item {
+        background: var(--nova-portal-surface);
+        border-color: var(--nova-portal-border);
+        padding: 0.875rem 1.25rem;
+        color: var(--nova-portal-text);
+        font-size: 0.9375rem;
+        font-weight: 500;
+        transition: background 150ms ease;
+
+        &:hover {
+            background: var(--nova-portal-accent-light);
+            color: var(--nova-portal-accent);
+        }
+
+        .badge {
+            background: var(--nova-portal-accent) !important;
+            color: white !important;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+            border-radius: 9999px;
+        }
+    }
+}
+
+// ─── Tables (document lists, portal tables) ──────────────────────────────────
+.o_portal .o_portal_my_doc_table,
+.o_portal .table {
+    background: var(--nova-portal-surface);
+    border-radius: var(--nova-portal-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--nova-portal-shadow);
+    border: 1px solid var(--nova-portal-border);
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead th {
+        background: var(--nova-portal-bg) !important;
+        color: var(--nova-portal-text-secondary) !important;
+        font-weight: 600 !important;
+        font-size: 0.8125rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        border-bottom: 1px solid var(--nova-portal-border) !important;
+        padding: 0.75rem 1rem !important;
+    }
+
+    tbody td {
+        padding: 0.75rem 1rem !important;
+        border-bottom: 1px solid var(--nova-portal-border) !important;
+        color: var(--nova-portal-text);
+        font-size: 0.875rem !important;
+        vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none !important;
+    }
+
+    tbody tr:hover {
+        background: var(--nova-portal-accent-light);
+    }
+}
+
+// ─── Sidebar (Details, Security on home + document sidebar) ──────────────────
+.o_portal .o_my_sidebar,
+.o_portal .o_portal_sidebar {
+    h4 {
+        font-size: 1.125rem;
+    }
+
+    hr {
+        border-color: var(--nova-portal-border);
+        opacity: 1;
+    }
+}
+
+// ─── Document detail page (sidebar layout) ───────────────────────────────────
+.o_portal_sidebar {
+    // Sidebar card (with sign/download/print buttons)
+    #sidebar_content.card,
+    .card {
+        background: var(--nova-portal-surface) !important;
+        border: 1px solid var(--nova-portal-border) !important;
+        border-radius: var(--nova-portal-radius-lg) !important;
+        box-shadow: var(--nova-portal-shadow) !important;
+        overflow: hidden;
+
+        .card-body {
+            border-left: none !important;
+        }
+
+        > ul > li {
+            border-color: var(--nova-portal-border);
+        }
+
+        .card-footer {
+            background: var(--nova-portal-bg);
+            border-top: 1px solid var(--nova-portal-border);
+        }
+    }
+
+    // Document content area (right column with report HTML)
+    .o_portal_html_view {
+        border-radius: var(--nova-portal-radius-lg);
+        box-shadow: var(--nova-portal-shadow);
+        border: 1px solid var(--nova-portal-border);
+    }
+
+    // Inline report content (non-iframe document rendering)
+    > .container > .row > div:last-child > div:not(.card):not(.o_portal_chatter) {
+        background: var(--nova-portal-surface);
+        border: 1px solid var(--nova-portal-border);
+        border-radius: var(--nova-portal-radius-lg);
+        box-shadow: var(--nova-portal-shadow);
+        padding: 2rem !important;
+    }
+
+    // Tables inside document report
+    table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+
+        th, td {
+            padding: 0.625rem 0.875rem !important;
+            font-size: 0.875rem !important;
+            border-color: var(--nova-portal-border) !important;
+        }
+
+        th {
+            background: var(--nova-portal-bg) !important;
+            font-weight: 600 !important;
+            color: var(--nova-portal-text-secondary) !important;
+        }
+    }
+}
+
+// ─── Buttons ─────────────────────────────────────────────────────────────────
+.o_portal .btn-primary {
+    background: var(--nova-portal-accent) !important;
+    border-color: var(--nova-portal-accent) !important;
+    border-radius: var(--nova-portal-radius) !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9375rem;
+    transition: all 150ms ease;
+
+    &:hover {
+        background: var(--nova-portal-accent-hover) !important;
+        border-color: var(--nova-portal-accent-hover) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+}
+
+.o_portal .btn-secondary {
+    background: transparent !important;
+    border: 1px solid var(--nova-portal-border) !important;
+    border-radius: var(--nova-portal-radius) !important;
+    color: var(--nova-portal-text) !important;
+    font-weight: 500 !important;
+
+    &:hover {
+        background: var(--nova-portal-accent-light) !important;
+        border-color: var(--nova-portal-accent) !important;
+        color: var(--nova-portal-accent) !important;
+    }
+}
+
+// ─── Signature area ──────────────────────────────────────────────────────────
+.o_portal_signature {
+    canvas {
+        border: 1px solid var(--nova-portal-border);
+        border-radius: var(--nova-portal-radius);
+    }
+}
+
+// Sign/Reject buttons at page bottom
+.o_portal_sidebar .text-center .btn {
+    border-radius: var(--nova-portal-radius) !important;
+    font-weight: 500 !important;
+    padding: 0.625rem 2rem !important;
+    margin: 0 0.25rem !important;
+}
+
+// ─── Contact avatar ──────────────────────────────────────────────────────────
+.o_portal .o_portal_contact_img {
+    border-radius: 9999px !important;
+    border: 2px solid var(--nova-portal-border) !important;
+}
+
+// ─── Portal chatter ──────────────────────────────────────────────────────────
+.o_portal_chatter {
+    .o_portal_chatter_composer textarea {
+        border: 1px solid var(--nova-portal-border);
+        border-radius: var(--nova-portal-radius);
+        padding: 0.75rem 1rem;
+        font-size: 0.9375rem;
+
+        &:focus {
+            border-color: var(--nova-portal-accent);
+            box-shadow: 0 0 0 3px var(--nova-portal-accent-light);
+            outline: none;
+        }
+    }
+
+    .o_portal_chatter_message {
+        border-bottom: 1px solid var(--nova-portal-border);
+        padding: 1rem 0;
+    }
+
+    .o_portal_chatter_avatar {
+        border-radius: 9999px;
+    }
+}
+
+// ─── Attachments ─────────────────────────────────────────────────────────────
+.o_portal .o_portal_chatter_attachment {
+    border: 1px solid var(--nova-portal-border);
+    border-radius: var(--nova-portal-radius);
+    padding: 0.5rem 0.75rem;
+    background: var(--nova-portal-bg);
+
+    &:hover {
+        border-color: var(--nova-portal-accent);
+    }
+}
+
+// ─── Status alerts ───────────────────────────────────────────────────────────
+.o_portal .alert {
+    border-radius: var(--nova-portal-radius);
+}
+
+// ─── Modal (signature dialog) ────────────────────────────────────────────────
+.o_portal .modal-content {
+    border: 1px solid var(--nova-portal-border);
+    border-radius: var(--nova-portal-radius-lg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+
+    .modal-header {
+        border-bottom: 1px solid var(--nova-portal-border);
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--nova-portal-border);
+    }
+}
+
+// ─── Form controls ───────────────────────────────────────────────────────────
+.o_portal .form-control,
+.o_portal .form-select {
+    border: 1px solid var(--nova-portal-border);
+    border-radius: var(--nova-portal-radius);
+    font-size: 0.9375rem;
+
+    &:focus {
+        border-color: var(--nova-portal-accent);
+        box-shadow: 0 0 0 3px var(--nova-portal-accent-light);
+    }
+}
+
+// ─── Pagination ──────────────────────────────────────────────────────────────
+.o_portal .pagination {
+    .page-link {
+        border: 1px solid var(--nova-portal-border);
+        color: var(--nova-portal-text);
+        border-radius: var(--nova-portal-radius);
+        margin: 0 2px;
+
+        &:hover {
+            background: var(--nova-portal-accent-light);
+            color: var(--nova-portal-accent);
+            border-color: var(--nova-portal-accent);
+        }
+    }
+
+    .page-item.active .page-link {
+        background: var(--nova-portal-accent);
+        border-color: var(--nova-portal-accent);
+        color: white;
+    }
+}
+
+// ─── Portal security page ────────────────────────────────────────────────────
+.o_portal_security_body .card {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+.o_portal footer,
+.o_portal .o_footer_copyright {
+    color: var(--nova-portal-text-tertiary);
+    font-size: 0.875rem;
+
+    a {
+        color: var(--nova-portal-accent) !important;
+    }
+}
+
+// ─── Portal search toolbar ───────────────────────────────────────────────────
+.o_portal .o_portal_search_panel {
+    background: var(--nova-portal-surface);
+    border: 1px solid var(--nova-portal-border);
+    border-radius: var(--nova-portal-radius-lg);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--nova-portal-shadow);
+}
+
+// ─── Badges ──────────────────────────────────────────────────────────────────
+.o_portal .badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 9999px;
+}

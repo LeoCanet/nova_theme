@@ -38,6 +38,7 @@
         "web.assets_frontend": [
             "nova_theme/static/src/scss/login_fonts.scss",
             "nova_theme/static/src/scss/login.scss",
+            "nova_theme/static/src/scss/portal.scss",
         ],
         "web._assets_primary_variables": [
             ("prepend", "nova_theme/static/src/scss/primary_variables.scss"),
