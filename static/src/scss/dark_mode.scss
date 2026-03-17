@@ -382,6 +382,11 @@ html.nova-dark {
                 color: var(--nova-accent) !important;
             }
 
+            td:hover {
+                background-color: var(--nova-surface-raised) !important;
+                color: var(--nova-text) !important;
+            }
+
             th.prev, th.next, th.picker-switch {
                 color: var(--nova-text-secondary) !important;
                 &:hover {
@@ -1808,7 +1813,6 @@ html.nova-dark {
                 border-color: rgba(255, 255, 255, 0.1) !important;
                 background-color: var(--nova-surface) !important;
             }
-
             // View harness
             .fc-view-harness,
             .fc-view {
@@ -1847,29 +1851,22 @@ html.nova-dark {
 
             // All internal layers transparent — background comes from .fc-view
             .fc-bg, .fc-bg table, .fc-bg td,
-            .fc-slats, .fc-slats td,
-            .fc-content-skeleton, .fc-content-skeleton td {
+            .fc-slats, .fc-slats table, .fc-slats td,
+            .fc-content-skeleton, .fc-content-skeleton table, .fc-content-skeleton td {
                 background-color: transparent !important;
             }
 
-            // Today column highlight
+            // Today column highlight — accent bg + accent borders like light mode (rgba(79,70,229,0.3))
             .fc-bg td.fc-today {
                 background-color: var(--nova-accent-light) !important;
+                border-left-color: rgba(167, 139, 250, 0.3) !important;
+                border-right-color: rgba(167, 139, 250, 0.3) !important;
             }
 
-            // Vertical day separators — drawn on slats content td via background gradient
-            // since fc-bg borders don't render through z-index layers in real browsers
-            // Vertical day separators via gradient (lines at end of each 1/7 column)
+
+            // Vertical day separators — same as light mode: border-right visible, border-left transparent
             .fc-slats td:not(.fc-axis) {
-                background-image: repeating-linear-gradient(
-                    to right,
-                    transparent 0px,
-                    transparent calc(100% / 7 - 1px),
-                    rgba(255, 255, 255, 0.1) calc(100% / 7 - 1px),
-                    rgba(255, 255, 255, 0.1) calc(100% / 7)
-                ) !important;
-                border-left: none !important;
-                border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-left-color: transparent !important;
             }
 
             // Fix white background in all-day section
@@ -1877,9 +1874,7 @@ html.nova-dark {
                 background-color: var(--nova-surface) !important;
             }
 
-            .fc-row .fc-bg td {
-                background-color: transparent !important;
-            }
+            // (fc-bg td transparency already handled by the global rule at line ~1847)
 
             // Kill ALL remaining white borders (from native FC defaults)
             .fc-row,
@@ -1892,31 +1887,43 @@ html.nova-dark {
                 border-color: rgba(255, 255, 255, 0.1) !important;
             }
 
+
+            // Remove surplus borders on outer container tds
+            .fc-head td.fc-head-container {
+                border: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+            .fc-body > tr > td.fc-widget-content {
+                border: none !important;
+            }
+
+            // Remove border-right on week number header ("Semaine 12")
+            th.fc-axis.fc-week-number {
+                border-right: none !important;
+            }
+
             // Axis column (hours) — only right border (separator with grid)
             .fc-axis {
                 border: none !important;
                 border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
 
-            // Kill the line at 0:00 (fc-divider between all-day and time grid)
+            // Divider between "Journée entière" and 0:00 time grid
             .fc-divider {
                 border: none !important;
                 background: transparent !important;
             }
 
-            // Replace light-mode inset box-shadow with a dark-friendly border-top
-            .fc-widget-content {
-                box-shadow: none !important;
+            // 0:00 line — inset box-shadow like native Odoo, adapted for dark
+            // Must match native specificity: .o_calendar_renderer .o_calendar_widget .fc-timeGrid*-view ...
+            .fc-timeGridWeek-view .fc-slats tr:first-child td.fc-widget-content:last-child,
+            .fc-timeGridDay-view .fc-slats tr:first-child td.fc-widget-content:last-child {
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
             }
 
-            // Separation between "Journée entière" and 0:00 time grid
-            .fc-time-grid {
-                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-            }
-
-            // "Journée entière" — subtle shadow like light mode
+            // "Journée entière" — box-shadow separator like light mode, adapted for dark bg
             .fc-day-grid {
-                box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 8px -4px !important;
+                box-shadow: rgba(255, 255, 255, 0.08) 0px 1px 0px 0px, rgba(0, 0, 0, 0.5) 0px 6px 12px -6px !important;
             }
 
             .fc-event {
@@ -1924,21 +1931,13 @@ html.nova-dark {
             }
 
             // Remove double borders on calendar edges
-            .fc-time-grid,
+            .fc-time-grid {
+                border: none !important;
+            }
             .fc-scroller {
                 border: none !important;
             }
 
-            // Kill fc-bg td borders (they create double/white lines at 0:00 and today)
-            // Our gradient handles vertical lines, fc td borders are not needed
-            .fc-time-grid .fc-bg td {
-                border: none !important;
-            }
-
-            // Today column — only accent bg, no double border
-            .fc-time-grid .fc-bg td.fc-today {
-                border: none !important;
-            }
 
             // Day cells (month view)
             .fc-daygrid-day {
@@ -2760,10 +2759,20 @@ html.nova-dark {
         }
     }
 
-    // Record title — dark text on dark bg fix
+    // Form avatar/photo — adapt border for dark bg
+    .o_form_view .o_field_image img,
+    .o_form_view .oe_avatar img {
+        border-color: var(--nova-border) !important;
+    }
+
+    // Record title + form section headings — dark text on dark bg fix
     .o_form_view .oe_title input,
     .o_form_view .oe_title textarea,
-    .o_form_view .oe_title span {
+    .o_form_view .oe_title span,
+    .o_form_view .oe_title label,
+    .o_form_view h1,
+    .o_form_view h2,
+    .o_form_view h3 {
         color: var(--nova-text) !important;
     }
 

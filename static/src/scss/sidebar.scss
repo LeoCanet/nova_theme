@@ -39,7 +39,12 @@ $sidebar-label-duration: 180ms;
         .nova-sidebar__section-title,
         .nova-sidebar__section-header {
             opacity: 0;
-            transition: opacity 100ms ease;
+            max-height: 0;
+            padding: 0 !important;
+            overflow: hidden;
+            transition: opacity $sidebar-label-duration ease,
+                        max-height $sidebar-duration $sidebar-ease,
+                        padding $sidebar-duration $sidebar-ease;
         }
 
         // Toggle icon: rotate
@@ -71,7 +76,10 @@ $sidebar-label-duration: 180ms;
 
         .nova-sidebar__section-title,
         .nova-sidebar__section-header {
-            transition: opacity $sidebar-label-duration ease $sidebar-duration * 0.4;
+            max-height: 50px;
+            transition: opacity $sidebar-label-duration ease $sidebar-duration * 0.4,
+                        max-height $sidebar-duration $sidebar-ease,
+                        padding $sidebar-duration $sidebar-ease;
         }
     }
 

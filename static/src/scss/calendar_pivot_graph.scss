@@ -121,6 +121,11 @@
             font-weight: 500;
         }
 
+        // Today column highlight in week/day view (time grid background layer)
+        .fc-bg td.fc-today {
+            background-color: var(--nova-accent-light) !important;
+        }
+
         // Time grid
         .fc-timegrid-slot {
             border-color: var(--nova-border-light);
