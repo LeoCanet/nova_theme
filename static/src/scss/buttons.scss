@@ -351,14 +351,15 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: transparent !important;
-        border: none !important;
+        background: var(--nova-surface) !important;
+        border: 1px solid var(--nova-border) !important;
         border-radius: var(--nova-radius) !important;
         color: var(--nova-text-secondary);
         transition: all var(--nova-transition-fast);
 
         &:hover:not(:disabled) {
             background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
             color: var(--nova-accent);
         }
 

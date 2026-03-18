@@ -380,6 +380,7 @@
     // ─── Title / Header ────────────────────────────────────────────────
     .oe_title {
         color: var(--nova-text);
+        margin-bottom: var(--nova-space-4) !important;
 
         > h1, > .h1 {
             min-height: auto !important;

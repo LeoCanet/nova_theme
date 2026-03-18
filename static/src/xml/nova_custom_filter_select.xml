@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Nova custom select component for filter dropdowns -->
+    <t t-name="nova_theme.NovaFilterSelect" owl="1">
+        <div class="nova-select" t-ref="container">
+            <div class="nova-select__trigger o_input"
+                 t-ref="trigger"
+                 t-on-click="toggleDropdown"
+                 tabindex="0"
+            >
+                <span class="nova-select__value" t-esc="currentLabel"/>
+                <i class="fa fa-chevron-down nova-select__arrow"
+                   t-att-class="{ 'nova-select__arrow--open': state.isOpen }"
+                />
+            </div>
+            <div t-if="state.isOpen"
+                 class="nova-select__dropdown nova-filter-select-portal"
+                 t-att-style="state.style"
+            >
+                <t t-foreach="props.options" t-as="option" t-key="option_index">
+                    <div class="nova-select__option"
+                         t-att-class="{ 'active': option.selected }"
+                         t-on-click="() => this.selectOption(option_index)"
+                    >
+                        <t t-esc="option.label"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <!-- Override the CustomGroupByItem template to use NovaFilterSelect -->
+    <t t-inherit="web.CustomGroupByItem" t-inherit-mode="extension">
+        <xpath expr="//select" position="replace">
+            <NovaFilterSelect
+                options="props.fields.map((f) => ({ label: f.string, value: f.name, selected: f.name === state.fieldName }))"
+                onSelect="(idx) => this.onFieldSelect(idx)"
+            />
+        </xpath>
+    </t>
+
+    <!-- Override the CustomFilterItem template to use NovaFilterSelect -->
+    <t t-inherit="web.CustomFilterItem" t-inherit-mode="extension">
+
+        <!-- Replace field select -->
+        <xpath expr="//select[hasclass('o_generator_menu_field')]" position="replace">
+            <NovaFilterSelect
+                options="fields.map((f, i) => ({ label: f.string, value: f.name, selected: i === condition.field }))"
+                onSelect="(idx) => this.onFieldSelect(condition, { target: { selectedIndex: idx } })"
+            />
+        </xpath>
+
+        <!-- Replace operator select -->
+        <xpath expr="//select[hasclass('o_generator_menu_operator')]" position="replace">
+            <NovaFilterSelect
+                options="OPERATORS[FIELD_TYPES[fieldType]].map((op, i) => ({ label: op.description.toString(), value: op.symbol, selected: i === condition.operator }))"
+                onSelect="(idx) => this.onOperatorSelect(condition, { target: { selectedIndex: idx } })"
+            />
+        </xpath>
+
+        <!-- Replace selection value select (preserve t-elif) -->
+        <xpath expr="//select[not(hasclass('o_generator_menu_field')) and not(hasclass('o_generator_menu_operator'))]" position="replace">
+            <t t-elif="fieldType === 'selection'">
+                <NovaFilterSelect
+                    options="fields[condition.field].selection.map((opt, i) => ({ label: opt[1], value: opt[0], selected: opt[0] === condition.value }))"
+                    onSelect="(idx) => this.onValueChange(condition, { target: { value: fields[condition.field].selection[idx][0] } })"
+                />
+            </t>
+        </xpath>
+
+    </t>
+
+</templates>

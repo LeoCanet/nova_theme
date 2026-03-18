@@ -451,21 +451,27 @@ a {
 }
 
 // ─── Filter / Group By / Favorites Buttons ───────────────────────────────
+.o_search_options {
+    gap: var(--nova-space-1);
+}
+
 .o_cp_bottom_left .btn,
 .o_search_options .btn {
-    background: transparent !important;
-    border: none !important;
+    background: var(--nova-surface) !important;
+    border: 1px solid var(--nova-border) !important;
     color: var(--nova-text-secondary);
-    border-radius: var(--nova-radius);
+    border-radius: var(--nova-radius) !important;
     transition: all var(--nova-transition-fast);
 
     &:hover, &:focus {
         background: var(--nova-accent-light) !important;
+        border-color: var(--nova-accent) !important;
         color: var(--nova-accent);
     }
 
     &:active, &.show {
         background: var(--nova-accent-medium) !important;
+        border-color: var(--nova-accent) !important;
         color: var(--nova-accent);
     }
 }
@@ -500,6 +506,18 @@ a {
             background: var(--nova-accent-light) !important;
             color: var(--nova-accent) !important;
             font-weight: 500;
+        }
+
+        // Align check icon before text on selected filter items
+        &.selected,
+        &.active {
+            padding-left: calc(var(--nova-space-3) + 1rem) !important;
+
+            &::before {
+                left: var(--nova-space-3) !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+            }
         }
     }
 
@@ -537,19 +555,76 @@ a {
         }
     }
 
-    select {
+    select,
+    select.o_input,
+    select.o_generator_menu_field,
+    select.o_generator_menu_operator {
+        // Match .nova-select__trigger style
+        display: flex !important;
+        align-items: center;
+        min-height: 36px;
         border: 1px solid var(--nova-border) !important;
         border-radius: var(--nova-radius) !important;
-        background: var(--nova-surface) !important;
+        background-color: var(--nova-bg) !important;
         color: var(--nova-text) !important;
-        padding: var(--nova-space-2) var(--nova-space-3);
+        padding: var(--nova-space-2) var(--nova-space-3) !important;
+        padding-right: 2.25rem !important;
         font-size: var(--nova-font-base);
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 0.75rem center !important;
+        background-size: 10px !important;
+        cursor: pointer;
+        width: 100%;
+        transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+
+        &:hover {
+            border-color: var(--nova-accent) !important;
+        }
 
         &:focus {
             border-color: var(--nova-accent) !important;
             box-shadow: none !important;
             outline: none;
         }
+
+        option {
+            background-color: var(--nova-surface) !important;
+            color: var(--nova-text) !important;
+            padding: var(--nova-space-2) var(--nova-space-3) !important;
+
+            &:hover, &:checked {
+                background-color: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+    }
+
+    // ── Custom filter condition layout ──
+    .o_filter_condition.dropdown-item-text {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: var(--nova-space-2) !important;
+    }
+
+    // ── "Ajouter un filtre personnalisé" chevron centering ──
+    .o_add_custom_filter_menu > .dropdown-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    // Override Odoo/Bootstrap caret positioning for submenu triggers
+    button.dropdown-toggle.dropdown-item {
+        padding-right: 2rem !important;
+    }
+    button.dropdown-toggle.dropdown-item::after,
+    button.dropdown-toggle.dropdown-item::before {
+        inset: 50% 0.75rem auto auto !important;
+        transform: translateY(-50%) !important;
+        margin-left: 0 !important;
     }
 
     // Checkboxes (Utiliser par défaut, Partager…)
@@ -739,7 +814,7 @@ a {
         border: 1px solid var(--nova-border);
         border-radius: var(--nova-radius-lg);
         box-shadow: var(--nova-shadow-lg);
-        z-index: 1060;
+        z-index: 10000;
         max-height: 260px;
         overflow-y: auto;
         padding: var(--nova-space-1);

@@ -1602,6 +1602,29 @@ html.nova-dark {
             color: var(--nova-text-secondary) !important;
         }
 
+        // Kanban card manage pane (kebab menu) — hover fix
+        .o_kanban_card_manage_pane {
+            .oe_kanban_action {
+                border-radius: var(--nova-radius-sm);
+                transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+
+                &:hover, &:focus {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+            }
+
+            // Separator between sections
+            hr {
+                border-color: var(--nova-border-light) !important;
+            }
+
+            // Settings section border-top (Modifier, etc.)
+            .row.o_kanban_card_manage_settings:not(:first-child) {
+                border-top-color: var(--nova-border) !important;
+            }
+        }
+
         // Column progressbar
         .o_kanban_counter_progress {
             .progress {
@@ -3353,6 +3376,26 @@ html.nova-dark {
         .o_cp_bottom_right {
             background-color: var(--nova-surface) !important;
             border-color: var(--nova-border) !important;
+        }
+    }
+
+    // Filter / Group By / Favorites buttons — dark mode hover
+    .o_cp_bottom_left .btn,
+    .o_search_options .btn {
+        color: var(--nova-text-secondary) !important;
+        background: var(--nova-surface) !important;
+        border-color: var(--nova-border) !important;
+
+        &:hover, &:focus {
+            background: var(--nova-accent-light) !important;
+            border-color: var(--nova-accent) !important;
+            color: var(--nova-accent) !important;
+        }
+
+        &:active, &.show {
+            background: var(--nova-accent-medium) !important;
+            border-color: var(--nova-accent) !important;
+            color: var(--nova-accent) !important;
         }
     }
 
