@@ -3380,8 +3380,8 @@ html.nova-dark {
     }
 
     // Filter / Group By / Favorites buttons — dark mode hover
-    .o_cp_bottom_left .btn,
-    .o_search_options .btn {
+    .o_cp_bottom_left .btn:not(.btn-primary):not(.o_list_button_add),
+    .o_search_options .btn:not(.btn-primary):not(.o_list_button_add) {
         color: var(--nova-text-secondary) !important;
         background: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
