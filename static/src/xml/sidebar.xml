@@ -48,7 +48,27 @@
                             <span class="nova-sidebar__icon">
                                 <i t-attf-class="fa #{getMenuIcon(pin)}"/>
                             </span>
-                            <span class="nova-sidebar__label" t-esc="pin.name"/>
+                            <!-- Inline rename input when editing -->
+                            <t t-if="isPinEditing(pin)">
+                                <input class="nova-sidebar__rename-input"
+                                       type="text"
+                                       t-att-value="pin.name"
+                                       t-on-keydown="(ev) => this.onPinRenameKeydown(pin, ev)"
+                                       t-on-blur="(ev) => this.onPinRenameBlur(pin, ev)"
+                                       t-on-click.prevent.stop="() => {}"
+                                       t-ref="'renameInput_' + (pin.key || '')"
+                                       />
+                            </t>
+                            <t t-else="">
+                                <span class="nova-sidebar__label"
+                                      t-on-dblclick.prevent.stop="() => this.startRenamePin(pin)"
+                                      t-esc="pin.name"/>
+                            </t>
+                            <button class="nova-sidebar__pin-rename-btn"
+                                    t-on-click.prevent.stop="() => this.startRenamePin(pin)"
+                                    title="Rename">
+                                <i class="fa fa-pencil"/>
+                            </button>
                             <button class="nova-sidebar__pin-remove"
                                     t-on-click.prevent.stop="() => this.removePin(pin)"
                                     title="Unpin">

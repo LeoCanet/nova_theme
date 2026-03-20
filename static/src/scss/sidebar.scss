@@ -53,7 +53,8 @@ $sidebar-label-duration: 180ms;
         }
 
         // Hide elements that don't make sense collapsed
-        .nova-sidebar__pin-remove {
+        .nova-sidebar__pin-remove,
+        .nova-sidebar__pin-rename-btn {
             display: none !important;
         }
 
@@ -167,6 +168,52 @@ $sidebar-label-duration: 180ms;
 
     .nova-sidebar__pin-item:hover .nova-sidebar__pin-remove {
         display: flex;
+    }
+
+    // ─── Pin rename button (pencil) ──────────────────────────────────
+    .nova-sidebar__pin-rename-btn {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border: none;
+        border-radius: var(--nova-radius-sm, 4px);
+        background: transparent;
+        color: var(--nova-text-tertiary);
+        cursor: pointer;
+        font-size: 10px;
+        flex-shrink: 0;
+        transition: all var(--nova-transition-fast);
+
+        &:hover {
+            background: var(--nova-accent-light);
+            color: var(--nova-accent);
+        }
+    }
+
+    .nova-sidebar__pin-item:hover .nova-sidebar__pin-rename-btn {
+        display: flex;
+    }
+
+    // ─── Inline rename input ──────────────────────────────────────────
+    .nova-sidebar__rename-input {
+        flex: 1;
+        min-width: 0;
+        margin-left: var(--nova-space-3);
+        padding: 1px 4px;
+        border: 1px solid var(--nova-accent);
+        border-radius: var(--nova-radius-sm, 4px);
+        background: var(--nova-surface);
+        color: var(--nova-text-primary);
+        font-size: var(--nova-font-base);
+        font-weight: 450;
+        outline: none;
+        line-height: 1.4;
+
+        &:focus {
+            box-shadow: 0 0 0 2px rgba(var(--nova-accent-rgb, 59, 130, 246), 0.2);
+        }
     }
 
     // ─── App icon (native module icon) ───────────────────────────────

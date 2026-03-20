@@ -504,7 +504,7 @@
         // IMPORTANT: the strip list must include ALL wrapper types so that
         // nested wrappers (e.g. .o_field_many2one_selection > .o_input_dropdown)
         // don't produce double borders.
-        div.o_input,
+        div.o_input:not(.nova-select__trigger),
         .o_input_dropdown,
         .o_field_many2one_selection {
             border: 1px solid var(--nova-border);

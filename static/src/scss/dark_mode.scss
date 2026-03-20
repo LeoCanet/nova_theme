@@ -2734,8 +2734,35 @@ html.nova-dark {
         }
     }
 
-    // Nova custom select — trigger inherits dark surface via CSS vars
-    // Dropdown already uses --nova-surface / --nova-border which switch in dark mode
+    // Nova custom select
+    .nova-select__trigger {
+        background-color: var(--nova-bg-alt) !important;
+        border-color: var(--nova-border) !important;
+        color: var(--nova-text) !important;
+    }
+    .nova-select__value {
+        color: var(--nova-text) !important;
+    }
+    .nova-select__placeholder {
+        color: var(--nova-text-tertiary) !important;
+    }
+    .nova-select__arrow {
+        color: var(--nova-text-tertiary) !important;
+    }
+    .nova-select__dropdown {
+        background-color: var(--nova-surface-raised) !important;
+        border-color: var(--nova-border) !important;
+    }
+    .nova-select__option {
+        color: var(--nova-text) !important;
+        &:hover {
+            background-color: var(--nova-accent-light) !important;
+        }
+        &.active {
+            background-color: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
+    }
 
     // ─── Control Panel Action Menus ──────────────────────────────────
     .o_cp_action_menus .btn {

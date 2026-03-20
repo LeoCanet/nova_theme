@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, useState, onMounted, onWillUnmount, onPatched } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -31,6 +31,7 @@ export class NovaSidebar extends Component {
             collapsed: sidebarCollapsed,
             favoriteApps: [],
             pinnedPages: [],
+            editingPinKey: null,
             _tick: 0,
         });
 
@@ -46,6 +47,16 @@ export class NovaSidebar extends Component {
 
         this._boundOnFavoritesChanged = () => this._loadFavorites();
         this._boundOnPinsChanged = () => this._loadPins();
+
+        onPatched(() => {
+            if (this.state.editingPinKey) {
+                const input = this.el && this.el.querySelector(".nova-sidebar__rename-input");
+                if (input && input !== document.activeElement) {
+                    input.focus();
+                    input.select();
+                }
+            }
+        });
 
         onMounted(() => {
             this._loadFavorites();
@@ -313,6 +324,57 @@ export class NovaSidebar extends Component {
                 options.viewType = pin.viewType;
             }
             this.actionService.doAction(pin.actionID, options);
+        }
+    }
+
+    // ── Pin renaming ─────────────────────────────────────────────────────
+
+    startRenamePin(pin) {
+        this.state.editingPinKey = pin.key || this._pinKey(pin);
+    }
+
+    commitRenamePin(pin, newName) {
+        const trimmed = (newName || "").trim();
+        if (!trimmed) {
+            // Empty name → cancel, keep old name
+            this.state.editingPinKey = null;
+            return;
+        }
+        const key = pin.key || this._pinKey(pin);
+        const pages = this.state.pinnedPages.map((p) => {
+            if ((p.key || this._pinKey(p)) === key) {
+                return { ...p, name: trimmed };
+            }
+            return p;
+        });
+        this.storage.setPinnedPages(pages);
+        this.state.pinnedPages = pages;
+        this.state.editingPinKey = null;
+        this.env.bus.trigger("NOVA:PINS-CHANGED");
+    }
+
+    cancelRenamePin() {
+        this.state.editingPinKey = null;
+    }
+
+    isPinEditing(pin) {
+        return this.state.editingPinKey === (pin.key || this._pinKey(pin));
+    }
+
+    onPinRenameKeydown(pin, ev) {
+        if (ev.key === "Enter") {
+            ev.preventDefault();
+            this.commitRenamePin(pin, ev.target.value);
+        } else if (ev.key === "Escape") {
+            ev.preventDefault();
+            this.cancelRenamePin();
+        }
+    }
+
+    onPinRenameBlur(pin, ev) {
+        // Commit on blur (unless already cancelled via Escape)
+        if (this.state.editingPinKey === (pin.key || this._pinKey(pin))) {
+            this.commitRenamePin(pin, ev.target.value);
         }
     }
 
