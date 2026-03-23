@@ -91,6 +91,7 @@
             "nova_theme/static/src/xml/chatter_topbar.xml",
             "nova_theme/static/src/xml/dark_mode_toggle.xml",
             "nova_theme/static/src/xml/perf_monitor.xml",
+            "nova_theme/static/src/xml/boolean_favorite_field.xml",
         ],
     },
     "images": [

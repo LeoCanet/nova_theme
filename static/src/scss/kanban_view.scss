@@ -255,8 +255,32 @@
 .o_kanban_dashboard .o_kanban_record {
     position: relative;
 
-    // Title link becomes a stretched-link covering the whole card
+    // Card header: flex layout with kebab in top-right corner
+    .o_kanban_card_header {
+        display: flex;
+        align-items: flex-start;
+
+        .o_kanban_card_header_title {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .o_kanban_manage_button_section {
+            flex-shrink: 0;
+            margin-left: auto;
+            align-self: flex-start;
+        }
+    }
+
+    // Title link: use standard text color, not accent
     .o_kanban_card_header_title .o_primary > a {
+        color: var(--nova-text) !important;
+        text-decoration: none;
+
+        &:hover {
+            color: var(--nova-accent) !important;
+        }
+
         &::after {
             content: "";
             position: absolute;

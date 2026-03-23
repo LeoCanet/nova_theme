@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Override: translate hardcoded English strings in BooleanFavoriteField -->
+    <t t-name="web.BooleanFavoriteField" t-inherit="web.BooleanFavoriteField" t-inherit-mode="extension" owl="1">
+        <xpath expr="//i" position="attributes">
+            <attribute name="t-att-title">props.value ? 'Retirer des favoris' : 'Ajouter aux favoris'</attribute>
+            <attribute name="t-att-aria-label">props.value ? 'Retirer des favoris' : 'Ajouter aux favoris'</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='!props.noLabel']" position="replace">
+            <t t-if="!props.noLabel"> <t t-esc="props.value ? 'Retirer des favoris' : 'Ajouter aux favoris'" /></t>
+        </xpath>
+    </t>
+
+</templates>
