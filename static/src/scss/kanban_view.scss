@@ -80,6 +80,11 @@
             border: none !important;
             border-radius: inherit;
             overflow: hidden;
+
+            // Remove clipping when kebab dropdown is open so it's not cut off
+            &:has(.o_kanban_card_manage_pane) {
+                overflow: visible;
+            }
         }
 
         // Inner clickable wrapper — inherit parent border-radius for proper image clipping
@@ -297,11 +302,37 @@
     .o_kanban_card_content a,
     .o_kanban_card_content button,
     .o_kanban_card_content .btn,
-    .o_kanban_card_content widget,
-    .o_kanban_card_manage_pane {
+    .o_kanban_card_content widget {
         position: relative;
         z-index: 2;
     }
+
+    // Kebab dropdown — when open, must sit above card content (z-index: 2)
+    .o_dropdown_kanban.show,
+    .o_dropdown_kanban:has(.o_kanban_card_manage_pane) {
+        z-index: 10;
+    }
+
+    .o_kanban_card_manage_pane {
+        z-index: 1050 !important;
+    }
+
+    // When kebab is open, lift entire record above siblings & banner
+    &:has(.o_kanban_card_manage_pane) {
+        z-index: 100 !important;
+    }
+}
+
+// ─── Onboarding banner: never block kebab dropdowns ─────────────────────────
+.o_onboarding_main,
+.o_onboarding_container {
+    position: relative;
+    z-index: 0;
+}
+
+// ─── Kebab open: remove overflow clipping on ancestors so dropdown is visible
+.o_content:has(.o_kanban_card_manage_pane) {
+    overflow: visible !important;
 }
 
 // ─── Kanban drag state ─────────────────────────────────────────────────────

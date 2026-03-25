@@ -322,8 +322,9 @@ html.nova-launcher-open {
     img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         border-radius: inherit;
+        image-rendering: auto;
     }
 }
 

@@ -30,10 +30,27 @@ $sidebar-label-duration: 180ms;
     &.nova-sidebar--collapsed {
         width: var(--nova-sidebar-collapsed-width);
 
-        // Fade text out — clipping handles the rest
+        // Center icons via padding only (no justify-content snap)
+        // Sidebar 56px - nav padding 16px = 40px; icon 28px → 6px each side
+        .nova-sidebar__item {
+            padding-left: 6px;
+            padding-right: 6px;
+            transition: padding $sidebar-duration $sidebar-ease,
+                        background var(--nova-transition-fast),
+                        color var(--nova-transition-fast);
+        }
+
+        // Shrink + fade text — no layout impact, animatable
         .nova-sidebar__item .nova-sidebar__label {
             opacity: 0;
-            transition: opacity 100ms ease;
+            flex: 0 0 0;
+            width: 0;
+            margin: 0;
+            overflow: hidden;
+            transition: opacity 100ms ease,
+                        flex $sidebar-duration $sidebar-ease,
+                        width $sidebar-duration $sidebar-ease,
+                        margin $sidebar-duration $sidebar-ease;
         }
 
         .nova-sidebar__section-title,
@@ -71,6 +88,12 @@ $sidebar-label-duration: 180ms;
     // ─── Expanded State (reverse transitions) ───────────────────────────
     // Labels appear AFTER the sidebar has finished widening
     &:not(.nova-sidebar--collapsed) {
+        .nova-sidebar__item {
+            transition: padding $sidebar-duration $sidebar-ease,
+                        background var(--nova-transition-fast),
+                        color var(--nova-transition-fast);
+        }
+
         .nova-sidebar__item .nova-sidebar__label {
             transition: opacity $sidebar-label-duration ease $sidebar-duration * 0.4;
         }
@@ -90,6 +113,8 @@ $sidebar-label-duration: 180ms;
         overflow-y: auto;
         overflow-x: hidden;
         padding: var(--nova-space-3) var(--nova-space-2);
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
     }
 
     .nova-sidebar__section-title {
@@ -218,8 +243,8 @@ $sidebar-label-duration: 180ms;
 
     // ─── App icon (native module icon) ───────────────────────────────
     .nova-sidebar__app-icon {
-        width: 24px;
-        height: 24px;
+        width: 28px !important;
+        height: 28px;
         border-radius: 6px;
         overflow: hidden;
         flex-shrink: 0;
@@ -228,9 +253,9 @@ $sidebar-label-duration: 180ms;
         justify-content: center;
 
         img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
             border-radius: inherit;
         }
     }
@@ -252,10 +277,13 @@ $sidebar-label-duration: 180ms;
                     color var(--nova-transition-fast);
 
         .nova-sidebar__icon {
-            width: 20px;
+            width: 28px;
             text-align: center;
             font-size: 15px;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: color var(--nova-transition-fast);
         }
 

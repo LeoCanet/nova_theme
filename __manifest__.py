@@ -81,6 +81,7 @@
             "nova_theme/static/src/js/nova_mobile_menu.js",
             "nova_theme/static/src/js/nova_mobile_view.js",
             "nova_theme/static/src/js/nova_db_name.js",
+            "nova_theme/static/src/js/nova_touch_no_autofocus.js",
             "nova_theme/static/src/xml/app_launcher.xml",
             "nova_theme/static/src/xml/nova_selection_field.xml",
             "nova_theme/static/src/xml/nova_custom_filter_select.xml",

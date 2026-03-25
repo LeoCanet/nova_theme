@@ -3243,6 +3243,11 @@ html.nova-dark {
         &:hover td {
             background-color: var(--nova-accent-light) !important;
         }
+        // Decorations (text-danger, text-warning, text-info, text-success) on data rows
+        &.text-danger td { color: var(--nova-danger) !important; }
+        &.text-warning td { color: var(--nova-warning) !important; }
+        &.text-info td { color: var(--nova-info) !important; }
+        &.text-success td { color: var(--nova-success) !important; }
     }
 
     .o_list_renderer .o_list_table tfoot,

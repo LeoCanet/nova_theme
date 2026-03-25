@@ -10,9 +10,19 @@
     .nova-sidebar {
         width: var(--nova-sidebar-collapsed-width);
 
-        // Fade text out quickly — clipping handles the rest
+        // Center icons via padding (same calc as sidebar.scss collapsed)
+        .nova-sidebar__item {
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        // Shrink + fade text
         .nova-sidebar__item .nova-sidebar__label {
             opacity: 0;
+            flex: 0 0 0;
+            width: 0;
+            margin: 0;
+            overflow: hidden;
             transition: opacity 100ms ease;
         }
 
@@ -28,8 +38,16 @@
             box-shadow: var(--nova-shadow-lg);
             z-index: 1035;
 
+            .nova-sidebar__item {
+                padding-left: var(--nova-space-3);
+                padding-right: var(--nova-space-3);
+            }
+
             .nova-sidebar__item .nova-sidebar__label {
                 opacity: 1;
+                flex: 1;
+                width: auto;
+                margin-left: var(--nova-space-3);
                 transition: opacity 180ms ease 140ms;
             }
 

@@ -16,7 +16,7 @@
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
     }
 }
 
@@ -90,7 +90,7 @@
 
 // Kanban cards stagger (handled via JS class toggling or pure CSS)
 .o_kanban_view .o_kanban_record {
-    animation: novaFadeInUp 0.3s ease both;
+    animation: novaFadeInUp 0.3s ease backwards;
 
     @for $i from 1 through 50 {
         &:nth-child(#{$i}) {

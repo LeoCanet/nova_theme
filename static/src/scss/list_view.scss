@@ -285,6 +285,11 @@ i.o_optional_columns_dropdown_toggle {
 .o_search_panel {
     background: var(--nova-surface) !important;
     border-right: 1px solid var(--nova-border) !important;
+
+    // Chart of accounts: Odoo sets flex-basis:50px which hides group names
+    &.account_root {
+        flex-basis: 200px !important;
+    }
     padding-left: 1rem !important;
     padding-right: 0.75rem !important;
 
@@ -306,25 +311,41 @@ i.o_optional_columns_dropdown_toggle {
         font-size: 0.8rem !important;
     }
 
-    // Remove list-group-item borders
+    // Reset Bootstrap list-group-item styles
     .list-group-item {
-        border-color: var(--nova-border) !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    .list-group-item-action:hover,
+    .list-group-item-action:focus,
+    .list-group-item-action:active,
+    .list-group-item-action.active {
+        background: var(--nova-accent-light) !important;
+        color: var(--nova-accent) !important;
+        border: none !important;
+        border-radius: var(--nova-radius) !important;
     }
 
     // Category items
     .o_search_panel_category_value {
         padding: 0 !important;
         margin: 1px 0 !important;
+        background: transparent !important;
 
-        > header {
+        > header,
+        > header.list-group-item-action {
             padding: 0.375rem 0.625rem !important;
-            border-radius: var(--nova-radius-sm) !important;
+            border-radius: var(--nova-radius) !important;
             transition: background 150ms ease, color 150ms ease !important;
             background: transparent !important;
             color: var(--nova-text) !important;
+            border: none !important;
 
-            &:hover {
+            &:hover,
+            &:focus {
                 background: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
             }
 
             // Active item

@@ -62,11 +62,14 @@ export class NovaAppLauncher extends Component {
         this.state.isOpen = true;
         this.state.searchQuery = "";
         document.documentElement.classList.add("nova-launcher-open");
-        setTimeout(() => {
-            if (this.searchInput && this.searchInput.el) {
-                this.searchInput.el.focus();
-            }
-        }, 50);
+        // Don't autofocus on touch devices to avoid opening the keyboard
+        if (!window.matchMedia("(pointer: coarse)").matches) {
+            setTimeout(() => {
+                if (this.searchInput && this.searchInput.el) {
+                    this.searchInput.el.focus();
+                }
+            }, 50);
+        }
     }
 
     close() {
