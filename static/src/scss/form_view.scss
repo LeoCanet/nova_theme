@@ -435,33 +435,17 @@
         }
     }
 
-    // ─── Required field asterisk ─────────────────────────────────────
-    // CSS-only approach using :has() — no JS needed.
-    // Pattern 1: .o_wrap_label cell followed by cell containing required field
-    .o_wrap_label:has(+ .o_cell .o_required_modifier) > .o_form_label,
-    // Pattern 2: .o_td_label followed by td containing required field
-    .o_td_label:has(+ td .o_required_modifier) > label {
-        &::after {
-            content: " *";
-            color: var(--nova-danger);
-            font-weight: 700;
-        }
-    }
 
-    // Pattern 3: label span that contains/precedes a required field (e.g. address type selector)
-    // These labels may wrap block-level widgets — use absolute positioning.
-    span.o_form_label:has(> .o_required_modifier),
-    span.o_form_label:has(+ .o_required_modifier) {
-        position: relative;
-
-        &::after {
-            content: " *";
-            color: var(--nova-danger);
-            font-weight: 700;
-            position: absolute;
-            top: 0;
-            margin-left: 2px;
-        }
+    // ── Many2one extra info (e.g. partner address below input) ──
+    // Only style when it actually has content (not empty spans)
+    .o_field_many2one_extra:not(:empty) {
+        margin-top: var(--nova-space-1);
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius);
+        background: var(--nova-bg-alt);
+        padding: var(--nova-space-2) var(--nova-space-3);
+        font-size: var(--nova-font-sm);
+        color: var(--nova-text-secondary);
     }
 
     // ─── Input Fields ──────────────────────────────────────────────────
@@ -504,7 +488,7 @@
         // IMPORTANT: the strip list must include ALL wrapper types so that
         // nested wrappers (e.g. .o_field_many2one_selection > .o_input_dropdown)
         // don't produce double borders.
-        div.o_input:not(.nova-select__trigger),
+        div.o_input,
         .o_input_dropdown,
         .o_field_many2one_selection {
             border: 1px solid var(--nova-border);
@@ -800,6 +784,25 @@
             // Stock forecast icon — red when row indicates stock issue
             tbody tr.o_data_row.text-danger .o_widget_qty_at_date_widget .fa-area-chart {
                 color: var(--nova-danger) !important;
+            }
+
+            // Row decorations: force color on cells, product links and tax badges
+            @each $dec in danger, warning, info, success {
+                tbody tr.o_data_row.text-#{$dec} {
+                    td {
+                        color: var(--bs-#{$dec}) !important;
+                    }
+                    td a.o_form_uri,
+                    td a.o_form_uri > span,
+                    td a.o_form_uri > span:first-child,
+                    td .o_field_many2many_tags .badge,
+                    td .o_field_many2many_tags .o_tag_badge_text {
+                        color: var(--bs-#{$dec}) !important;
+                    }
+                    td .o_field_many2many_tags .badge {
+                        border-color: var(--bs-#{$dec}) !important;
+                    }
+                }
             }
             tbody td,
             tbody .o_data_row td,

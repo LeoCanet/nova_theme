@@ -656,7 +656,14 @@ html.nova-dark {
             box-shadow: none !important;
         }
 
-        &:read-only, &[readonly], &:disabled {
+        // Only apply :read-only to actual form elements (div matches :read-only by default)
+        &:is(input, textarea, select) {
+            &:read-only, &[readonly], &:disabled {
+                background-color: var(--nova-surface) !important;
+                color: var(--nova-text-secondary) !important;
+            }
+        }
+        &[readonly], &:disabled {
             background-color: var(--nova-surface) !important;
             color: var(--nova-text-secondary) !important;
         }
@@ -2734,7 +2741,7 @@ html.nova-dark {
         }
     }
 
-    // Nova custom select
+    // Nova custom select — same background as other form inputs
     .nova-select__trigger {
         background-color: var(--nova-bg-alt) !important;
         border-color: var(--nova-border) !important;
@@ -3243,11 +3250,8 @@ html.nova-dark {
         &:hover td {
             background-color: var(--nova-accent-light) !important;
         }
-        // Decorations (text-danger, text-warning, text-info, text-success) on data rows
-        &.text-danger td { color: var(--nova-danger) !important; }
-        &.text-warning td { color: var(--nova-warning) !important; }
-        &.text-info td { color: var(--nova-info) !important; }
-        &.text-success td { color: var(--nova-success) !important; }
+        // Decorations on data rows — only in inline lists (form view), not top-level list views
+        // Top-level list views handle their own decoration colors via Bootstrap text-* classes
     }
 
     .o_list_renderer .o_list_table tfoot,
@@ -3791,7 +3795,6 @@ html.nova-dark {
     }
 
     .o_Composer_toolButtons.bg-view {
-        background-color: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
     }
 

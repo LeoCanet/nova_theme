@@ -64,10 +64,38 @@
         background: var(--nova-bg-alt);
         border-top: 1px solid var(--nova-border);
         padding: var(--nova-space-4) var(--nova-space-6);
-        gap: var(--nova-space-2);
+        gap: var(--nova-space-3);
 
         .btn {
             min-width: 80px;
+        }
+
+        // Hide bare "ou" / "or" text nodes between buttons
+        > footer {
+            font-size: 0;  // hides text nodes
+            display: flex;
+            align-items: center;
+            gap: var(--nova-space-3);
+
+            > * {
+                font-size: var(--nova-font-base);  // restore on children
+            }
+        }
+
+        // Secondary / link buttons — give them a visible border
+        .btn-secondary, .btn-link {
+            border: 1px solid var(--nova-border) !important;
+            border-radius: var(--nova-radius) !important;
+            color: var(--nova-text) !important;
+            background: transparent !important;
+            text-decoration: none !important;
+            padding: var(--nova-space-2) var(--nova-space-4);
+
+            &:hover {
+                background: var(--nova-accent-light) !important;
+                border-color: var(--nova-accent) !important;
+                color: var(--nova-accent) !important;
+            }
         }
     }
 

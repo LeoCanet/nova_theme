@@ -38,7 +38,10 @@ export class NovaSelectionField extends SelectionField {
         if (this.props.value === false) {
             return this.props.placeholder || "";
         }
-        const opt = this.options.find(([v]) => v === this.props.value);
+        // For many2one, use this.value (integer id) instead of this.props.value ([id, label])
+        // For selection, this.value === this.props.value (both are the raw value)
+        const currentVal = this.value;
+        const opt = this.options.find(([v]) => v === currentVal);
         return opt ? opt[1] : "";
     }
 

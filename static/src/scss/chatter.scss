@@ -633,3 +633,56 @@
         color: var(--nova-text-tertiary);
     }
 }
+
+// ─── Nova chatter message cards ────────────────────────────────────────────
+// Generic classes for styled message blocks in chatter (message_post body).
+// Usage: <div class="nova_msg nova_msg_info"><div class="nova_msg_text">...</div></div>
+.nova_msg {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    margin-bottom: 10px;
+}
+.nova_msg_info {
+    background-color: #e8f4f8;
+    border-color: #d1e8f2;
+    .nova_msg_text { color: #31708f; }
+}
+.nova_msg_danger {
+    background-color: #f8d7da;
+    border-color: #eed3d7;
+    .nova_msg_text { color: #b94a48; }
+}
+.nova_msg_warning {
+    background-color: #fff3cd;
+    border-color: #ffc107;
+    .nova_msg_text { color: #856404; }
+}
+.nova_msg_success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    .nova_msg_text { color: #3c763d; }
+}
+
+html.nova-dark {
+    .nova_msg_info {
+        background-color: rgba(49, 112, 143, 0.15);
+        border-color: rgba(49, 112, 143, 0.3);
+        .nova_msg_text { color: #7ec8e3; }
+    }
+    .nova_msg_danger {
+        background-color: rgba(185, 74, 72, 0.15);
+        border-color: rgba(185, 74, 72, 0.3);
+        .nova_msg_text { color: #e8a0a0; }
+    }
+    .nova_msg_warning {
+        background-color: rgba(255, 193, 7, 0.12);
+        border-color: rgba(255, 193, 7, 0.3);
+        .nova_msg_text { color: #f0c040; }
+    }
+    .nova_msg_success {
+        background-color: rgba(76, 175, 80, 0.15);
+        border-color: rgba(76, 175, 80, 0.3);
+        .nova_msg_text { color: #81c784; }
+    }
+}
