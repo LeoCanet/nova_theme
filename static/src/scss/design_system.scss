@@ -751,6 +751,19 @@ a {
     border-radius: var(--nova-radius-sm);
 }
 
+// ─── Boolean toggle (form-switch) — consistent sizing ───────────────────
+.form-switch .form-check-input,
+.o_boolean_toggle .form-check-input {
+    width: 2em !important;
+    height: 1em !important;
+    cursor: pointer;
+
+    &:checked {
+        background-color: var(--nova-accent) !important;
+        border-color: var(--nova-accent) !important;
+    }
+}
+
 // ─── Nova Custom Select (replaces native <select>) ──────────────────────
 .nova-select {
     position: relative;

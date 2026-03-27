@@ -713,6 +713,22 @@ html.nova-dark {
         }
     }
 
+    // Boolean toggle (form-switch) — dark mode colors + consistent sizing
+    .form-switch .form-check-input,
+    .o_boolean_toggle .form-check-input {
+        width: 2em !important;
+        height: 1em !important;
+        background-color: var(--nova-surface) !important;
+        border-color: var(--nova-border) !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23adb5bd'/%3e%3c/svg%3e") !important;
+
+        &:checked {
+            background-color: var(--nova-accent) !important;
+            border-color: var(--nova-accent) !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+        }
+    }
+
     // Kill all focus glow on form controls — borders are enough
     .form-control:focus,
     .form-select:focus,

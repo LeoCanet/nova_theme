@@ -20,7 +20,7 @@
                             data-hotkey="m"
                             t-on-click="chatterTopbar.chatter.onClickSendMessage"
                         >
-                            <i class="fa fa-paper-plane me-1"/>Send message
+                            <i class="fa fa-paper-plane me-1"/>Contacter le client
                         </button>
                         <span class="nova-tb-sep"/>
                         <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonLogNote nova-tb-btn"

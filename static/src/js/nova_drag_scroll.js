@@ -11,7 +11,8 @@
 const INTERACTIVE =
     "a, button, input, select, textarea, .btn, .dropdown-toggle, " +
     ".o_kanban_quick_add, .o_kanban_config, .product, .orderline, " +
-    ".numpad, .pay-order-button, .control-button";
+    ".numpad, .pay-order-button, .control-button, " +
+    ".o_handle, [draggable='true'], .ui-sortable-handle, .o_field_handle";
 
 const MIN_OVERFLOW = 20;
 
@@ -51,6 +52,7 @@ function findScrollableContainer(target) {
 document.addEventListener("mousedown", (e) => {
     if (e.button !== 0) return;
     if (e.target.closest(INTERACTIVE)) return;
+    if (e.target.closest('[draggable="true"]')) return;
 
     if (animationId) {
         cancelAnimationFrame(animationId);

@@ -44,6 +44,15 @@
     //     has arrows that extend INTO the active button's area.
     //     Its ::after must match the active bg so the notch is invisible.
     .o_form_statusbar {
+        // Flex-wrap layout — buttons and status bar share the same flow.
+        // display:contents on .o_statusbar_buttons dissolves the wrapper so
+        // each button is a direct flex item. Status bar pushes right with
+        // margin-left:auto. Buttons wrap at the FORM edge, not the status edge.
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--nova-space-2);
+
         background: var(--nova-bg) !important;
         border: none !important;
         padding: var(--nova-space-2) var(--nova-space-4);
@@ -55,8 +64,61 @@
         // renders differently due to compositing. color-mix() gives a true opaque blend.
         --_arrow-hover: color-mix(in srgb, var(--nova-accent) 18%, var(--nova-bg));
 
+        .o_statusbar_buttons {
+            // Dissolve wrapper — individual buttons become direct flex children
+            display: contents;
+        }
+
+        // Status bar: takes remaining space on shared line, full width when alone.
+        // flex-basis:0% + flex-grow:1 = always fills available space on current line.
+        // row-reverse inside keeps arrows right-aligned.
+        > .o_field_statusbar {
+            flex: 1 0 0%;
+            min-width: 0;
+            position: relative;
+
+            // ── Scroll indicators — subtle edge fades ──
+            // JS toggles .nova-scroll-left / .nova-scroll-right on this element.
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 32px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity .2s ease;
+                z-index: 1;
+            }
+
+            &::before {
+                left: 0;
+                background: linear-gradient(to right, var(--nova-bg), transparent);
+            }
+
+            &::after {
+                right: 0;
+                background: linear-gradient(to left, var(--nova-bg), transparent);
+            }
+
+            &.nova-scroll-left::before { opacity: 1; }
+            &.nova-scroll-right::after { opacity: 1; }
+        }
+
         .o_statusbar_status {
+            // Force single row — scroll horizontally if too many states
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            scrollbar-width: none; // Firefox
+            &::-webkit-scrollbar {
+                display: none; // Chrome/Safari
+            }
+
             .o_arrow_button {
+                // Never shrink — overflow-x on parent handles excess
+                flex-shrink: 0 !important;
+
                 // Kill Bootstrap btn-light/btn-secondary CSS custom properties
                 --bs-btn-bg: transparent;
                 --bs-btn-hover-bg: transparent;
@@ -145,8 +207,6 @@
         }
 
         .o_statusbar_buttons {
-            gap: var(--nova-space-2);
-
             // Common style for all action buttons
             .btn {
                 border-radius: var(--nova-radius) !important;
@@ -224,8 +284,12 @@
 
         background: var(--nova-surface) !important;
         border: none !important;
-        border-bottom: 1px solid var(--nova-border) !important;
         border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0 !important;
+
+        // Border bottom only when there are smart buttons inside
+        &:has(.oe_stat_button, .btn) {
+            border-bottom: 1px solid var(--nova-border) !important;
+        }
         box-shadow: none !important;
         padding: 0 !important;
         margin: 0 !important;
@@ -446,6 +510,33 @@
         padding: var(--nova-space-2) var(--nova-space-3);
         font-size: var(--nova-font-sm);
         color: var(--nova-text-secondary);
+    }
+
+    // ─── Readonly fields — subtle container so they don't look naked ───
+    // In readonly mode, Odoo renders <span>/<a> instead of <input>.
+    // Scoped to .o_inner_group (the actual field grid) inside .o_group — this
+    // excludes button boxes, smart buttons, and top-level sheet elements.
+    .o_inner_group .o_field_widget.o_readonly_modifier,
+    .oe_title:not(h1):not(.h1):not(h2):not(.h2) > .o_field_widget.o_readonly_modifier {
+        &:not(.o_field_one2many):not(.o_field_many2many):not(.o_field_binary):not(.o_field_image):not(.o_field_boolean):not(.o_priority):not(.o_field_statusbar):not(.o_field_many2many_tags):not(.o_field_radio):not(.o_field_html):not(.o_field_payment):not([class*="tax-totals"]):not(.oe_subtotal_footer_separator) {
+            background: var(--nova-bg-alt);
+            border: 1px solid var(--nova-border-light);
+            border-radius: var(--nova-radius);
+            padding: var(--nova-space-2) var(--nova-space-3);
+            min-height: 36px;
+        }
+    }
+
+    // Undo readonly box on the main record title (h1/h2)
+    .oe_title h1, .oe_title .h1,
+    .oe_title h2, .oe_title .h2 {
+        .o_field_widget.o_readonly_modifier {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            min-height: auto;
+        }
     }
 
     // ─── Input Fields ──────────────────────────────────────────────────
