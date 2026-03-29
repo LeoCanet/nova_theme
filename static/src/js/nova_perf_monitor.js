@@ -449,7 +449,7 @@ export class NovaPerfMonitor extends Component {
 NovaPerfMonitor.template = "nova_theme.PerfMonitor";
 NovaPerfMonitor.props = {};
 
-if (session.is_system) {
+if (session.debug) {
     registry.category("systray").add("nova_theme.PerfMonitor", {
         Component: NovaPerfMonitor,
     }, { sequence: 100 });

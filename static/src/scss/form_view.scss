@@ -73,8 +73,8 @@
         // flex-basis:0% + flex-grow:1 = always fills available space on current line.
         // row-reverse inside keeps arrows right-aligned.
         > .o_field_statusbar {
-            flex: 1 0 0%;
-            min-width: 0;
+            flex: 1 0 25%;
+            min-width: 25%;
             position: relative;
 
             // ── Scroll indicators — subtle edge fades ──
@@ -516,7 +516,7 @@
     // In readonly mode, Odoo renders <span>/<a> instead of <input>.
     // Scoped to .o_inner_group (the actual field grid) inside .o_group — this
     // excludes button boxes, smart buttons, and top-level sheet elements.
-    .o_inner_group .o_field_widget.o_readonly_modifier,
+    .o_inner_group:not(.oe_subtotal_footer) .o_field_widget.o_readonly_modifier,
     .oe_title:not(h1):not(.h1):not(h2):not(.h2) > .o_field_widget.o_readonly_modifier {
         &:not(.o_field_one2many):not(.o_field_many2many):not(.o_field_binary):not(.o_field_image):not(.o_field_boolean):not(.o_priority):not(.o_field_statusbar):not(.o_field_many2many_tags):not(.o_field_radio):not(.o_field_html):not(.o_field_payment):not([class*="tax-totals"]):not(.oe_subtotal_footer_separator) {
             background: var(--nova-bg-alt);

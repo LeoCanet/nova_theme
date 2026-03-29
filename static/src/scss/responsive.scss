@@ -374,6 +374,7 @@
         -webkit-overflow-scrolling: touch;
     }
 
+
     // Modals full-screen on mobile
     .modal .modal-dialog {
         margin: var(--nova-space-2);
@@ -625,6 +626,7 @@
     // Status bar mobile — own line, full width, scroll if needed
     .o_form_statusbar > .o_field_statusbar {
         flex-basis: 100% !important;
+        min-width: 0 !important;
     }
 
     .o_calendar_view {

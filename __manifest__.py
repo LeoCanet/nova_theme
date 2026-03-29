@@ -61,6 +61,7 @@
             "nova_theme/static/src/scss/chatter.scss",
             "nova_theme/static/src/scss/loading.scss",
             "nova_theme/static/src/scss/mobile_menu.scss",
+            "nova_theme/static/src/scss/arpa_notification.scss",
             "nova_theme/static/src/scss/dark_mode.scss",
             "nova_theme/static/src/scss/animations.scss",
             "nova_theme/static/src/scss/responsive.scss",

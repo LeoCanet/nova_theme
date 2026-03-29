@@ -1,0 +1,262 @@
+// ╔══════════════════════════════════════════════════════════════════════════════╗
+// ║  Nova Theme — arpa_notification systray override                           ║
+// ║  Replaces hardcoded colours / sizes with Nova design-system tokens so the  ║
+// ║  notification bell + dropdown feel native in both light & dark modes.       ║
+// ╚══════════════════════════════════════════════════════════════════════════════╝
+
+.arpa-notif-systray {
+    // ── Container ────────────────────────────────────────────────────────────
+    // Match exact same hit-area & hover as other systray interactive elements
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px !important;
+    max-height: 34px !important;
+    padding: 0 var(--nova-space-1) !important;
+    border-radius: var(--nova-radius);
+    background: transparent !important;
+    transition: all var(--nova-transition-fast);
+    position: relative;
+
+    &:hover {
+        background: var(--nova-accent-light) !important;
+    }
+
+    // ── Bell icon ────────────────────────────────────────────────────────────
+    .fa-bell {
+        font-size: var(--nova-font-lg);
+        color: var(--nova-text-secondary);
+        transition: color var(--nova-transition-fast);
+    }
+
+    &:hover .fa-bell {
+        color: var(--nova-accent);
+    }
+
+    // ── Badge (unread count) ─────────────────────────────────────────────────
+    .arpa-notif-badge {
+        position: absolute;
+        top: 0px;
+        right: -4px;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        font-size: var(--nova-font-2xs);
+        font-weight: 700;
+        font-family: var(--nova-font-family);
+        border-radius: var(--nova-radius-full);
+        background: var(--nova-accent) !important;
+        color: #FFFFFF !important;
+        border: 2px solid var(--nova-surface) !important;
+        line-height: 16px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        z-index: 1;
+    }
+
+    // ── Dropdown panel ───────────────────────────────────────────────────────
+    .arpa-notif-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        width: 340px;
+        background: var(--nova-surface);
+        border: 1px solid var(--nova-border);
+        border-radius: var(--nova-radius-lg);
+        box-shadow: var(--nova-shadow-lg);
+        z-index: 1060;
+        color: var(--nova-text);
+        overflow: hidden;
+        animation: novaDropdownIn 0.15s ease;
+    }
+
+    // ── Header ───────────────────────────────────────────────────────────────
+    .arpa-notif-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--nova-space-3) var(--nova-space-4);
+        border-bottom: 1px solid var(--nova-border);
+        background: var(--nova-bg-alt);
+
+        > span {
+            font-size: var(--nova-font-sm);
+            font-weight: 600;
+            font-family: var(--nova-font-family);
+            color: var(--nova-text);
+        }
+
+        .btn-link {
+            font-size: var(--nova-font-xs);
+            font-family: var(--nova-font-family);
+            color: var(--nova-accent);
+            text-decoration: none;
+            padding: 0;
+
+            &:hover {
+                color: var(--nova-accent-hover);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // ── List ─────────────────────────────────────────────────────────────────
+    .arpa-notif-list {
+        max-height: 360px;
+        overflow-y: auto;
+
+        // Thin custom scrollbar
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: var(--nova-border);
+            border-radius: var(--nova-radius-full);
+        }
+    }
+
+    // ── Individual notification item ─────────────────────────────────────────
+    .arpa-notif-item {
+        display: flex;
+        align-items: flex-start;
+        padding: var(--nova-space-3) var(--nova-space-4);
+        border-bottom: 1px solid var(--nova-border-light);
+        cursor: pointer;
+        transition: background var(--nova-transition-fast);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: var(--nova-accent-light);
+        }
+
+        &.arpa-notif-read {
+            opacity: 0.55;
+        }
+    }
+
+    // ── Body (dot + text wrapper) ────────────────────────────────────────────
+    .arpa-notif-body {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--nova-space-2);
+        width: 100%;
+    }
+
+    // ── Unread dot ───────────────────────────────────────────────────────────
+    .arpa-notif-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        min-width: 8px;
+        border-radius: 50%;
+        background: var(--nova-accent) !important;
+        margin-top: 5px;
+        flex-shrink: 0;
+    }
+
+    // ── Notification text ────────────────────────────────────────────────────
+    .arpa-notif-text {
+        font-size: var(--nova-font-xs);
+        font-family: var(--nova-font-family);
+        line-height: 1.45;
+        color: var(--nova-text);
+    }
+
+    // ── Date / timestamp ─────────────────────────────────────────────────────
+    .arpa-notif-date {
+        font-size: var(--nova-font-2xs) !important;
+        font-family: var(--nova-font-family);
+        color: var(--nova-text-tertiary) !important;
+        margin-top: 2px;
+    }
+
+    // ── Section separator (read / unread) ────────────────────────────────────
+    .arpa-notif-separator {
+        padding: var(--nova-space-1) var(--nova-space-4);
+        font-size: var(--nova-font-2xs);
+        font-weight: 600;
+        font-family: var(--nova-font-family);
+        color: var(--nova-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: var(--nova-bg-alt);
+        border-top: 1px solid var(--nova-border-light);
+        border-bottom: 1px solid var(--nova-border-light);
+    }
+
+    // ── Empty state ──────────────────────────────────────────────────────────
+    .arpa-notif-empty {
+        font-size: var(--nova-font-xs) !important;
+        font-family: var(--nova-font-family);
+        color: var(--nova-text-tertiary) !important;
+        padding: var(--nova-space-6) var(--nova-space-4);
+    }
+}
+
+// ╔══════════════════════════════════════════════════════════════════════════════╗
+// ║  Dark-mode overrides                                                       ║
+// ╚══════════════════════════════════════════════════════════════════════════════╝
+// All --nova-* variables are already re-mapped in dark mode, so the rules above
+// automatically adapt.  The overrides below handle edge-cases that need !important
+// to beat arpa_notification's own hardcoded values.
+
+html.nova-dark {
+    .arpa-notif-systray {
+        &:hover {
+            background: var(--nova-accent-light) !important;
+        }
+
+        .fa-bell {
+            color: var(--nova-text-secondary);
+        }
+
+        &:hover .fa-bell {
+            color: var(--nova-accent);
+        }
+
+        .arpa-notif-badge {
+            border-color: var(--nova-surface) !important;
+        }
+
+        .arpa-notif-dropdown {
+            background: var(--nova-surface);
+            border-color: var(--nova-border);
+            box-shadow: var(--nova-shadow-lg);
+            color: var(--nova-text);
+        }
+
+        .arpa-notif-header {
+            background: var(--nova-bg-alt);
+            border-bottom-color: var(--nova-border);
+
+            > span {
+                color: var(--nova-text);
+            }
+        }
+
+        .arpa-notif-item {
+            border-bottom-color: var(--nova-border-light);
+
+            &:hover {
+                background: var(--nova-accent-light);
+            }
+        }
+
+        .arpa-notif-text {
+            color: var(--nova-text);
+        }
+
+        .arpa-notif-separator {
+            background: var(--nova-bg-alt);
+            border-color: var(--nova-border-light);
+            color: var(--nova-text-tertiary);
+        }
+    }
+}
