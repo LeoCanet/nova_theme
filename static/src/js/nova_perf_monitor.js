@@ -3,7 +3,6 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 
 /**
  * Narrow no-break space (\u202F) before "ms" prevents Inter font contextual
@@ -449,7 +448,7 @@ export class NovaPerfMonitor extends Component {
 NovaPerfMonitor.template = "nova_theme.PerfMonitor";
 NovaPerfMonitor.props = {};
 
-if (session.debug) {
+if (odoo.debug) {
     registry.category("systray").add("nova_theme.PerfMonitor", {
         Component: NovaPerfMonitor,
     }, { sequence: 100 });

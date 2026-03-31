@@ -285,6 +285,8 @@
         background: var(--nova-surface) !important;
         border: none !important;
         border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0 !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
 
         // Border bottom only when there are smart buttons inside
         &:has(.oe_stat_button, .btn) {
@@ -306,6 +308,9 @@
             background: transparent !important;
             box-shadow: none !important;
             transition: background var(--nova-transition-fast);
+            flex: 1 1 0% !important;
+            max-width: 180px;
+            min-width: 0;
 
             &:first-child {
                 border-left: none !important;
@@ -314,6 +319,7 @@
 
             &:last-child {
                 border-right: 1px solid var(--nova-border) !important;
+                border-top-right-radius: calc(var(--nova-radius-lg) - 1px) !important;
             }
 
             &:hover {

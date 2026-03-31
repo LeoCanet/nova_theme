@@ -75,6 +75,7 @@
             "nova_theme/static/src/js/nova_selection_field.js",
             "nova_theme/static/src/js/nova_custom_filter_select.js",
             "nova_theme/static/src/js/nova_custom_filter_patch.js",
+            "nova_theme/static/src/js/nova_button_box.js",
             "nova_theme/static/src/js/nova_graph_patch.js",
             "nova_theme/static/src/js/nova_statusbar.js",
             "nova_theme/static/src/js/nova_drag_scroll.js",

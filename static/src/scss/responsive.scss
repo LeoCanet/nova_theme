@@ -101,8 +101,10 @@
 // The control panel is sticky while .o_view_controller / .o_content scroll.
 // The scrollbar shifts content but not the header, causing misalignment.
 // Must use !important to override the global * { scrollbar-width: thin } in design_system.
-.o_view_controller,
-.o_content {
+// Hide vertical scrollbar on views (prevents header/content misalignment)
+// but exclude grouped kanban which needs a horizontal scrollbar
+.o_view_controller:not(:has(.o_kanban_renderer.o_kanban_grouped)),
+.o_content:not(:has(.o_kanban_renderer.o_kanban_grouped)) {
     scrollbar-width: none !important;
     scrollbar-color: transparent transparent !important;
     &, &:hover {
@@ -110,6 +112,29 @@
         scrollbar-color: transparent transparent !important;
     }
     &::-webkit-scrollbar { width: 0 !important; display: none !important; }
+}
+
+// Grouped kanban: show horizontal scrollbar (auto-hide pattern from design_system)
+.o_view_controller:has(.o_kanban_renderer.o_kanban_grouped),
+.o_content:has(.o_kanban_renderer.o_kanban_grouped) {
+    scrollbar-width: thin !important;
+    scrollbar-color: transparent transparent !important;
+    &::-webkit-scrollbar { width: 6px !important; height: 6px !important; }
+    &::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: var(--nova-radius-full);
+        transition: background 0.2s ease;
+    }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &:hover {
+        scrollbar-color: color-mix(in srgb, var(--nova-text) 50%, transparent) transparent !important;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, var(--nova-text) 50%, transparent);
+    }
+    &:hover::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in srgb, var(--nova-text) 65%, transparent);
+    }
 }
 
 @media (max-width: 768px) {
