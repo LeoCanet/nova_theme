@@ -451,3 +451,38 @@
     font-size: 0.75rem;
     border-radius: 9999px;
 }
+
+// ─── Checkboxes / Radios — accent color ─────────────────────────────────────
+.form-check-input.form-check-input:checked {
+    border-color: var(--nova-portal-accent) !important;
+    background-color: var(--nova-portal-accent) !important;
+}
+.form-check-input.form-check-input:checked[type="checkbox"] {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important;
+}
+.form-check-input.form-check-input:checked[type="radio"] {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+.form-check-input.form-check-input:focus {
+    border-color: var(--nova-portal-accent) !important;
+    box-shadow: none !important;
+}
+
+// ─── Buttons primary — accent color ─────────────────────────────────────────
+.o_portal .btn-primary {
+    background-color: var(--nova-portal-accent) !important;
+    border-color: var(--nova-portal-accent) !important;
+
+    &:hover, &:focus {
+        background-color: var(--nova-portal-accent-hover) !important;
+        border-color: var(--nova-portal-accent-hover) !important;
+    }
+}
+
+// ─── Bootstrap .text-primary / .border-primary on portal ────────────────────
+.o_portal .text-primary {
+    color: var(--nova-portal-accent) !important;
+}
+.o_portal .border-primary {
+    border-color: var(--nova-portal-accent) !important;
+}

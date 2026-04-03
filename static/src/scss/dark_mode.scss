@@ -322,7 +322,6 @@ html.nova-dark {
         color: var(--nova-text-secondary) !important;
     }
 
-    .o_NotificationListItem_counter,
     .o_ChannelPreviewView_counter,
     .o_ThreadNeedactionPreview_counter {
         background-color: var(--nova-accent) !important;
@@ -989,6 +988,12 @@ html.nova-dark {
     // ─── Tooltips & Popovers ─────────────────────────────────────────
     .tooltip .tooltip-inner {
         background: var(--nova-surface-raised) !important;
+        color: var(--nova-text) !important;
+    }
+
+    // Odoo field tooltips — force color on the popover wrapper
+    // (ks_curved_backend_theme sets color via --color which stays in light-mode)
+    .o_popover:has(.o-tooltip) {
         color: var(--nova-text) !important;
     }
 

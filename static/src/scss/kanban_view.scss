@@ -95,11 +95,17 @@
         &:hover {
             box-shadow: var(--nova-shadow-sm);
             transform: translateY(-1px);
-            border-color: var(--nova-accent);
+            border-color: var(--nova-accent) !important;
         }
 
         &:active {
             transform: translateY(0);
+        }
+
+        // Kanban action links — hover badge uses accent instead of compiled $primary
+        .oe_kanban_action_a:hover > .badge {
+            background-color: var(--nova-accent) !important;
+            color: white !important;
         }
 
         // Title
@@ -183,7 +189,7 @@
                 border-radius: var(--nova-radius-sm);
             }
 
-            .fa:hover {
+            .fa.o_button_icon:hover {
                 color: var(--nova-accent) !important;
             }
 
