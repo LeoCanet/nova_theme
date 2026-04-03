@@ -36,160 +36,202 @@
 
 // ─── Primary Button ────────────────────────────────────────────────────────
 .btn-primary {
-    background: var(--nova-accent);
-    border-color: var(--nova-accent);
-    color: white;
+    background: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+    color: white !important;
 
     &:hover, &:focus {
-        background: var(--nova-accent-hover);
-        border-color: var(--nova-accent-hover);
-        color: white;
+        background: var(--nova-accent-hover) !important;
+        border-color: var(--nova-accent-hover) !important;
+        color: white !important;
         transform: translateY(-1px);
     }
 
     &:active {
+        background: var(--nova-accent-hover) !important;
+        border-color: var(--nova-accent-hover) !important;
+        color: white !important;
         transform: translateY(0);
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
     }
 
     &:disabled, &.disabled {
+        background: var(--nova-accent) !important;
+        border-color: var(--nova-accent) !important;
         opacity: 0.5;
         transform: none;
-        box-shadow: none;
+        box-shadow: none !important;
     }
 }
 
 // ─── Secondary Button ──────────────────────────────────────────────────────
 .btn-secondary {
-    background: var(--nova-surface);
-    border-color: var(--nova-border);
-    color: var(--nova-text);
+    background: var(--nova-surface) !important;
+    border-color: var(--nova-border) !important;
+    color: var(--nova-text) !important;
     box-shadow: var(--nova-shadow-xs);
 
     &:hover, &:focus {
-        background: var(--nova-bg-alt);
-        border-color: var(--nova-border);
-        color: var(--nova-text);
+        background: var(--nova-bg-alt) !important;
+        border-color: var(--nova-border) !important;
+        color: var(--nova-text) !important;
         box-shadow: var(--nova-shadow-sm);
     }
 
     &:active {
-        background: var(--nova-border);
+        background: var(--nova-border) !important;
+        color: var(--nova-text) !important;
     }
 }
 
 // ─── Outline / Ghost Buttons ───────────────────────────────────────────────
 .btn-outline-primary {
-    color: var(--nova-accent);
-    border-color: var(--nova-accent);
-    background: transparent;
+    color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+    background: transparent !important;
 
     &:hover, &:focus {
-        background: var(--nova-accent-light);
-        color: var(--nova-accent);
-        border-color: var(--nova-accent);
+        background: var(--nova-accent-light) !important;
+        color: var(--nova-accent) !important;
+        border-color: var(--nova-accent) !important;
+    }
+
+    &:active {
+        background: var(--nova-accent) !important;
+        color: white !important;
     }
 }
 
 .btn-outline-secondary {
-    color: var(--nova-text-secondary);
-    border-color: var(--nova-border);
-    background: transparent;
+    color: var(--nova-text-secondary) !important;
+    border-color: var(--nova-border) !important;
+    background: transparent !important;
 
     &:hover, &:focus {
-        background: var(--nova-bg-alt);
-        color: var(--nova-text);
+        background: var(--nova-bg-alt) !important;
+        color: var(--nova-text) !important;
     }
 }
 
 // ─── Link Button (ghost) ──────────────────────────────────────────────────
 .btn-link {
-    color: var(--nova-accent);
-    border: none;
+    color: var(--nova-accent) !important;
+    border: none !important;
     padding: var(--nova-space-1) var(--nova-space-2);
-    background: transparent;
-    text-decoration: none;
+    background: transparent !important;
+    text-decoration: none !important;
 
     &:hover {
-        color: var(--nova-accent-hover);
-        background: var(--nova-accent-light);
+        color: var(--nova-accent-hover) !important;
+        background: var(--nova-accent-light) !important;
         border-radius: var(--nova-radius);
+        text-decoration: none !important;
+    }
+
+    &:active {
+        color: var(--nova-accent-hover) !important;
+        background: var(--nova-accent-light) !important;
     }
 }
 
 // ─── Danger Button ─────────────────────────────────────────────────────────
 .btn-danger {
-    background: var(--nova-danger);
-    border-color: var(--nova-danger);
-    color: white;
+    background: var(--nova-danger) !important;
+    border-color: var(--nova-danger) !important;
+    color: white !important;
 
     &:hover, &:focus {
-        background: color-mix(in srgb, var(--nova-danger) 85%, black);
-        border-color: color-mix(in srgb, var(--nova-danger) 85%, black);
-        color: white;
+        background: color-mix(in srgb, var(--nova-danger) 85%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-danger) 85%, black) !important;
+        color: white !important;
         transform: translateY(-1px);
         box-shadow: var(--nova-shadow-sm);
+    }
+
+    &:active {
+        background: color-mix(in srgb, var(--nova-danger) 80%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-danger) 80%, black) !important;
+        color: white !important;
     }
 }
 
 .btn-outline-danger {
-    color: var(--nova-danger);
-    border-color: var(--nova-danger);
-    background: transparent;
+    color: var(--nova-danger) !important;
+    border-color: var(--nova-danger) !important;
+    background: transparent !important;
 
     &:hover, &:focus {
-        background: var(--nova-danger-light);
-        color: var(--nova-danger);
+        background: var(--nova-danger-light) !important;
+        color: var(--nova-danger) !important;
     }
 }
 
 // ─── Success Button ────────────────────────────────────────────────────────
 .btn-success {
-    background: var(--nova-success);
-    border-color: var(--nova-success);
-    color: white;
+    background: var(--nova-success) !important;
+    border-color: var(--nova-success) !important;
+    color: white !important;
 
     &:hover, &:focus {
-        background: color-mix(in srgb, var(--nova-success) 85%, black);
-        border-color: color-mix(in srgb, var(--nova-success) 85%, black);
-        color: white;
+        background: color-mix(in srgb, var(--nova-success) 85%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-success) 85%, black) !important;
+        color: white !important;
+    }
+
+    &:active {
+        background: color-mix(in srgb, var(--nova-success) 80%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-success) 80%, black) !important;
+        color: white !important;
     }
 }
 
 // ─── Warning Button ────────────────────────────────────────────────────────
 .btn-warning {
-    background: var(--nova-warning);
-    border-color: var(--nova-warning);
-    color: white;
+    background: var(--nova-warning) !important;
+    border-color: var(--nova-warning) !important;
+    color: white !important;
 
     &:hover, &:focus {
-        background: color-mix(in srgb, var(--nova-warning) 85%, black);
-        border-color: color-mix(in srgb, var(--nova-warning) 85%, black);
-        color: white;
+        background: color-mix(in srgb, var(--nova-warning) 85%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-warning) 85%, black) !important;
+        color: white !important;
+    }
+
+    &:active {
+        background: color-mix(in srgb, var(--nova-warning) 80%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-warning) 80%, black) !important;
+        color: white !important;
     }
 }
 
 // ─── Info Button ───────────────────────────────────────────────────────────
 .btn-info {
-    background: var(--nova-info);
-    border-color: var(--nova-info);
-    color: white;
+    background: var(--nova-info) !important;
+    border-color: var(--nova-info) !important;
+    color: white !important;
 
     &:hover, &:focus {
-        background: color-mix(in srgb, var(--nova-info) 85%, black);
-        border-color: color-mix(in srgb, var(--nova-info) 85%, black);
-        color: white;
+        background: color-mix(in srgb, var(--nova-info) 85%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-info) 85%, black) !important;
+        color: white !important;
+    }
+
+    &:active {
+        background: color-mix(in srgb, var(--nova-info) 80%, black) !important;
+        border-color: color-mix(in srgb, var(--nova-info) 80%, black) !important;
+        color: white !important;
     }
 }
 
 // ─── Light/Dark utility buttons ────────────────────────────────────────────
 .btn-light {
-    background: var(--nova-bg-alt);
-    border-color: var(--nova-border);
-    color: var(--nova-text);
+    background: var(--nova-bg-alt) !important;
+    border-color: var(--nova-border) !important;
+    color: var(--nova-text) !important;
 
     &:hover {
-        background: var(--nova-border);
+        background: var(--nova-border) !important;
+        color: var(--nova-text) !important;
     }
 }
 
@@ -233,6 +275,16 @@
 }
 
 // ─── A. Control Panel — Primary Buttons ────────────────────────────────────
+.o_cp_buttons {
+    gap: var(--nova-space-2);
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: var(--nova-space-2);
+    }
+}
+
 .o_cp_buttons .btn-primary,
 .o_cp_buttons .o_form_button_save,
 .o_form_button_create,

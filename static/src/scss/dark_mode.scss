@@ -351,19 +351,46 @@ html.nova-dark {
 
     // ─── Bootstrap DateTimePicker widget (calendar popup) ───────────
     .bootstrap-datetimepicker-widget {
+        // Override tempusdominus CSS custom properties for dark mode
+        --bs-datetimepicker-btn-hover-bg: var(--nova-surface-raised);
+        --bs-datetimepicker-active-bg: var(--nova-accent);
+        --bs-datetimepicker-active-color: #fff;
+        --bs-datetimepicker-primary-border-color: var(--nova-surface);
+        --bs-datetimepicker-secondary-border-color: var(--nova-border);
+        --bs-datetimepicker-secondary-border-color-rgba: rgba(255, 255, 255, 0.1);
+        --bs-datetimepicker-disabled-color: var(--nova-text-tertiary);
+        --bs-datetimepicker-alternate-color: var(--nova-text-tertiary);
+        --bs-datetimepicker-text-shadow: none;
+
         background-color: var(--nova-surface) !important;
         border-color: var(--nova-border) !important;
 
-        .datepicker table {
-            --datepicker-color: var(--nova-text);
-            --datepicker__thead-bg: var(--nova-bg-alt);
+        // Arrow pointers (::before / ::after on .bottom / .top)
+        &.bottom::after, &.top::after {
+            border-bottom-color: var(--nova-surface) !important;
+            border-top-color: var(--nova-surface) !important;
+        }
+        &.bottom::before, &.top::before {
+            border-bottom-color: var(--nova-border) !important;
+            border-top-color: var(--nova-border) !important;
+        }
 
+        .datepicker table {
             th, td {
                 color: var(--nova-text) !important;
                 border-color: var(--nova-border) !important;
             }
 
-            thead tr:nth-child(2) th,
+            // Bootstrap .table > :not(:first-child) sets a light border-top
+            > :not(:first-child) {
+                border-top-color: var(--nova-border) !important;
+            }
+
+            thead tr:nth-child(2) th {
+                background-color: var(--nova-bg-alt) !important;
+                color: var(--nova-text-secondary) !important;
+            }
+
             td.cw {
                 background-color: var(--nova-bg-alt) !important;
                 color: var(--nova-text-secondary) !important;
@@ -373,18 +400,29 @@ html.nova-dark {
                 color: var(--nova-text-tertiary) !important;
             }
 
-            td.active {
+            td.active, td.active:hover {
                 background-color: var(--nova-accent) !important;
                 color: white !important;
             }
 
+            // Today marker — small triangle in corner
             td.today:not(.active) {
                 color: var(--nova-accent) !important;
             }
+            td.today::before {
+                border-bottom-color: var(--nova-accent) !important;
+            }
+            td.active.today::before {
+                border-bottom-color: #fff !important;
+            }
 
-            td:hover {
+            td.day:hover, td.hour:hover, td.minute:hover, td.second:hover {
                 background-color: var(--nova-surface-raised) !important;
                 color: var(--nova-text) !important;
+            }
+
+            td span:hover {
+                background-color: var(--nova-surface-raised) !important;
             }
 
             th.prev, th.next, th.picker-switch {
@@ -401,12 +439,54 @@ html.nova-dark {
             span, td {
                 color: var(--nova-text) !important;
             }
+
+            // Hover only on td, children stay transparent
+            td {
+                &:hover {
+                    background: var(--nova-accent-light) !important;
+                    color: var(--nova-accent) !important;
+                }
+
+                a, span, .btn, button {
+                    background: none !important;
+                    color: inherit !important;
+                }
+            }
+
+            .separator {
+                color: var(--nova-text-tertiary) !important;
+                &:hover {
+                    background: transparent !important;
+                }
+            }
         }
 
-        .accordion-toggle span.fa {
+        // Bottom toggle buttons (clock ↔ calendar, close)
+        .accordion-toggle {
+            td {
+                border-color: var(--nova-border) !important;
+            }
+
+            span.fa, a[data-action] {
+                color: var(--nova-text-secondary) !important;
+                border-color: var(--nova-border) !important;
+                box-shadow: none !important;
+
+                &:hover {
+                    background-color: var(--nova-surface-raised) !important;
+                    color: var(--nova-text) !important;
+                }
+            }
+        }
+
+        // "Close the picker" button and other action links
+        a[data-action] {
             color: var(--nova-text-secondary) !important;
-            border-color: var(--nova-border) !important;
-            box-shadow: none !important;
+
+            &:hover {
+                background-color: var(--nova-surface-raised) !important;
+                color: var(--nova-text) !important;
+            }
         }
     }
 
@@ -635,8 +715,14 @@ html.nova-dark {
     }
 
     // Generic .btn — catch-all border fix for any button with white/light border
-    .btn:not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-info):not(.btn-link) {
+    .btn:not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-info):not(.btn-link):not(.o_toggle_fold):not(.active):not(.show):not(.oe_stat_button):not(.oe_kanban_global_click) {
         border-color: var(--nova-border) !important;
+
+        &:hover, &:focus {
+            border-color: var(--nova-accent) !important;
+            background-color: var(--nova-accent-light) !important;
+            color: var(--nova-accent) !important;
+        }
     }
 
     // ─── Inputs ──────────────────────────────────────────────────────
@@ -1009,6 +1095,27 @@ html.nova-dark {
         &:not(.alert-warning):not(.alert-danger):not(.alert-success):not(.alert-info) {
             background-color: var(--nova-surface-raised) !important;
         }
+
+        // Links & buttons inside alerts in dark mode
+        a:not(.btn),
+        .alert-link {
+            color: var(--nova-text) !important;
+        }
+
+        .btn-link,
+        .btn.btn-link {
+            color: var(--nova-text) !important;
+        }
+
+        .btn:not(.btn-link) {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: var(--nova-text) !important;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.18) !important;
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -1101,9 +1208,7 @@ html.nova-dark {
 
         .o_search_panel_category_value,
         .o_search_panel_filter_group {
-            &:hover {
-                background-color: var(--nova-accent-light) !important;
-            }
+            background-color: transparent !important;
         }
 
         .o_search_panel_label {
@@ -1501,17 +1606,18 @@ html.nova-dark {
             // Odoo kanban QWeb templates use inline styles, random classes, etc.
             // This wildcard overrides everything.
             > div {
-                *:not(.badge):not([class*="text-bg-"]) {
+                *:not(.badge):not([class*="text-bg-"]):not([class*="o_activity_color_"]):not(.text-success):not(.text-warning):not(.text-danger):not(.text-info):not(.text-primary) {
                     color: var(--nova-text) !important;
                 }
                 small, .text-muted, .text-600 {
                     color: var(--nova-text-tertiary) !important;
                 }
-                .text-danger { color: var(--nova-danger) !important; }
-                .text-success { color: var(--nova-success) !important; }
-                .text-warning { color: var(--nova-warning) !important; }
+                .text-danger, .o_activity_color_overdue { color: var(--nova-danger) !important; }
+                .text-success, .o_activity_color_planned { color: var(--nova-success) !important; }
+                .text-warning, .o_activity_color_today { color: var(--nova-warning) !important; }
                 .text-info { color: var(--nova-info) !important; }
                 .text-primary { color: var(--nova-accent) !important; }
+                .o_activity_color_default { color: var(--nova-text-tertiary) !important; }
             }
 
             .o_kanban_record_title,
@@ -2245,7 +2351,7 @@ html.nova-dark {
 
     // bg-view and bg-100 used in chatter
     .bg-view {
-        background-color: var(--nova-bg) !important;
+        background-color: var(--nova-surface) !important;
     }
 
     .bg-100 {
@@ -2671,7 +2777,7 @@ html.nova-dark {
 
     // Any remaining white bg utility classes
     .bg-view {
-        background-color: var(--nova-bg) !important;
+        background-color: var(--nova-surface) !important;
     }
 
     // No-content empty state — Odoo compiles a white radial-gradient from $o-view-background-color
@@ -2903,11 +3009,11 @@ html.nova-dark {
         &.active {
             color: var(--nova-accent) !important;
             background: var(--nova-accent-light) !important;
-            border-color: var(--nova-accent) !important;
+            border: 1px solid var(--nova-accent) !important;
         }
 
         &:hover:not(.active) {
-            color: var(--nova-text) !important;
+            color: var(--nova-accent) !important;
             background: var(--nova-bg-alt) !important;
         }
     }
@@ -3526,7 +3632,7 @@ html.nova-dark {
 
     // bg-view utility (Bootstrap generated with !important — we need higher specificity)
     .bg-view {
-        background-color: var(--nova-bg) !important;
+        background-color: var(--nova-surface) !important;
     }
 
     .bg-100 {
@@ -3537,11 +3643,63 @@ html.nova-dark {
         background-color: var(--nova-bg-alt) !important;
     }
 
+    // ─── Pagination ────────────────────────────────────────────────────
+    .pagination {
+        .page-item .page-link {
+            background-color: var(--nova-surface) !important;
+            border-color: var(--nova-border) !important;
+            color: var(--nova-text-secondary) !important;
+
+            &:hover {
+                background-color: var(--nova-accent-light) !important;
+                color: var(--nova-accent) !important;
+            }
+        }
+        .page-item.active .page-link {
+            background-color: var(--nova-accent) !important;
+            border-color: var(--nova-accent) !important;
+            color: white !important;
+        }
+    }
+
+    // ─── List group active ──────────────────────────────────────────────
+    .list-group-item {
+        background-color: var(--nova-surface) !important;
+        border-color: var(--nova-border) !important;
+        color: var(--nova-text) !important;
+
+        &.active {
+            background-color: var(--nova-accent) !important;
+            border-color: var(--nova-accent) !important;
+            color: white !important;
+        }
+    }
+
+    // ─── Progress bars ──────────────────────────────────────────────────
+    .progress {
+        background-color: var(--nova-bg-alt) !important;
+    }
+    .progress-bar:not([class*="bg-"]) {
+        background-color: var(--nova-accent) !important;
+    }
+
+    // ─── Nav pills dark mode ────────────────────────────────────────────
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+        background-color: var(--nova-accent) !important;
+        color: white !important;
+    }
+
     // All tables
     table, .table {
         --bs-table-bg: transparent;
         --bs-table-border-color: var(--nova-border);
         border-color: var(--nova-border) !important;
+
+        // Bootstrap .table > :not(:first-child) { border-top: 2px solid #e9ecef }
+        > :not(:first-child) {
+            border-top-color: var(--nova-border) !important;
+        }
     }
 
     .table-bordered > :not(caption) > * > * {

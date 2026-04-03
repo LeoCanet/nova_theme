@@ -129,15 +129,15 @@
 
 // ─── Font Size Presets ────────────────────────────────────────────────────
 [data-nova-font-size="compact"] {
-    --nova-font-2xs: 0.75rem;
-    --nova-font-xs: 0.8125rem;
-    --nova-font-sm: 0.875rem;
-    --nova-font-base: 0.9375rem;
-    --nova-font-md: 1rem;
-    --nova-font-lg: 1.0625rem;
-    --nova-font-xl: 1.125rem;
-    --nova-font-2xl: 1.3125rem;
-    --nova-font-3xl: 1.75rem;
+    --nova-font-2xs: 0.6875rem;   // 11px
+    --nova-font-xs: 0.75rem;      // 12px
+    --nova-font-sm: 0.8125rem;    // 13px
+    --nova-font-base: 0.875rem;   // 14px
+    --nova-font-md: 0.9375rem;    // 15px
+    --nova-font-lg: 1rem;         // 16px
+    --nova-font-xl: 1.0625rem;    // 17px
+    --nova-font-2xl: 1.1875rem;   // 19px
+    --nova-font-3xl: 1.625rem;    // 26px
 }
 // Default = :root values
 [data-nova-font-size="large"] {
@@ -163,13 +163,30 @@
 
 // ─── Global Reset & Base Styles ────────────────────────────────────────────
 body {
-    font-family: var(--nova-font-family);
+    font-family: var(--nova-font-family) !important;
     font-size: var(--nova-font-base) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: 'kern';
     color: var(--nova-text);
     background-color: var(--nova-bg);
+}
+
+// ─── Global font-family override (responsive to font family preset) ─────
+// Odoo/Bootstrap compile $font-family-base into many elements directly.
+// This wildcard ensures ALL elements inside the webclient inherit the
+// chosen font, except icon fonts (FontAwesome, Odoo icons).
+.o_web_client {
+    &, * {
+        font-family: var(--nova-font-family) !important;
+    }
+    // Preserve icon font families
+    .fa, .oi, .material-icons, [class*="fa-"] {
+        font-family: "FontAwesome" !important;
+    }
+    .oi {
+        font-family: "odoo_ui_icons" !important;
+    }
 }
 
 // ─── Global font-size overrides (responsive to presets) ──────────────────
@@ -373,8 +390,9 @@ a {
         }
 
         &:hover:not(.active) {
-            color: var(--nova-text);
+            color: var(--nova-accent) !important;
             background: var(--nova-bg-alt) !important;
+            border-color: var(--nova-accent) !important;
         }
     }
 }
@@ -466,13 +484,30 @@ a {
     &:hover, &:focus {
         background: var(--nova-accent-light) !important;
         border-color: var(--nova-accent) !important;
-        color: var(--nova-accent);
+        color: var(--nova-accent) !important;
     }
 
     &:active, &.show {
         background: var(--nova-accent-medium) !important;
         border-color: var(--nova-accent) !important;
-        color: var(--nova-accent);
+        color: var(--nova-accent) !important;
+    }
+}
+
+// ─── Selected / Active dropdown items — accent check icon ────────────────
+// Odoo uses color: $primary (blue) on the ::before check mark. Override globally.
+:not(.dropstart) > .dropdown-item {
+    &.active, &.selected {
+        &:not(.dropdown-item_active_noarrow)::before {
+            color: var(--nova-accent) !important;
+        }
+    }
+}
+.o-dropdown.dropstart > .dropdown-item.dropdown-toggle {
+    &.active, &.selected {
+        &::after {
+            color: var(--nova-accent) !important;
+        }
     }
 }
 
@@ -514,6 +549,7 @@ a {
             padding-left: calc(var(--nova-space-3) + 1rem) !important;
 
             &::before {
+                color: var(--nova-accent) !important;
                 left: var(--nova-space-3) !important;
                 top: 50% !important;
                 transform: translateY(-50%) !important;
@@ -741,6 +777,81 @@ a {
 .alert {
     border: none !important;
     border-radius: 0 !important;
+
+    // Links & buttons inside alerts — consistent Nova styling
+    a:not(.btn),
+    .alert-link {
+        color: inherit !important;
+        font-weight: 600;
+        text-decoration: none !important;
+
+        &:hover {
+            opacity: 0.8;
+            text-decoration: none !important;
+        }
+    }
+
+    .btn-link,
+    .btn.btn-link {
+        color: inherit !important;
+        font-weight: 600;
+        text-decoration: none !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 var(--nova-space-1);
+
+        &:hover {
+            opacity: 0.8;
+            text-decoration: none !important;
+        }
+    }
+
+    .btn:not(.btn-link) {
+        background: rgba(0, 0, 0, 0.1) !important;
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        color: inherit !important;
+        font-weight: 600;
+        text-decoration: none !important;
+        border-radius: var(--nova-radius-sm);
+        padding: var(--nova-space-1) var(--nova-space-3);
+        box-shadow: none !important;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.18) !important;
+            text-decoration: none !important;
+        }
+    }
+
+    // Catch-all: no underline on any button inside alerts
+    .btn {
+        text-decoration: none !important;
+    }
+}
+
+// ─── Bootstrap "primary" color → Nova accent ─────────────────────────────
+// Odoo uses .text-primary, .border-primary, .bg-primary, .text-bg-primary
+// in many places (badges, links, borders). Remap them all to --nova-accent.
+.text-primary {
+    color: var(--nova-accent) !important;
+}
+.border-primary {
+    &, &.border, .o_web_client & {
+        border-color: var(--nova-accent) !important;
+    }
+}
+.bg-primary {
+    background-color: var(--nova-accent) !important;
+}
+.text-bg-primary {
+    background-color: var(--nova-accent) !important;
+    color: white !important;
+}
+.link-primary {
+    color: var(--nova-accent) !important;
+    &:hover {
+        color: var(--nova-accent-hover) !important;
+    }
 }
 
 // ─── Badge overrides ───────────────────────────────────────────────────────
@@ -749,6 +860,36 @@ a {
     font-size: var(--nova-font-sm);
     padding: 0.2em 0.6em;
     border-radius: var(--nova-radius-sm);
+
+    // Odoo uses outline: 1px solid $o-brand-primary on these badge variants.
+    // Remap to accent color.
+    &.text-bg-default, &.bg-light, &.text-bg-light, &.bg-default, &.text-primary {
+        outline-color: var(--nova-accent) !important;
+    }
+}
+
+// ─── Datepicker today marker — accent color instead of $blue ──────────────
+.bootstrap-datetimepicker-widget .datepicker table td.today::before {
+    border-bottom-color: var(--nova-accent) !important;
+}
+.bootstrap-datetimepicker-widget .datepicker table td.active.today::before {
+    border-bottom-color: #fff !important;
+}
+
+// Outline-style primary badges (e.g. pending invitation emails in Settings)
+.badge.border-primary,
+.badge.border.text-primary {
+    background-color: var(--nova-accent-light) !important;
+    color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+    text-decoration: none !important;
+    margin: 3px 2px;
+
+    &:hover, &:focus {
+        background-color: var(--nova-accent-medium) !important;
+        color: var(--nova-accent) !important;
+        text-decoration: none !important;
+    }
 }
 
 // ─── Boolean toggle (form-switch) — consistent sizing ───────────────────
@@ -762,6 +903,87 @@ a {
         background-color: var(--nova-accent) !important;
         border-color: var(--nova-accent) !important;
     }
+}
+
+// ─── All checkboxes / radios — accent when checked ──────────────────────
+.form-check-input:checked {
+    background-color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+}
+.form-check-input:focus {
+    border-color: var(--nova-accent) !important;
+    box-shadow: 0 0 0 0.25rem rgba(var(--nova-accent), 0.15) !important;
+}
+
+// ─── Selection badges (radio-style pill selectors) ──────────────────────
+.o_field_selection_badge .o_selection_badge.active,
+.o_field_selection_badge .o_selection_badge:checked {
+    color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+}
+
+// ─── Nav pills / tabs — active state ────────────────────────────────────
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background-color: var(--nova-accent) !important;
+    color: white !important;
+}
+.nav-link {
+    color: var(--nova-text-secondary);
+    &:hover, &:focus {
+        color: var(--nova-accent) !important;
+    }
+    &.active {
+        color: var(--nova-accent) !important;
+    }
+}
+
+// ─── Pagination — active page ───────────────────────────────────────────
+.pagination .page-item.active .page-link {
+    background-color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+    color: white !important;
+}
+.pagination .page-link {
+    color: var(--nova-accent);
+    &:hover {
+        color: var(--nova-accent-hover);
+    }
+}
+
+// ─── List group — active item ───────────────────────────────────────────
+.list-group-item.active {
+    background-color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+    color: white !important;
+}
+
+// ─── Progress bars ──────────────────────────────────────────────────────
+.progress-bar:not([class*="bg-"]) {
+    background-color: var(--nova-accent) !important;
+}
+
+// ─── Search facets (active filter pills in search bar) ──────────────────
+.o_searchview .o_searchview_facet {
+    .o_searchview_facet_label {
+        background-color: var(--nova-accent) !important;
+        color: white !important;
+    }
+}
+
+// ─── Field copy button ──────────────────────────────────────────────────
+.o_field_copy .o_clipboard_button {
+    color: var(--nova-accent) !important;
+    border-color: var(--nova-accent) !important;
+    &:hover {
+        background-color: var(--nova-accent-light) !important;
+    }
+}
+
+// ─── Attachment delete overlay ──────────────────────────────────────────
+.o_attachment_delete:hover,
+.o_AttachmentCard_unlink:hover {
+    background-color: var(--nova-danger) !important;
 }
 
 // ─── Nova Custom Select (replaces native <select>) ──────────────────────

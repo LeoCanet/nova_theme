@@ -18,7 +18,7 @@
 
     // ─── Logo / Brand ──────────────────────────────────────────────────
     .o_menu_brand {
-        font-size: var(--nova-font-lg);
+        font-size: var(--nova-font-lg) !important;
         font-weight: 600;
         color: var(--nova-text) !important;
         margin: 0;
@@ -74,7 +74,7 @@
             display: flex;
             align-items: center;
             padding: 0 var(--nova-space-3);
-            font-size: var(--nova-font-base);
+            font-size: var(--nova-font-base) !important;
             font-weight: 500;
             color: var(--nova-text-secondary);
             border-radius: 0;
@@ -338,7 +338,7 @@
         .dropdown-item {
             border-radius: var(--nova-radius-sm);
             padding: var(--nova-space-2) var(--nova-space-3);
-            font-size: var(--nova-font-base);
+            font-size: var(--nova-font-base) !important;
             font-weight: 450;
             color: var(--nova-text);
             transition: background var(--nova-transition-fast);

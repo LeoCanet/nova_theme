@@ -49,6 +49,40 @@ $spacer: 1rem;
 $body-bg: #F8FAFC;
 $body-color: #1E293B;
 
+// ─── Links ────────────────────────────────────────────────────────────────
+$o-main-link-color: $o-brand-primary;
+$link-color: $o-brand-primary;
+$link-hover-color: darken($o-brand-primary, 10%);
+
+// ─── Component Active States ──────────────────────────────────────────────
+$component-active-color: $o-brand-primary;
+$component-active-bg: rgba($o-brand-primary, 0.1);
+
+// ─── Nav Pills ────────────────────────────────────────────────────────────
+$nav-pills-link-active-bg: $o-brand-primary;
+$nav-pills-link-active-color: #FFFFFF;
+$nav-link-color: $o-brand-primary;
+
+// ─── Form Check (Checkboxes / Radio / Switches) ──────────────────────────
+$form-check-input-checked-bg-color: $o-brand-primary;
+$form-check-input-checked-border-color: $o-brand-primary;
+$form-check-input-focus-border: rgba($o-brand-primary, 0.5);
+$form-check-input-focus-box-shadow: 0 0 0 0.25rem rgba($o-brand-primary, 0.15);
+
+// ─── Required Field Indicator ─────────────────────────────────────────────
+$o-input-border-required: $o-brand-primary;
+
+// ─── Pagination ───────────────────────────────────────────────────────────
+$pagination-active-bg: $o-brand-primary;
+$pagination-active-border-color: $o-brand-primary;
+
+// ─── List Group ───────────────────────────────────────────────────────────
+$list-group-active-bg: $o-brand-primary;
+$list-group-active-border-color: $o-brand-primary;
+
+// ─── Progress Bar ─────────────────────────────────────────────────────────
+$progress-bar-bg: $o-brand-primary;
+
 // ─── Input / Form ──────────────────────────────────────────────────────────
 $input-border-color: #E2E8F0;
 $input-focus-border-color: $o-brand-primary;
