@@ -110,6 +110,12 @@
     }
 }
 
+// Sample data rows: désactiver l'animation fade in (fill-mode: both écrase
+// l'opacity 0.33 native d'Odoo en finissant toujours à opacity: 1)
+.o_list_view .o_view_sample_data tbody tr {
+    animation: none !important;
+}
+
 // Sidebar items slide in
 .nova-sidebar__item {
     animation: novaSlideInLeft 0.2s ease both;
